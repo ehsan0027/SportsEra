@@ -1,7 +1,5 @@
 package model
 
-import model.player.PlayerBasicProfile
-
 data class Team( var teamLogo:String?=null,
                 val teamName:String,
                  val shortName:String,
@@ -14,11 +12,11 @@ data class Team( var teamLogo:String?=null,
                )
 {
     constructor():this("","","","","","","")
-    var player_BasicProfile_list:List<PlayerBasicProfile>?=null
-    var out_playerBasicProfile:List<PlayerBasicProfile>?=null
-    var striker: PlayerBasicProfile?=null
-    var non_striker: PlayerBasicProfile?=null
-    var bowler: PlayerBasicProfile?=null
+    var player_list:List<PlayerBasicProfile>?=null
+    var out_player:List<PlayerBasicProfile>?=null
+    var striker:PlayerBasicProfile?=null
+    var non_striker:PlayerBasicProfile?=null
+    var bowler:PlayerBasicProfile?=null
 
     //fun selectPlayer(p:List<PlayerBasicProfile>):PlayerBasicProfile
 

@@ -21,6 +21,9 @@ android:background="#DCDCDC">
             android:layout_marginTop="30dp"
             android:src="@drawable/profile_pic"
             android:clickable="true"
+            android:focusable="true"
+            app:civ_border_color="@color/DimGray"
+            app:civ_border_width="5dp"
             android:layout_centerHorizontal="true"
             android:onClick="selectProfileImage"/>
 
@@ -29,10 +32,11 @@ android:background="#DCDCDC">
             android:layout_height="wrap_content"
             android:layout_below="@id/user_profile"
             android:id="@+id/textInput_layout"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
 
     >
+
 
         <LinearLayout
                 android:layout_width="match_parent"
@@ -55,7 +59,6 @@ android:background="#DCDCDC">
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/fullnameEditText"
-                        android:inputType="textPersonName"
                 />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -63,7 +66,7 @@ android:background="#DCDCDC">
             <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Phone Number"
+                    android:hint="Phone Number (+923XXXXXXXXX)"
                     app:boxStrokeColor="@android:color/holo_green_dark"
                     android:textSize="20sp"
                     android:textColorHint="@color/textColor"
@@ -72,8 +75,8 @@ android:background="#DCDCDC">
                 <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/phoneNumber_field"
                         android:inputType="phone"
+                        android:id="@+id/phoneNumber_field"
                 />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -101,9 +104,8 @@ android:background="#DCDCDC">
             android:layout_height="15dp"
             android:layout_below="@+id/signUp_button"
             android:layout_marginTop="20dp"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
             android:background="@android:color/holo_blue_dark"
             app:backgroundTint="#000000"
     android:id="@+id/black_button">
