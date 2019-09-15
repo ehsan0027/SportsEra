@@ -10,6 +10,7 @@ import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.credentials.Credential
 import com.google.android.gms.auth.api.credentials.HintRequest
 import com.google.android.gms.common.api.GoogleApiClient
+import org.jetbrains.anko.longToast
 import org.jetbrains.anko.toast
 
 class PhoneHintActivity: FragmentActivity(), GoogleApiClient.ConnectionCallbacks {
@@ -28,18 +29,18 @@ class PhoneHintActivity: FragmentActivity(), GoogleApiClient.ConnectionCallbacks
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        getCreadenticalApiClient()
+        getCredentialApiClient()
         requestHint()
 
     }
 
 
-    private fun getCreadenticalApiClient() {
+    private fun getCredentialApiClient() {
         apiClient = GoogleApiClient.Builder(baseContext)
             .addConnectionCallbacks(this)
             .addApi(Auth.CREDENTIALS_API)
             .build()
-    }
+            }
 
 
     // Construct a request for phone numbers and show the picker
@@ -51,7 +52,7 @@ class PhoneHintActivity: FragmentActivity(), GoogleApiClient.ConnectionCallbacks
             apiClient, hintRequest
         )
         startIntentSenderForResult(intent.intentSender, RESOLVE_HINT, null, 0, 0, 0)
-    }
+            }
 
 
 
@@ -71,7 +72,7 @@ class PhoneHintActivity: FragmentActivity(), GoogleApiClient.ConnectionCallbacks
                     setResult(Activity.RESULT_OK, intent)
                     finish()
                 }
-                else{toast("Number not selected")}
+                else{longToast("Number not selected")}
             }
         }
         finish()

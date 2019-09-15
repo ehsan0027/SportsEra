@@ -11,8 +11,8 @@
         tools:context="view.match.StartMatchActivity">
 <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:background="@color/DarkSlateGray"
+        android:layout_height="10dp"
+        android:background="@color/colorAccent"
         app:layout_constraintTop_toTopOf="parent">
 
 </LinearLayout>
@@ -24,57 +24,24 @@
             android:id="@+id/relativeLayout_StartMatch"
             app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.card.MaterialCardView
-                android:layout_width="120dp"
-                android:layout_height="130dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                app:cardBackgroundColor="@color/WhiteSmoke"
-                android:clickable="true"
-                android:focusable="true"
-                android:checkable="true"
-                app:checkedIcon="@drawable/team_ready_check"
-                android:id="@+id/team_A_Card_StartMatchActivity"
-                android:layout_marginLeft="3dp"
-                android:layout_marginStart="3dp">
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-
         <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:layout_marginLeft="10dp"
                 android:src="@mipmap/ic_launcher_round"
                 android:id="@+id/team_A_StartMatchActivity"
-                android:layout_gravity="top|center_horizontal" />
+                android:layout_marginStart="10dp" />
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAllCaps="false"
+                android:layout_marginLeft="10dp"
+                android:layout_below="@id/team_A_StartMatchActivity"
                 android:textAlignment="center"
-                android:layout_gravity="center_horizontal"
                 android:text="@string/select_team_a"
-                android:textStyle="bold|italic"
-                android:textColor="@color/cardview_dark_background"
                 style="@style/teamNameTextStyle"
                 android:id="@+id/selected_Team_A_Name_StartMatchActivity"
-                />
-
-                <com.google.android.material.button.MaterialButton
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:cornerRadius="0dp"
-                        android:clickable="false"
-                        android:id="@+id/team_A_Squad_StartMatchAcitivity"
-                        android:textColor="@color/FloralWhite"
-                        />
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+                android:layout_marginStart="10dp" />
 
         <com.github.florent37.shapeofview.shapes.StarView
                 android:layout_width="60dp"
@@ -86,8 +53,7 @@
             <LinearLayout
                     android:layout_width="match_parent"
                     android:background="@color/colorPrimaryDark"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent">
 
                 <TextView
                         android:layout_width="match_parent"
@@ -97,66 +63,37 @@
                         android:textStyle="italic"
                         android:text="VS"
                         android:textSize="20sp"/>
+
+
             </LinearLayout>
 
 
         </com.github.florent37.shapeofview.shapes.StarView>
 
-<com.google.android.material.card.MaterialCardView
-        android:layout_width="120dp"
-        android:layout_height="130dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        app:cardBackgroundColor="@color/WhiteSmoke"
-        android:clickable="true"
-        android:focusable="true"
-        android:checkable="true"
-        app:checkedIcon="@drawable/team_ready_check"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/team_B__Card_StartMatchActivity"
-        android:layout_marginRight="3dp"
-        android:layout_marginEnd="3dp">
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
 
         <de.hdodenhof.circleimageview.CircleImageView
-
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:id="@+id/team_B_StartMatchActivity"
                 android:src="@mipmap/ic_launcher_round"
-                android:layout_gravity="top|center_horizontal"
-
-                />
-
-
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
+                android:layout_marginEnd="15dp"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAllCaps="false"
                 android:textAlignment="center"
-                android:layout_gravity="center_horizontal"
                 android:text="@string/select_team_b"
-                android:textColor="@color/cardview_dark_background"
-                android:textStyle="bold|italic"
                 android:id="@+id/selected_Team_B_Name_StartMatchActivity"
+                android:layout_below="@id/team_B_StartMatchActivity"
+                android:layout_marginRight="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_alignParentEnd="true"
                 style="@style/teamNameTextStyle"
+                android:layout_alignParentRight="true"
                  />
-
-        <com.google.android.material.button.MaterialButton
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:cornerRadius="1dp"
-                android:clickable="false"
-                android:id="@+id/team_B_Squad_StartMatchAcitivity"
-                android:textColor="@color/GhostWhite"
-                />
-    </LinearLayout>
-
-</com.google.android.material.card.MaterialCardView>
-
     </RelativeLayout>
 
     <LinearLayout
