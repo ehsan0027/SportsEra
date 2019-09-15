@@ -13,12 +13,10 @@
         android:elevation="5dp"
         app:cardElevation="5dp"
         app:cardCornerRadius="5dp"
-        app:cardBackgroundColor="@color/cardView"
+        app:cardBackgroundColor="@color/cardview_dark_background"
         android:id="@+id/cardView_teamMemberList"
 >
-        <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
 
     <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="75dp"
@@ -66,27 +64,17 @@
         <TextView android:layout_width="55dp"
                   android:layout_height="wrap_content"
                   android:textAlignment="textEnd"
-                  android:hint="Phone :"
+                  android:hint="Role:"
                   android:textColorHint="@color/white_text"
                   android:gravity="end"/>
 
         <TextView android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:text="phone number"
+                  android:text="player Role"
                   style="@style/playerTextStyle"
-        android:id="@+id/playerPhn_teamMemberList"/>
+        android:id="@+id/playerRole_teamMemberList"/>
     </LinearLayout>
 
-
-    <TextView android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignParentRight="true"
-              android:layout_centerVertical="true"
-              android:layout_marginRight="10dp"
-              android:text="City"
-              style="@style/playerTextStyle"
-              android:id="@+id/playerCity_teamMemberList"
-              android:layout_alignParentEnd="true" android:layout_marginEnd="10dp"/>
         </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>
 

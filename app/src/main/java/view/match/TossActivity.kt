@@ -35,9 +35,9 @@ class TossActivity : AppCompatActivity() {
 
             val team = item as SelectedTeam
             val teamId=team.teamId
-Log.d("Team_ID_Adapter",teamId)
+            Log.d("Team_ID_Adapter",teamId)
             val teamName=team.name
-            startActivity<StartInning>(
+            startActivity<StartInningActivity>(
                 "batingTeamId" to teamId,
                 "batingTeamName" to teamName,
                 "newMatchId" to newMatchId,

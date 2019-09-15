@@ -101,18 +101,52 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
         Log.d("FetchMatch_ID", newMatchId)
 
         groupAdapter.clear()
-    fetchTeamMember(teamId)
+    getTeamSquad(teamId,newMatchId)
     }
 
-
-    private fun fetchTeamMember(teamId:String) {
+    private fun getTeamSquad(teamId:String,newMatchId:String) {
         Log.d("FetchTeam_ID", teamId)
         val playerRef= FirebaseDatabase.getInstance()
-        val teamsPlayerRef = FirebaseDatabase.getInstance().getReference("/TeamsPlayer/$teamId")
+        val teamsPlayerRef = FirebaseDatabase.getInstance().getReference("Match/$newMatchId/$teamId")
         teamsPlayerRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) { Log.d("FetchTeam_ID", "onCancelled") }
             override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists()) {
+                if (p0.exists())
+                {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    /**
                     Log.d("FetchTeam_ID", "team exist")
                     p0.children.forEach {
                         val playerId = it.key
@@ -136,9 +170,14 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
                         }
 
                     }
+                     **/
                 }
+
             }
-        })
+
+        }
+
+                    )
     }
 
 

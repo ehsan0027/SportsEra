@@ -19,15 +19,17 @@
             android:roundIcon="@drawable/ic_toys_black"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name="view.team.TeamsPlayerReadyToPlayMatch"></activity>
-        <activity android:name="view.match.StartInning" />
+        <activity android:name="view.team.TeamsPlayerReadyToPlayMatch" />
+        <activity android:name="view.match.StartInningActivity" />
         <activity android:name="view.match.TossActivity" />
         <activity
                 android:name="com.yalantis.ucrop.UCropActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name="view.team.TeamDetailActivity" />
-        <activity android:name="view.match.SelectTeamActivity" />
+        <activity android:name="view.match.SelectTeamActivity"
+                android:launchMode="singleTop"
+                />
         <activity android:name="view.match.StartMatchActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -44,12 +46,13 @@
                     android:resource="@xml/searchable" />
         </activity>
         <activity android:name="view.PhoneAuthActivity" />
-        <activity android:name="view.ProfilePackage.Profile" />
+        <activity android:name="view.Profile" />
         <activity android:name="view.TeamRegistration" />
         <activity android:name="view.CurrentLocationDetector" />
         <activity android:name="view.fragment.SearchPlayerToAddInTeam" />
-        <activity android:name="view.EditProfile"/>
-        <activity android:name="view.match.ui.MatchScoring"/>
+        <activity android:name="view.EditProfileActivity" />
+        <activity android:name="view.matchscoring.MatchScoringActivity" />
+        <activity android:name="view.match.SelectSquadActivity" />
     </application>
 
 </manifest>

@@ -31,7 +31,7 @@
                     app:boxStrokeColor="@android:color/holo_green_dark"
                     android:textSize="20sp"
                     android:textColorHint="@color/colorAccent"
-                    android:hint="Phone Number (+923XXXXXXXXX)"
+                    android:hint="Phone Number "
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             >
                 <com.google.android.material.textfield.TextInputEditText
@@ -42,21 +42,6 @@
                 />
 
             </com.google.android.material.textfield.TextInputLayout>
-
-            <com.dx.dxloadingbutton.lib.LoadingButton
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/sendCode_Button_PhoneAuthActivity"
-                    app:lb_btnText="Send Code"
-                    android:layout_marginStart="25dp"
-                    android:layout_marginEnd="25dp"
-                    android:layout_marginTop="10dp"
-                    app:lb_resetAfterFailed="true"
-                    app:lb_btnRippleColor="@android:color/holo_purple"
-                    app:lb_btnDisabledColor="@android:color/white"
-                    app:lb_cornerRadius="32"
-                    app:lb_rippleEnable="true"
-                    />
 
             <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -71,7 +56,6 @@
                 <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number"
                         android:id="@+id/code_textView_PhoneAuthActivity"
 
                 />
@@ -83,31 +67,49 @@
 
 
 
-
-
-            <com.dx.dxloadingbutton.lib.LoadingButton
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/verifyPhone_Button_PhoneAuthActivity"
-                    app:lb_btnText="verify"
-                    android:layout_marginStart="25dp"
-                    android:layout_marginEnd="25dp"
-                    android:layout_marginTop="10dp"
-                    app:lb_resetAfterFailed="true"
-                    app:lb_btnRippleColor="@android:color/holo_purple"
-                    app:lb_btnDisabledColor="@android:color/white"
-                    app:lb_cornerRadius="32"
-                    app:lb_rippleEnable="true"
-                    />
-
-
-
-
-
         </LinearLayout>
 
 
     </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+    <com.dx.dxloadingbutton.lib.LoadingButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/sendCode_Button_PhoneAuthActivity"
+            app:lb_btnText="Send Code"
+            android:layout_below="@id/textInput_layout"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="10dp"
+
+            app:lb_resetAfterFailed="true"
+            app:lb_btnRippleColor="@android:color/holo_purple"
+            app:lb_btnDisabledColor="@android:color/white"
+            app:lb_cornerRadius="32"
+            app:lb_rippleEnable="true"
+            />
+
+
+    <com.dx.dxloadingbutton.lib.LoadingButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/verifyPhone_Button_PhoneAuthActivity"
+             app:lb_btnText="verify"
+    android:layout_below="@id/sendCode_Button_PhoneAuthActivity"
+    android:layout_marginLeft="25dp"
+    android:layout_marginTop="10dp"
+
+            app:lb_resetAfterFailed="true"
+            app:lb_btnRippleColor="@android:color/holo_purple"
+            app:lb_btnDisabledColor="@android:color/white"
+            app:lb_cornerRadius="32"
+            app:lb_rippleEnable="true"
+    />
+
+
 
 </RelativeLayout>
 
