@@ -19,7 +19,7 @@
     <item android:id="@+id/profile" android:title="profile" />
     <item android:id="@+id/upcomingMatch" android:title="upcoming match"/>
     <item android:id="@+id/startMatch" android:title="start match"/>
-    <item android:id="@+id/editProfile" android:title="update profile"/>
+    <item android:id="@+id/myTeam" android:title="my team"/>
     <item android:id="@+id/createTeam" android:title="create team"/>
     <item android:id="@+id/signOut" android:title="sign out"/>
 </menu>

@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package view
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -22,7 +20,7 @@ import com.google.firebase.storage.StorageReference
 import com.pawegio.kandroid.progressDialog
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.player_signup.*
-import model.player.*
+import model.*
 import org.jetbrains.anko.*
 import java.io.File
 
@@ -32,6 +30,7 @@ class PlayerSignUp:AppCompatActivity(),View.OnClickListener {
     private var uAuthListener: FirebaseAuth.AuthStateListener? = null
     private var firebaseDatabase: FirebaseDatabase? = null
     private var playerDatabaseRef: DatabaseReference? = null
+    private var rootDatabaseRef: DatabaseReference? = null
     private var myStorageReference: StorageReference? = null
     private var selectedProfileUri: Uri? = null
     private var isSignInButtonClicked=false
@@ -52,7 +51,8 @@ private val SAMPLE_CROPPED_IMAGE_NAME="SampleCropImage"
         playerAuth = FirebaseAuth.getInstance()
         uAuthListener = FirebaseAuth.AuthStateListener { }
         firebaseDatabase = FirebaseDatabase.getInstance()
-        playerDatabaseRef = firebaseDatabase?.reference
+        playerDatabaseRef = firebaseDatabase!!.getReference("PlayerBasicProfile")
+        rootDatabaseRef = firebaseDatabase!!.getReference("")
         myStorageReference = FirebaseStorage.getInstance().reference
 
         phoneNumber_field.setOnFocusChangeListener { _, hasFocus ->
@@ -97,7 +97,7 @@ private val SAMPLE_CROPPED_IMAGE_NAME="SampleCropImage"
             dialog.setProgressStyle(STYLE_HORIZONTAL)
             dialog.incrementProgressBy(progress.toInt())
 
-        }.addOnSuccessListener { snapshot ->
+        }?.addOnSuccessListener { snapshot ->
             val result = snapshot.metadata!!.reference!!.downloadUrl
             result.addOnSuccessListener {
                 imageLink = it.toString()
@@ -106,7 +106,7 @@ private val SAMPLE_CROPPED_IMAGE_NAME="SampleCropImage"
                 savePlayerData(imageLink)
             }
 
-        }.addOnFailureListener { Exception ->
+        }?.addOnFailureListener { Exception ->
             toast(Exception.localizedMessage.toString())
 
         }
@@ -131,33 +131,27 @@ private val SAMPLE_CROPPED_IMAGE_NAME="SampleCropImage"
             }.show()
         }else{
 
-           val progressDialog: ProgressDialog = show(this, "PlayerBasicProfile Registration", "Registering...")
+           val progressDialog: ProgressDialog = show(this, "Player Registration", "Registering...")
             progressDialog.show()
 
             Log.d("downloadUrl_Image", downloadUrl)
 
-
             val playerId = playerAuth?.uid.toString()
-            val playerBasicProfile = PlayerBasicProfile(downloadUrl, name, phone, playerId)
-            val playerBattingStats=BattingStats()
-            val playerBowlingStats=BowlingStats()
-            val playerFieldingStats=FieldingStats()
-            val captainStats=CaptainStats()
-
-            val savePlayerWithStats=HashMap<String,Any>()
-            savePlayerWithStats["/PlayerBasicProfile/$playerId"]=playerBasicProfile
-            savePlayerWithStats["/BattingStats/$playerId"]=playerBattingStats
-            savePlayerWithStats["/BowlingStats/$playerId"]=playerBowlingStats
-            savePlayerWithStats["/FieldingStats/$playerId"]=playerFieldingStats
-            savePlayerWithStats["/CaptainStats/$playerId"]=captainStats
-
-            playerDatabaseRef?.updateChildren(savePlayerWithStats)?.addOnCompleteListener { task ->
+            val player = PlayerBasicProfile(downloadUrl,name,phone,playerId)
+            val bat_stats = BattingStats()
+            val bowl_stats = BowlingStats()
+            val field_stats = FieldingStats()
+            val captain_stats = CaptainStats()
+            rootDatabaseRef?.child("BattingStats")?.child(playerId)?.setValue(bat_stats)
+            rootDatabaseRef?.child("BowlingStats")?.child(playerId)?.setValue(bowl_stats)
+            rootDatabaseRef?.child("FieldingStats")?.child(playerId)?.setValue(field_stats)
+            rootDatabaseRef?.child("CaptainStats")?.child(playerId)?.setValue(captain_stats)
+            playerDatabaseRef?.child(playerId)?.setValue(player)?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     toast("player saved")
                     progressDialog.dismiss()
-                    startActivity<EditProfileActivity>()
-                    finish()
-                    //startActivity<Dashboard>()
+
+                    startActivity<EditProfile>()
                     //go to dashboard
                 }
             }?.addOnFailureListener { exception ->

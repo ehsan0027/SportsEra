@@ -1,20 +1,17 @@
 package model
 
-import kotlin.collections.ArrayList
+import java.util.*
 
-class Match(
-    val matchType:String,
-    val matchOver:String,
-    val matchGround:String,
-    val matchDate:String,
-    val matchTime:String,
-    val ballType:String,
-    var team_A_id:String,
-    var team_B_id:String,
-    //val team_A_Squad: ArrayList<String>? =null,
-    //val team_B_Squad: ArrayList<String>? =null,
-    val matchUpmire:String,
-    val matchId:String)
+class Match(val matchType:String,
+            val matchOver:String,
+            val matchGround:String,
+            val matchDate:String,
+            val matchTime:String,
+            val ballType:String,
+            val team_A:String,
+            val team_B:String,
+            val matchUmpire:String,
+            val matchId:String)
 {
 constructor():this("","","","","","","","","","")
 
