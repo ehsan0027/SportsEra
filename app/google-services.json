@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "675174842791",
+    "firebase_url": "https://sportsera-b7dd3.firebaseio.com",
+    "project_id": "sportsera-b7dd3",
+    "storage_bucket": "sportsera-b7dd3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675174842791:android:73fe857ba8e09b77",
+        "android_client_info": {
+          "package_name": "com.example.sportsplayer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "675174842791-qhm8tqkof488erdv8evlf861m6dd0usa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sportsplayer",
+            "certificate_hash": "984c7ff0a7fb81dc0a1366e1d66bb150713d1462"
+          }
+        },
+        {
+          "client_id": "675174842791-2teatdv1akick4pmontcrtod5t35ocnl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhoae4MdD9Y5HwF6X96yFNGnkNuiPzwPw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "675174842791-2teatdv1akick4pmontcrtod5t35ocnl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

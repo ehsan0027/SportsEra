@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <com.github.florent37.shapeofview.shapes.DiagonalView
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:background="@color/colorAccent"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:elevation="4dp"
+            app:shape_diagonal_angle="14"
+            app:shape_diagonal_direction="left"
+            app:shape_diagonal_position="bottom"
+            android:id="@+id/laouyt_diagonal">
+
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorAccent"
+                android:id="@+id/profile_layout"
+                >
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/playerName_ProfileActivity"
+                    android:textAlignment="center"
+                    android:hint="Ehsan Ul Haq"
+                    style="@style/playerName_ProfileActivity">
+
+            </TextView>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/playerRoll_ProfileActivity"
+                    android:textAlignment="center"
+                    android:hint="Ehsan Ul Haq"
+                    style="@style/playerRoll_ProfileActivity"/>
+
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        style="@style/playerImage_ProfileActivity"
+                        android:id="@+id/playerImage_ProfileActivity"
+                        android:layout_below="@id/playerRoll_ProfileActivity"/>
+
+
+        </RelativeLayout>
+
+
+
+        <!-- YOUR CONTENT -->
+
+    </com.github.florent37.shapeofview.shapes.DiagonalView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
