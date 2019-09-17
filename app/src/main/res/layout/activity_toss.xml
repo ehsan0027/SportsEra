@@ -5,7 +5,10 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="view.match.TossActivity">
+        tools:context="view.match.TossActivity"
+
+        android:clipToPadding="false"
+        android:clipChildren="false">
 
 
     <TextView
@@ -18,21 +21,142 @@
             android:textSize="20sp"
             android:id="@+id/text_labelFor_Toss"
             />
-    <androidx.recyclerview.widget.RecyclerView
+
+
+
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@id/text_labelFor_Toss"
-            android:id="@+id/recyclerView_TossActivity"
+            android:id="@+id/Toss_TossAcyivity"
+
             >
 
-    </androidx.recyclerview.widget.RecyclerView>
+
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp"
+            >
+        //Bowling Card
+        <com.google.android.material.card.MaterialCardView
+                android:layout_width="130dp"
+                android:layout_height="160dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:checkable="true"
+                app:checkedIcon="@drawable/team_ready_check"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                app:strokeColor="@color/Green"
+                app:strokeWidth="2dp"
+                app:cardElevation="5dp"
+                android:id="@+id/teamA_Card_TossActivity"
+                >
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:id="@+id/teamA_Logo_TossActivity"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="2dp"
+                    app:civ_border_color="@color/DarkOrange"
+                    app:civ_border_width="2dp"
+                    android:src="@drawable/team_ready_check"
+                    />
+
+
+            <TextView android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/teamNameTextStyle"
+                    android:textAlignment="center"
+                    android:background="@android:color/transparent"
+                    android:hint="Pakistan"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:id="@+id/teamA_FullName_TossActivity"
+                    />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+
+        //Batting Card
+        <com.google.android.material.card.MaterialCardView
+                android:layout_width="130dp"
+                android:layout_height="160dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:checkable="true"
+                app:checkedIcon="@drawable/team_ready_check"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                app:strokeColor="@color/Green"
+                app:strokeWidth="2dp"
+                app:cardElevation="5dp"
+                android:id="@+id/teamB_Card_TossActivity"
+                >
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:id="@+id/teamB_Logo_TossActivity"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginTop="2dp"
+                        android:src="@drawable/team_ready_check"
+                        app:civ_border_color="@color/DarkOrange"
+                        app:civ_border_width="2dp"
+                        />
+
+
+                <TextView android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/teamNameTextStyle"
+                        android:textAlignment="center"
+                        android:background="@android:color/transparent"
+                        android:hint="Pakistan"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:id="@+id/teamB_FullName_Logo_TossActivity"
+                        />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+
+
 
 
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/recyclerView_TossActivity"
         android:layout_marginTop="4dp"
+            app:layout_constraintTop_toBottomOf="@id/Toss_TossAcyivity"
             >
 
         <TextView
@@ -44,7 +168,9 @@
                 android:textSize="20sp"
              android:layout_alignParentTop="true"
                 />
-<LinearLayout
+
+
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -76,6 +202,8 @@ android:layout_margin="10dp"
                     android:text="Bowling"
                     android:textAllCaps="false"
                     android:textSize="20sp"
+                    android:clickable="false"
+                    android:id="@+id/bowling_TossActivity"
                     />
         </com.google.android.material.card.MaterialCardView>
 
@@ -106,11 +234,26 @@ android:layout_margin="10dp"
                 android:text="Batting"
                 android:textAllCaps="false"
                 android:textSize="20sp"
+                android:id="@+id/batting_TossActivity"
+                android:clickable="false"
                 />
     </com.google.android.material.card.MaterialCardView>
 
 
 </LinearLayout>
+
+
+        <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/battin_bowling_layout"
+                android:text="Start Inning"
+                android:textAllCaps="false"
+                android:id="@+id/startInning_TossActivity"
+                >
+
+
+        </com.google.android.material.button.MaterialButton>
     </RelativeLayout>
 
 

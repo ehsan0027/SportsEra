@@ -48,6 +48,7 @@
         <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:clickable="false"
                 android:src="@mipmap/ic_launcher_round"
                 android:id="@+id/team_A_StartMatchActivity"
                 android:layout_gravity="top|center_horizontal" />
@@ -68,9 +69,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         app:cornerRadius="0dp"
+                        app:backgroundTint="@color/DarkOrange"
                         android:clickable="false"
                         android:id="@+id/team_A_Squad_StartMatchAcitivity"
-                        android:textColor="@color/FloralWhite"
+                        android:textColor="@color/white_text"
                         />
 
             </LinearLayout>
@@ -113,7 +115,7 @@
         android:checkable="true"
         app:checkedIcon="@drawable/team_ready_check"
         android:layout_alignParentEnd="true"
-        android:id="@+id/team_B__Card_StartMatchActivity"
+        android:id="@+id/team_B_Card_StartMatchActivity"
         android:layout_marginRight="3dp"
         android:layout_marginEnd="3dp">
     <LinearLayout
@@ -128,7 +130,7 @@
                 android:id="@+id/team_B_StartMatchActivity"
                 android:src="@mipmap/ic_launcher_round"
                 android:layout_gravity="top|center_horizontal"
-
+                android:clickable="false"
                 />
 
 
@@ -151,7 +153,9 @@
                 app:cornerRadius="1dp"
                 android:clickable="false"
                 android:id="@+id/team_B_Squad_StartMatchAcitivity"
-                android:textColor="@color/GhostWhite"
+                android:textColor="@color/white_text"
+                app:backgroundTint="@color/DarkOrange"
+
                 />
     </LinearLayout>
 
@@ -184,10 +188,11 @@
 
             <RadioButton android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Limited Over"
+                    android:text="@string/limited_over"
                     android:layout_marginLeft="20dp"
                     android:layout_weight="1"
                     android:textSize="18sp"
+                    android:checked="true"
                     android:id="@+id/ondayMatch_StartMatch" />
         </RadioGroup>
 
@@ -357,9 +362,10 @@
 
             <RadioButton android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="LEATHER"
+                    android:text="@string/leather"
                     android:layout_weight="1"
                     android:textSize="18sp"
+                    android:checked="true"
                     android:id="@+id/leatherBall_StartMatch" />
         </RadioGroup>
 

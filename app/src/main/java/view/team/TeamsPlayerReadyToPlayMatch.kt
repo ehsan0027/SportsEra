@@ -25,6 +25,9 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
     val groupAdapter= GroupAdapter<ViewHolder>().apply { spanCount=3 }
     lateinit var teamId:String
     lateinit var newMatchId:String
+    lateinit var teamA_Id:String
+    lateinit var teamB_Id:String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_teams_player_ready_to_play_match)
@@ -98,86 +101,53 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
         super.onResume()
         teamId=intent.getStringExtra("teamId")
         newMatchId=intent.getStringExtra("newMatchId")
+        teamA_Id=intent.getStringExtra("teamA_Id")
+        teamB_Id=intent.getStringExtra("teamB_Id")
+
         Log.d("FetchMatch_ID", newMatchId)
 
         groupAdapter.clear()
     getTeamSquad(teamId,newMatchId)
     }
 
-    private fun getTeamSquad(teamId:String,newMatchId:String) {
-        Log.d("FetchTeam_ID", teamId)
-        val playerRef= FirebaseDatabase.getInstance()
-        val teamsPlayerRef = FirebaseDatabase.getInstance().getReference("Match/$newMatchId/$teamId")
-        teamsPlayerRef.addListenerForSingleValueEvent(object : ValueEventListener {
+
+    private fun fetchTeamSquadData(teamSquad: String, newMatchId: String)
+    {
+        val matchRef = FirebaseDatabase.getInstance().getReference("Match/$newMatchId")
+        matchRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) { Log.d("FetchTeam_ID", "onCancelled") }
             override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists())
-                {
+                if (p0.exists()) {
+                    Log.d("FetchTeam_Squad", "exist")
+                    val teamMember=p0.child("$teamSquad").value as ArrayList<*>
+                    val playerRef=FirebaseDatabase.getInstance().getReference("PlayerBasicProfile")
+                    var p_key:String
+                    teamMember.forEach {
+                        p_key=it.toString()
+                        Log.d("FetchTeam_LIST",p_key)
+                        playerRef.child(p_key).addListenerForSingleValueEvent(object : ValueEventListener{
+                            override fun onCancelled(p0: DatabaseError) { toast(p0.message) }
+                            override fun onDataChange(p0: DataSnapshot) {
+                                val playerId = p0.child("playerId").value.toString()
+                                val playerName = p0.child("name").value.toString()
+                                Log.d("FetchTeam_Data",playerName)
+                                groupAdapter.add(SelectedTeamPlayer(playerName,playerId))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    /**
-                    Log.d("FetchTeam_ID", "team exist")
-                    p0.children.forEach {
-                        val playerId = it.key
-                        Log.d("FetchPlayer_ID",playerId)
-
-                        playerRef.getReference("/PlayerBasicProfile/$playerId").also { task ->
-                            task.addListenerForSingleValueEvent(object: ValueEventListener {
-                                override fun onCancelled(p0: DatabaseError) {
-                                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                                }
-
-                                override fun onDataChange(p0: DataSnapshot) {
-                                    //get the actual player
-                                    val playerId = p0.child("playerId").value.toString()
-                                    val playerName = p0.child("name").value.toString()
-                                    groupAdapter.add(SelectedTeamPlayer(playerName,playerId!!))
-
-                                }
-
-                            })
+                            }
                         }
-
+                        )
                     }
-                     **/
+
                 }
-
             }
-
+        })
+    }
+    private fun getTeamSquad(teamId:String,newMatchId:String) {
+        Log.d("FetchTeam_ID", teamId)
+        when (teamId) {
+            teamA_Id -> { fetchTeamSquadData("team_A_Squad", newMatchId) }
+            teamB_Id->{ fetchTeamSquadData("team_B_Squad",newMatchId)}
         }
-
-                    )
     }
 
 

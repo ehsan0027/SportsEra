@@ -11,12 +11,14 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.pawegio.kandroid.startActivity
 import kotlinx.android.synthetic.main.activity_start_inning.*
 import model.player.SelectedPlayerForMatch
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.okButton
 import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.toast
+import view.matchscoring.MatchScoringActivity
 import view.team.TeamsPlayerReadyToPlayMatch
 
 @Suppress("DEPRECATION")
@@ -41,8 +43,16 @@ class StartInningActivity : AppCompatActivity() {
         //[select bowler]
     bowler_imageButton_StartInning.setOnClickListener {
         if (batingTeamIdStartInning == teamA_Id) {
-            startActivityForResult<TeamsPlayerReadyToPlayMatch>(BOWLER_RC,"teamId" to teamB_Id,"newMatchId" to newMatchId) }
-        else{startActivityForResult<TeamsPlayerReadyToPlayMatch>(BOWLER_RC,"teamId" to teamA_Id,"newMatchId" to newMatchId) }
+            startActivityForResult<TeamsPlayerReadyToPlayMatch>(BOWLER_RC,
+                "teamId" to teamB_Id,
+                "newMatchId" to newMatchId ,
+                "teamA_Id" to teamA_Id,
+                "teamB_Id" to teamB_Id) }
+        else{startActivityForResult<TeamsPlayerReadyToPlayMatch>(BOWLER_RC,
+            "teamId" to teamA_Id,
+            "newMatchId" to newMatchId,
+            "teamA_Id" to teamA_Id,
+            "teamB_Id" to teamB_Id) }
         }
 
         //start Inning
@@ -55,14 +65,18 @@ class StartInningActivity : AppCompatActivity() {
     {
         startActivityForResult<TeamsPlayerReadyToPlayMatch>(STRIKER_RC,
             "teamId" to batingTeamIdStartInning,
-            "newMatchId" to newMatchId)
+            "newMatchId" to newMatchId,
+            "teamA_Id" to teamA_Id,
+            "teamB_Id" to teamB_Id)
 
     }
     private fun selectNonStriker()
     {
         startActivityForResult<TeamsPlayerReadyToPlayMatch>(NON_STRIKER_RC,
             "teamId" to batingTeamIdStartInning,
-            "newMatchId" to newMatchId)
+            "newMatchId" to newMatchId,
+            "teamA_Id" to teamA_Id,
+            "teamB_Id" to teamB_Id)
 
     }
     private fun playerReSelection(playerName:String,requestCode:Int)
@@ -90,8 +104,8 @@ class StartInningActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         supportActionBar?.title="Start Inning"
-        batingTeamIdStartInning=intent.getStringExtra("batingTeamId")
-        val batingTeamName=intent.getStringExtra("batingTeamName")
+        batingTeamIdStartInning=intent.getStringExtra("battingTeamId")
+        val batingTeamName=intent.getStringExtra("battingTeamName")
         newMatchId=intent.getStringExtra("newMatchId")
         teamA_Id=intent.getStringExtra("teamA_Id")
         teamB_Id=intent.getStringExtra("teamB_Id")
@@ -145,6 +159,8 @@ class StartInningActivity : AppCompatActivity() {
                 if(task.isSuccessful){
                     toast("Inning Started")
                     progressDialog.dismiss()
+                    //Match Scoring Activity start
+                    startActivity<MatchScoringActivity>()
                     finish()
                 }
             }.addOnFailureListener { exception ->

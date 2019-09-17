@@ -57,12 +57,10 @@ class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionLis
 
 
         adapter.setOnItemClickListener { item, view ->
-
             val team=item as MyTeamOnDashboard
             Log.d("Dashboard_TeamName",team.teamName)
             Log.d("Dashboard_TeamCaptain",team.teamCaptain)
             Log.d("Dashboard_TeamCity",team.teamCity)
-
 
             startActivity<TeamDetailActivity>(
                 "teamId" to team.teamId,
@@ -70,9 +68,7 @@ class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionLis
                 "teamName" to team.teamName,
                 "teamCity" to team.teamCity
                 )
-
         }
-
             cropedImage.setOnClickListener {
              startActivity<MatchScoringActivity>()
             }
@@ -145,6 +141,7 @@ class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionLis
         val searchView=menuItem.actionView as SearchView
         searchView.setOnSearchClickListener {
             makeViewsInvisible(dashboard_layout)
+
             supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.fragmentContainer,searchTeamFragment)

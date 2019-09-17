@@ -21,6 +21,8 @@
     <string name="team_detail">Team Detail</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
+    <string name="limited_over">Limited Over</string>
+    <string name="leather">LEATHER</string>
 
 
     //Playing Role Spinner Items

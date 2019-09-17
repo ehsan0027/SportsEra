@@ -47,8 +47,8 @@ class StartMatchActivity : AppCompatActivity(){
 
 
         //Click Listener for Team_A and Team_B
-        team_A_StartMatchActivity.setOnClickListener { selectTeamA() }
-        team_B_StartMatchActivity.setOnClickListener { selectTeamB() }
+        team_A_Card_StartMatchActivity.setOnClickListener { selectTeamA() }
+        team_B_Card_StartMatchActivity.setOnClickListener { selectTeamB() }
 
         //RadioGroup Click Listener
         matchType_radio_group.setOnCheckedChangeListener { _, checkedId ->
@@ -66,7 +66,6 @@ class StartMatchActivity : AppCompatActivity(){
             toast("Ball Type: $ballType")
 
         }
-
         //matchTime Click and FocusChange Listener
         matchTime_StartMatch.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus)
@@ -92,7 +91,12 @@ class StartMatchActivity : AppCompatActivity(){
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        matchType=R.string.limited_over.toString()
+        ballType=R.string.leather.toString()
 
+    }
 
     private fun setMatchDate()
     {
@@ -153,7 +157,7 @@ private fun saveMatch() {
         Log.d("MatchId ",matchId)
         newMatchId=matchId
 
-        val newMatch=Match(matchType,over,ground,date,time,ballType,team_A_id,team_B_id,umpire,matchId)
+        val newMatch=Match(matchType,over,ground,date,time,ballType,team_A_id,team_B_id,team_A_Squad,team_B_Squad,umpire,matchId)
 
         Log.d("Team_A_Id ",team_A_id)
         Log.d("team_B_Id ",team_B_id)
@@ -161,14 +165,12 @@ private fun saveMatch() {
         startMatch["/Match/$matchId"]=newMatch
         startMatch["/TeamsMatch/$team_A_id/$matchId"]=true
         startMatch["/TeamsMatch/$team_B_id/$matchId"]=true
-        startMatch["/Match/$matchId/$team_A_id"]=team_A_Squad
-        startMatch["/Match/$matchId/$team_B_id"]=team_B_Squad
 
         newDatabaseReference.updateChildren(startMatch).addOnCompleteListener { task->
             if(task.isSuccessful){
+               toast("match saved")
                 Log.d("MatchSaved ",matchId)
-                toast("Match Saved")
-                //progressDialog.dismiss()
+
                 startActivity<TossActivity>("teamA_Id" to team_A_id,
                     "teamB_Id" to team_B_id,
                     "teamALogo" to team_A_Logo,
@@ -209,7 +211,7 @@ private fun checkTeamReselection(name:String, rc:Int)
                     when (rc) {
                         team_A-> {team_A_Card_StartMatchActivity.isChecked=false
                                   selectTeamA() }
-                        team_B->{team_B__Card_StartMatchActivity.isChecked=false
+                        team_B->{team_B_Card_StartMatchActivity.isChecked=false
                              selectTeamB() }
                     }
                 dialog.dismiss()
@@ -218,7 +220,7 @@ private fun checkTeamReselection(name:String, rc:Int)
     }else{
         when(rc){
             team_A->{team_A_Card_StartMatchActivity.isChecked=true}
-            team_B->{team_B__Card_StartMatchActivity.isChecked=true}
+            team_B->{team_B_Card_StartMatchActivity.isChecked=true}
         }
     }
 }

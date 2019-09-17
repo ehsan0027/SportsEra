@@ -109,6 +109,7 @@ class TeamAvailableFragment : Fragment() {
 
     //Launch SelectSquadActivity
     private fun selectSquadForMatch(teamId: String) {
+
         val intent = Intent(activity, SelectSquadActivity::class.java)
         intent.putExtra("teamId", teamId)
         this.startActivityForResult(intent, SQUAD_RC)

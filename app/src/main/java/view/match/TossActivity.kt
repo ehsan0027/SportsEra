@@ -1,100 +1,163 @@
 package view.match
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.appcompat.app.AppCompatActivity
 import com.example.sportsplayer.R
 import com.squareup.picasso.Picasso
-import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.Item
-import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_toss.*
-import kotlinx.android.synthetic.main.selected_team_listview.view.*
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.okButton
 import org.jetbrains.anko.startActivity
 
 class TossActivity : AppCompatActivity() {
 
-    val groupAdapter= GroupAdapter<ViewHolder>().apply { spanCount=2 }
-   lateinit var teamA_Id:String
-   lateinit var teamB_Id:String
-   lateinit var newMatchId:String //new match id sent from StartMatchActivity
+    lateinit var teamA_Id: String
+    lateinit var teamB_Id: String
+    lateinit var teamA_Name:String
+    lateinit var teamB_Name:String
+
+    lateinit var tossWonTeamElectedTo: String
+    lateinit var battingTeamName: String
+    lateinit var newMatchId: String //new match id sent from StartMatchActivity
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_toss)
 
-        recyclerView_TossActivity.apply {
-            layoutManager= GridLayoutManager(context,groupAdapter.spanCount).apply {
-                spanSizeLookup=groupAdapter.spanSizeLookup
+
+//start Inning Button
+        startInning_TossActivity.setOnClickListener { setTossWonTeam()}
+
+        //teamA_Card
+        teamA_Card_TossActivity.setOnClickListener { v ->
+            run {
+
+                teamA_Card_TossActivity.isChecked = !teamA_Card_TossActivity.isChecked
+               if (teamA_Card_TossActivity.isChecked)
+                  {teamB_Card_TossActivity.isChecked=false}
             }
-            adapter=groupAdapter
-        }
-//GroupiAdapter OnItemClickListener
-        groupAdapter.setOnItemClickListener { item, view ->
-
-            val team = item as SelectedTeam
-            val teamId=team.teamId
-            Log.d("Team_ID_Adapter",teamId)
-            val teamName=team.name
-            startActivity<StartInningActivity>(
-                "batingTeamId" to teamId,
-                "batingTeamName" to teamName,
-                "newMatchId" to newMatchId,
-                "teamA_Id" to teamA_Id,
-                "teamB_Id" to teamB_Id)
 
         }
+
+        //teamB_Card
+        teamB_Card_TossActivity.setOnClickListener { v ->
+            run {
+
+                teamB_Card_TossActivity.isChecked = !teamB_Card_TossActivity.isChecked
+                if (teamB_Card_TossActivity.isChecked)
+                {teamA_Card_TossActivity.isChecked=false}
+            }
+
+        }
+
+        //batting Card
+        batting_Card_TossActivity.setOnClickListener { view ->
+            run {
+                batting_Card_TossActivity.isChecked = !batting_Card_TossActivity.isChecked
+                if (batting_Card_TossActivity.isChecked) {
+                    tossWonTeamElectedTo = "Batting"
+                    bowling_Card_TossActivity.isChecked = false
+                Log.d("TOSSACTIVITY","batting")
+                }
+            }
+        }
+
+
+        bowling_Card_TossActivity.setOnClickListener { view ->
+            run {
+                bowling_Card_TossActivity.isChecked = !bowling_Card_TossActivity.isChecked
+                if (bowling_Card_TossActivity.isChecked) {
+                    tossWonTeamElectedTo = "Bowling"
+                    batting_Card_TossActivity.isChecked = false
+                    Log.d("TOSSACTIVITY","bowling")
+
+                }
+            }
+        }
+
     }
 
 
-    override fun onStart() {
-        super.onStart()
+    private fun setTossWonTeam()
+    {
+        val battingTeamId: String
+
+         when{
+            teamA_Card_TossActivity.isChecked-> {
+                battingTeamId=teamA_Id
+                battingTeamName=teamA_Name
+                Log.d("TOSSACTIVITY","teamA_selected")
+
+            startInning(battingTeamId)
+
+            }
+            teamB_Card_TossActivity.isChecked->{
+                battingTeamId=teamB_Id
+            battingTeamName=teamB_Name
+                Log.d("TOSSACTIVITY","teamB_selected")
+
+            startInning(battingTeamId)
+
+            }
+        }
+
+
+
+    }
+
+    private fun startInning(battingTeamId:String) {
+Log.d("TOSSACTIVITY","BT_id $battingTeamId")
+        if (battingTeamId.isNotEmpty()
+            && battingTeamName.isNotEmpty()
+            && newMatchId.isNotEmpty()
+            && teamA_Id.isNotEmpty()
+            && teamB_Id.isNotEmpty()
+        ) {
+            Log.d("TOSSACTIVITY","StartInningActivity")
+            startActivity<StartInningActivity>(
+                "battingTeamId" to battingTeamId,
+                "battingTeamName" to battingTeamName,
+                "newMatchId" to newMatchId,
+                "teamA_Id" to teamA_Id,
+                "teamB_Id" to teamB_Id
+            )
+        } else {
+            alert {
+                title = "No Slection"
+                message = "please selecte Toss won team (batting/bowling)"
+                setFinishOnTouchOutside(false)
+                okButton { dialog ->
+                    dialog.dismiss()
+                }
+            }.show()
+        }
 
     }
 
     override fun onResume() {
         super.onResume()
-        groupAdapter.clear()
         showTeams()
     }
 
-    fun showTeams()
-    {
+    private fun showTeams() {
 
-         teamA_Id=intent.getStringExtra("teamA_Id")
-        teamB_Id=intent.getStringExtra("teamB_Id")
-        newMatchId=intent.getStringExtra("newMatchId")
+        teamA_Id = intent.getStringExtra("teamA_Id")
+        teamB_Id = intent.getStringExtra("teamB_Id")
+        teamA_Name = intent.getStringExtra("teamAName")
+        teamB_Name = intent.getStringExtra("teamBName")
+        newMatchId = intent.getStringExtra("newMatchId")
 
-        val teamA_Logo=intent.getStringExtra("teamALogo")
-        val teamB_Logo=intent.getStringExtra("teamBLogo")
-        val teamA_Name=intent.getStringExtra("teamAName")
-        val teamB_Name=intent.getStringExtra("teamBName")
-        groupAdapter.add(SelectedTeam(teamA_Logo,teamA_Name,teamA_Id))
-        groupAdapter.add(SelectedTeam(teamB_Logo,teamB_Name,teamB_Id))
-    }
-    class SelectedTeam(val logo:String,
-                       val name:String,
-                       val teamId:String): Item<ViewHolder>()
-    {
-        override fun getLayout(): Int {
-            return R.layout.selected_team_listview
-        }
+        val teamA_Logo = intent.getStringExtra("teamALogo")
+        val teamB_Logo = intent.getStringExtra("teamBLogo")
 
-        override fun bind(viewHolder: ViewHolder, position: Int) {
-
-            Picasso.get().load(logo).into(viewHolder.itemView.teamLogo_selected_team_List)
-            viewHolder.itemView.teamFullName_selected_team_List.text=name
-
-        }
-        override fun getSpanSize(spanCount: Int, position: Int): Int {
-            return spanCount/2
-        }
-
+        Picasso.get().load(teamA_Logo).into(teamA_Logo_TossActivity)
+        Picasso.get().load(teamB_Logo).into(teamB_Logo_TossActivity)
+        teamA_FullName_TossActivity.text = teamA_Name
+        teamB_FullName_Logo_TossActivity.text = teamB_Name
 
     }
-
-
 
 
 }

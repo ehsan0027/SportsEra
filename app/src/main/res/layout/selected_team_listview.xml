@@ -6,17 +6,19 @@
         android:layout_height="160dp"
         android:layout_margin="2dp"
         android:orientation="vertical"
-
+        android:clipToPadding="false"
         >
 
     <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_height="0dp"
             android:id="@+id/cardView_selected_team_list"
             app:cardElevation="2dp"
             app:cardCornerRadius="10dp"
             android:layout_weight="0.5"
+            android:checkable="true"
+            app:checkedIcon="@drawable/team_ready_check"
+
             >
         <ImageView
                 android:layout_width="150dp"
@@ -35,7 +37,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="10dp"
-            android:background="@color/white_layout"
             >
 
         <TextView android:layout_width="match_parent"
