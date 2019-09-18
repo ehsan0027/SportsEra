@@ -1,10 +1,5 @@
 package view.team
 
-import android.app.Activity
-import android.app.Dialog
-import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -17,28 +12,25 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.pawegio.kandroid.startActivity
-import com.pawegio.kandroid.toast
+import com.pawegio.kandroid.visible
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_team_detail.*
-import kotlinx.android.synthetic.main.remove_player_popup.*
-import view.fragment.SearchPlayerToAddInTeam
-import view.team.ui.SectionPagerAdapter
-import view.team.ui.TeamMatchFragment
-import view.team.ui.TeamMemberFragment
-import view.team.ui.TeamStatsFragment
 import org.jetbrains.anko.*
+import view.match.MatchDetails
+import view.team.ui.*
 
 class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
-    TeamStatsFragment.OnFragmentInteractionListener,
+TeamStatsFragment.OnFragmentInteractionListener,
     TeamMatchFragment.OnFragmentInteractionListener,
-    TeamMemberFragment.OnFragmentInteractionListener
+    TeamMemberFragment.OnFragmentInteractionListener,
+        TeamRequestMatchFragment.OnFragmentInteractionListener
      {
 
 
 
-         override fun onFragmentInteraction(uri: Uri) {}
-
+    override fun onFragmentInteraction(uri: Uri) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
          lateinit var captainId:String
 
          override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,10 +39,26 @@ class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
 
              setViewsContent() //setViewsContent
 
-             //assign Click Listener to Button
-        addNewPlayer_TeamDetailActivity.setOnClickListener(this)
+        // Restore instance state
+        if (savedInstanceState != null) {
+            onRestoreInstanceState(savedInstanceState)
+
+
+        }
+
+        setViewsContent()
+        //assign Click Listener to Button
+        challenge_for_match.setOnClickListener(this)
+
+        val captainId =intent.getStringExtra("captainId").toString()
+        val currentPlayer = FirebaseAuth.getInstance().uid.toString()
+        if (currentPlayer!=captainId){
+            makeViewsInvisible(challenge_for_match)
+        }
+
 
     }
+
 
          private fun getUserInfo(teamId:String)
          {
@@ -73,16 +81,21 @@ class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
              })
          }
 
+
+
+
          private fun setViewsContent()
          {
              val teamId=intent.getStringExtra("teamId")
              val teamLogo=intent.getStringExtra("teamLogo")
              val teamName=intent.getStringExtra("teamName")
              val teamCity=intent.getStringExtra("teamCity")
+             val captainId =intent.getStringExtra("captainId")
+             Log.d("CaptainId",captainId)
+
              supportActionBar?.title=teamName
 
-             //[groupAdapter initialization]
-             val fragmentAdapter=SectionPagerAdapter(teamId,supportFragmentManager)
+             val fragmentAdapter=SectionPagerAdapter(teamId,captainId,supportFragmentManager)
              viewPager.adapter=fragmentAdapter
              tabLayout.setupWithViewPager(viewPager)
 
@@ -92,46 +105,31 @@ class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
 
          }
 
+         override fun onClick(view: View?) {
+             when(view?.id)
+             {
+                 R.id.challenge_for_match->{
 
-         private fun checkCaptainValidity()
+                     val teamId=intent.getStringExtra("teamId")
+                     val teamLogo=intent.getStringExtra("teamLogo")
+                     val teamName=intent.getStringExtra("teamName")
+                     val captainId =intent.getStringExtra("captainId")
+
+                     startActivity<MatchDetails>(
+                         "teamId" to teamId,
+                         "teamLogo" to teamLogo,
+                         "teamName" to teamName,
+                         "captainId" to captainId
+                     )
+                 }
+         }
+     }
+         private fun makeViewsInvisible(vararg view:View)
          {
-             val currentPlayer=FirebaseAuth.getInstance().uid
-             if(currentPlayer==captainId)
-             { val teamId=intent.getStringExtra("teamId")
-                 startActivityForResult<SearchPlayerToAddInTeam>(SEARCH_PLAYER,"teamId" to teamId)
-             }else {
-                 alert {
-                     title = "Captain Authentication"
-                     message = "Permission Denied,only Team Captain can add new player"
-                     okButton { dialog -> dialog.dismiss() }
-                 }.show()
+             for(v in view)
+             {
+                 v.visible=false
              }
-
-         }
-    override fun onClick(view: View?) {
-        when(view?.id)
-        {
-            R.id.addNewPlayer_TeamDetailActivity->{
-                checkCaptainValidity()
-            }
-
-        }
-    }
-
-         override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-             super.onActivityResult(requestCode, resultCode, data)
-
-         if(resultCode==Activity.RESULT_OK && data !=null)
-         {when(requestCode)
-         {
-             SEARCH_PLAYER->{setViewsContent()}
-
-         }
-         }
          }
 
-         companion object{
-             const val SEARCH_PLAYER=1
-         }
-
-}
+     }
