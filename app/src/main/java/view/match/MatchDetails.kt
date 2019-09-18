@@ -9,17 +9,15 @@ import android.util.Log
 import android.view.View
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentTransaction
 import com.example.sportsplayer.R
 import com.google.firebase.database.FirebaseDatabase
-import com.pawegio.kandroid.startActivityForResult
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.match_details_layout.*
-import model.Match
 import model.MatchInvite
 import org.jetbrains.anko.*
 import view.match.ui.SearchTeamForMatch
 import view.team.TeamDetailActivity
-import view.team.ui.TeamRequestMatchFragment
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -37,6 +35,8 @@ class MatchDetails : AppCompatActivity(), SearchTeamForMatch.OnFragmentInteracti
 
 
     }
+
+    private lateinit var searchTeamForMatch: SearchTeamForMatch
 
     lateinit var matchType:String
     lateinit var ballType:String
@@ -56,10 +56,12 @@ class MatchDetails : AppCompatActivity(), SearchTeamForMatch.OnFragmentInteracti
 
         databaseRef= FirebaseDatabase.getInstance()
 
+        searchTeamForMatch=SearchTeamForMatch()
+
 
         //Click Listener for Team_A and Team_B
       //  team_A_StartMatchActivity.setOnClickListener { selectTeamA() }
-        team_B_Match_Details.setOnClickListener { startActivityForResult<SearchTeamForMatch>(team_B) }
+        team_B_Match_Details.setOnClickListener { }
 
         //RadioGroup Click Listener
         matchType_radio_group.setOnCheckedChangeListener { _, checkedId ->

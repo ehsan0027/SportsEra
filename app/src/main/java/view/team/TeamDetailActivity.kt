@@ -1,16 +1,11 @@
 package view.team
 
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentTransaction
 import com.example.sportsplayer.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -19,8 +14,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.pawegio.kandroid.visible
 import com.squareup.picasso.Picasso
-import com.xwray.groupie.Item
-import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_team_detail.*
 import org.jetbrains.anko.*
 import view.match.MatchDetails

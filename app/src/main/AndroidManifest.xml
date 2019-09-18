@@ -19,10 +19,9 @@
             android:roundIcon="@drawable/ic_toys_black"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name="view.team.TeamsPlayerReadyToPlayMatch"></activity>
+        <activity android:name="view.team.TeamsPlayerReadyToPlayMatch"/>
         <activity android:name="view.match.StartInning" />
         <activity android:name="view.match.TossActivity" />
-        <activity android:name="view.match.SelectTeamActivity" />
         <activity android:name="view.match.MatchDetails" />
 
         <activity
