@@ -133,12 +133,6 @@ change_photo_Button_EditProfileActivity.setOnClickListener { selectProfileImage(
         bowlingStyle = resources.getStringArray(R.array.Bowling_Style)[0]
         gender =resources.getString(R.string.male)
 
- Log.d("Resource_String",playingRole)
- Log.d("Resource_String",battingStyle)
- Log.d("Resource_String",bowlingStyle)
- Log.d("Resource_String",gender)
-
-
     }
 
     private fun makeButtonEnableVisible(vararg view:View)

@@ -37,7 +37,6 @@ class SearchTeamForMatch : Fragment() {
     private var listener: OnFragmentInteractionListener? = null
     private var firebaseDatabase: FirebaseDatabase? = null
     lateinit var ref: DatabaseReference
-    val SQUAD_RC = 1
     lateinit var team_Id: String
     lateinit var team_name: String
     lateinit var team_logo: String
@@ -117,7 +116,6 @@ class SearchTeamForMatch : Fragment() {
     }
 
 
-
     private fun searchTeam(inputText:String)
     {
         val allTeamDatabaseRef=firebaseDatabase?.getReference("Team")
@@ -129,7 +127,7 @@ class SearchTeamForMatch : Fragment() {
             .setQuery(query!!,Team::class.java)
             .setLifecycleOwner(this)
             .build()
- var card:MaterialCardView
+        var card:MaterialCardView
 
         val firebaseRecyclerAdapter = object: FirebaseRecyclerAdapter<Team, SearchTeamViewHolder>(option)
         {
@@ -165,7 +163,6 @@ class SearchTeamForMatch : Fragment() {
                                         team_Id = model.teamId
                                         team_name = model.teamName
                                         team_logo = model.teamLogo!!
-                                        selectSquadForMatch(team_Id)
 
                                         /**
                                         val teamLogo = item.teamLogo

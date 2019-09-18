@@ -9,54 +9,68 @@ import android.util.Log
 import android.view.View
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentTransaction
 import com.example.sportsplayer.R
 import com.google.firebase.database.FirebaseDatabase
-
-import com.pawegio.kandroid.startActivityForResult
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_start_match.*
-import model.Match
+import kotlinx.android.synthetic.main.match_details_layout.*
+import model.MatchInvite
 import org.jetbrains.anko.*
+import view.match.ui.SearchTeamForMatch
+import view.team.TeamDetailActivity
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class StartMatchActivity : AppCompatActivity(){
+class MatchDetails : AppCompatActivity(), SearchTeamForMatch.OnFragmentInteractionListener {
+
+    override fun onFragmentInteraction(teamId: String,teamLogo:String,teamName:String) {
+        Log.d("onFragmentInteraction",teamId)
+        Log.d("onFragmentInteraction",teamLogo)
+
+        val intent = Intent()
+        intent.putExtra("teamId",teamId)
+        intent.putExtra("teamLogo",teamLogo)
+        intent.putExtra("teamName",teamName)
+        setResult(Activity.RESULT_OK, intent)
+
+
+    }
+
+    private lateinit var searchTeamForMatch: SearchTeamForMatch
 
     lateinit var matchType:String
     lateinit var ballType:String
-    lateinit var team_A_id:String
     lateinit var team_B_id:String
-    lateinit var team_A_Logo:String
     lateinit var team_B_Logo:String
-    lateinit var team_A_Name:String
     lateinit var team_B_Name:String
-    lateinit var newMatchId:String
+    lateinit var newRequestId:String
     var databaseRef: FirebaseDatabase?=null
-    var team_A_Squad = ArrayList<String>()//Creating an empty arraylist
-    var team_B_Squad = ArrayList<String>()//Creating an empty arraylist
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_start_match)
-        supportActionBar?.title="Start Match"
+        setContentView(R.layout.match_details_layout)
+        supportActionBar?.title="Match Details"
         //[Team id fields initialization]
-        team_A_id=""
+
         team_B_id=""
+
         databaseRef= FirebaseDatabase.getInstance()
+
+        searchTeamForMatch=SearchTeamForMatch()
 
 
         //Click Listener for Team_A and Team_B
-        team_A_Card_StartMatchActivity.setOnClickListener { selectTeamA() }
-        team_B_Card_StartMatchActivity.setOnClickListener { selectTeamB() }
+      //  team_A_StartMatchActivity.setOnClickListener { selectTeamA() }
+        team_B_Match_Details.setOnClickListener { }
 
         //RadioGroup Click Listener
         matchType_radio_group.setOnCheckedChangeListener { _, checkedId ->
             val radio: RadioButton = find(checkedId)
             matchType=radio.text.toString()
             when(matchType){
-                    "Test"->{ matchOver_StartMatch.visibility=View.GONE }
-                "Limited Over"->{matchOver_StartMatch.visibility=View.VISIBLE}
+                "Test"->{ matchOvers_Match_Details.visibility= View.GONE }
+                "Limited Over"->{matchOvers_Match_Details.visibility=View.VISIBLE}
             }
             toast("Match Type: $matchType")
         }
@@ -67,25 +81,42 @@ class StartMatchActivity : AppCompatActivity(){
 
         }
         //matchTime Click and FocusChange Listener
-        matchTime_StartMatch.setOnFocusChangeListener { _, hasFocus ->
+        matchTime_Match_Details.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus)
             { setMatchTime() }
         }
-        matchTime_StartMatch.setOnClickListener {
+        matchTime_Match_Details.setOnClickListener {
             setMatchTime()
         }
        //matchDate Click and FocusChange Listener
-        matchDate_StartMatch.setOnClickListener{
+        matchDate_Match_Details.setOnClickListener{
             setMatchDate()
         }
-    matchDate_StartMatch.setOnFocusChangeListener { _, hasFocus ->
+    matchDate_Match_Details.setOnFocusChangeListener { _, hasFocus ->
         if(hasFocus)
         {setMatchDate()}
     }
 
     //saveMatch Button Click Listener
-        saveMatch_StartMatchActivity.setOnClickListener {
-            saveMatch()
+        send_challenge_request_button_match_details.setOnClickListener {
+            sendRequestForMatch()
+        }
+
+
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+
+        val teamData=intent.extras
+        if(teamData!==null)
+        {
+            val teamId=teamData.getString("teamId")
+            val teamLogo=teamData.getString("teamLogo")
+            Log.d("Select Team Activity",teamId)
+        }else{
+            Log.d("Select Team Activity","  NULL")
         }
 
 
@@ -108,7 +139,7 @@ class StartMatchActivity : AppCompatActivity(){
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             val myFormat = "dd.MM.yyyy" // mention the format you need
             val sdf = SimpleDateFormat(myFormat, Locale.US)
-            matchDate_StartMatch.setText(sdf.format(cal.time))
+            matchDate_Match_Details.setText(sdf.format(cal.time))
         }
 
         DatePickerDialog(
@@ -126,24 +157,31 @@ class StartMatchActivity : AppCompatActivity(){
        val matchHour=0
         val matchMinute=0
         val timePicker = TimePickerDialog(this,
-            TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                matchTime_StartMatch.setText("$hourOfDay : $minute")
+            TimePickerDialog.OnTimeSetListener { _, hourOfDay, minutes ->
+                matchTime_Match_Details.setText("$hourOfDay : $minutes")
             },matchHour,matchMinute,false)
         timePicker.show()
 
     }
 
-private fun saveMatch() {
-    val over = matchOver_StartMatch.text.toString().trim()
-    val ground = matchGround_StartMatch.text.toString().trim()
-    val date = matchDate_StartMatch.text.toString().trim()
-    val time = matchTime_StartMatch.text.toString().trim()
-    val umpire=matchUmpire_StartMatch.text.toString().trim()
-    if (over.isNotEmpty()
-        && ground.isNotEmpty()
+private fun sendRequestForMatch() {
+
+    val team_A_id = intent.getStringExtra("teamId")
+    val team_A_Logo=intent.getStringExtra("teamLogo")
+    val team_A_Name=intent.getStringExtra("teamName")
+    Log.d("team",team_A_id)
+    val overs = matchOvers_Match_Details.text.toString().trim()
+    val city = matchCity_Match_Details.text.toString().trim()
+    val venue = matchVenue_Match_Details.text.toString().trim()
+    val date = matchDate_Match_Details.text.toString().trim()
+    val time = matchTime_Match_Details.text.toString().trim()
+    val squad = squad_count_Match_Details.text.toString().trim()
+    if (overs.isNotEmpty()
+        && city.isNotEmpty()
+        && venue.isNotEmpty()
         && date.isNotEmpty()
         && time.isNotEmpty()
-        && umpire.isNotEmpty()
+        && squad.isNotEmpty()
         && matchType.isNotEmpty()
         && ballType.isNotEmpty()
         && team_A_id.isNotEmpty()
@@ -153,31 +191,33 @@ private fun saveMatch() {
         val newDatabaseReference=databaseRef?.reference
 
         //generate unique id for match
-        val matchId=newDatabaseReference?.push()?.key!!
-        Log.d("MatchId ",matchId)
-        newMatchId=matchId
+        val requestId=newDatabaseReference?.push()?.key!!
+        Log.d("requestId ",requestId)
+        newRequestId=requestId
 
-        val newMatch=Match(matchType,over,ground,date,time,ballType,team_A_id,team_B_id,team_A_Squad,team_B_Squad,umpire,matchId)
+        val newMatchInvite=MatchInvite(matchType,overs,city,venue,date,time,ballType,team_A_id,team_B_id,squad,requestId)
 
         Log.d("Team_A_Id ",team_A_id)
         Log.d("team_B_Id ",team_B_id)
-        val startMatch=HashMap<String,Any>()
-        startMatch["/Match/$matchId"]=newMatch
-        startMatch["/TeamsMatch/$team_A_id/$matchId"]=true
-        startMatch["/TeamsMatch/$team_B_id/$matchId"]=true
+        val addRequest=HashMap<String,Any>()
+        addRequest["/MatchInvite/$requestId"]=newMatchInvite
+        addRequest["/TeamsMatchInvite/$team_A_id/$requestId"]=true
+        addRequest["/TeamsMatchInvite/$team_B_id/$requestId"]=true
 
-        newDatabaseReference.updateChildren(startMatch).addOnCompleteListener { task->
+
+
+        newDatabaseReference.updateChildren(addRequest).addOnCompleteListener { task->
             if(task.isSuccessful){
-               toast("match saved")
-                Log.d("MatchSaved ",matchId)
-
+                Log.d("MatchSaved ",requestId)
+                toast("Request Sent")
+                //progressDialog.dismiss()
                 startActivity<TossActivity>("teamA_Id" to team_A_id,
                     "teamB_Id" to team_B_id,
                     "teamALogo" to team_A_Logo,
                     "teamBLogo" to team_B_Logo,
                     "teamAName" to team_A_Name,
                     "teamBName" to team_B_Name,
-                    "newMatchId" to newMatchId)
+                    "newRequestId" to newRequestId)
             }
         }.addOnFailureListener { exception ->
             toast(exception.localizedMessage.toString())
@@ -185,11 +225,14 @@ private fun saveMatch() {
 
         }
 
+        startActivity<TeamDetailActivity>()
+
+
 
     } else {
         alert {
             title="Missing Field"
-            message="please fill all the provided fields"
+            message="Please Fill All Provided Fields"
             okButton {
                 dialog ->
                 dialog.dismiss()
@@ -236,48 +279,18 @@ private fun checkTeamReselection(name:String, rc:Int)
         {
             when(requestCode)
             {
-                team_A->{
-                    val team1_id = data.getStringExtra("teamId")
-                    val team1_logo = data.getStringExtra("teamLogo")
-                    val team1_Name = data.getStringExtra("teamName")
-                    val squad=data.getStringArrayListExtra("teamSquad") as ArrayList<String>
-                    /**
-                    //also valid
-                    val bundle = data.extras
-                    val squadList = bundle.getStringArrayList("teamSquad") as ArrayList<String>
-                    Log.d("ArrayList_bundle","${squadList.size}")
-                    **/
-                    if(team1_id.isNotEmpty() && team1_logo.isNotEmpty() && team1_Name.isNotEmpty() && squad.isNotEmpty())
-                    {
-                        team_A_id=team1_id
-                        team_A_Logo=team1_logo
-                        team_A_Name=team1_Name
-                        team_A_Squad=squad
-                        checkTeamReselection(team_A_Name, team_A)
-                        Picasso.get().load(team1_logo).into(team_A_StartMatchActivity)
-                        selected_Team_A_Name_StartMatchActivity.text=team1_Name
-                        team_A_Squad_StartMatchAcitivity.text="Squad (${team_A_Squad.size})"
-
-
-                    }
-                }
                 team_B->{
                     val team2_id = data.getStringExtra("teamId")
                     val team2_logo = data.getStringExtra("teamLogo")
                     val team2_Name = data.getStringExtra("teamName")
-                    val squad_B=data.getStringArrayListExtra("teamSquad") as ArrayList<String>
-
-                    Log.d("StartMatchActivity_T2",team2_id)
-                    if (team2_id.isNotEmpty() && team2_logo.isNotEmpty() && team2_Name.isNotEmpty() && squad_B.isNotEmpty())
+                    Log.d("MatchDetails_Team_B",team2_id)
+                    if (team2_id.isNotEmpty() && team2_logo.isNotEmpty() && team2_Name.isNotEmpty() )
                     {
                         team_B_id=team2_id
                         team_B_Logo=team2_logo
                         team_B_Name=team2_Name
-                     team_B_Squad=squad_B
-                        checkTeamReselection(team_B_Name,team_B)
-                        Picasso.get().load(team2_logo).into(team_B_StartMatchActivity)
-                        selected_Team_B_Name_StartMatchActivity.text=team2_Name
-                    team_B_Squad_StartMatchAcitivity.text="SQUAD (${team_B_Squad.size})"
+                        Picasso.get().load(team2_logo).into(team_B_Match_Details)
+                        selected_Team_B_Name_Match_Details.text=team2_Name
                     }
                 }
             }
@@ -290,9 +303,7 @@ private fun checkTeamReselection(name:String, rc:Int)
 
 
     companion object{
-      const  val team_A=1
-       const val team_B=2
+        const val team_B=2
     }
-
 
 }

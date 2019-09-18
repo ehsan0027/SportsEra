@@ -2,7 +2,6 @@ package view
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -11,7 +10,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
-import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.FragmentTransaction
@@ -27,15 +25,13 @@ import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
-import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.dashboard_activity.*
 import kotlinx.android.synthetic.main.my_team_list_ondashboard.view.*
 import org.jetbrains.anko.startActivity
+import view.ProfilePackage.Profile
 import view.fragment.SearchTeamFragment
-import view.match.StartMatchActivity
-import view.matchscoring.MatchScoringActivity
+import view.match.MatchDetails
 import view.team.TeamDetailActivity
-import java.io.File
 
 @Suppress("DEPRECATION")
 class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionListener
@@ -59,21 +55,22 @@ class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionLis
         adapter.setOnItemClickListener { item, view ->
             val team=item as MyTeamOnDashboard
             Log.d("Dashboard_TeamName",team.teamName)
-            Log.d("Dashboard_TeamCaptain",team.teamCaptain)
+            Log.d("Dashboard_TeamCaptain",team.captainId)
             Log.d("Dashboard_TeamCity",team.teamCity)
 
             startActivity<TeamDetailActivity>(
                 "teamId" to team.teamId,
                 "teamLogo" to team.teamLogo,
                 "teamName" to team.teamName,
-                "teamCity" to team.teamCity
+                "teamCity" to team.teamCity,
+                "captainId" to team.captainId
                 )
         }
             cropedImage.setOnClickListener {
-             startActivity<MatchScoringActivity>()
+                startActivity<Profile>()
             }
 
-            //retrieve team data from the database
+        //retrieve team data from the database
         fetchTeamFromDatabase()
 
         //get the instance of SearchTeamFragment
@@ -160,10 +157,12 @@ class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionLis
         when(item?.itemId)
         {
             R.id.profile->startActivity<Profile>()
-            R.id.upcomingMatch->{
-                makeViewsInvisible(dashboard_layout)
+            R.id.editProfile->{
+                startActivity<EditProfile>()
             }//Upcoming Matches Activity
-            R.id.startMatch->{ startActivity<StartMatchActivity>() }
+            R.id.startMatch->{
+               startActivity<MatchDetails>()
+            }
             R.id.signOut->signOutUser()
             R.id.editProfile->startActivity<EditProfileActivity>()
             R.id.createTeam->startActivity<TeamRegistration>()
@@ -246,7 +245,7 @@ val playersTeamReference=FirebaseDatabase.getInstance().getReference("/PlayersTe
                                val team_Id=p0.child("teamId").value.toString()
                                val teamLogo=p0.child("teamLogo").value.toString()
                                val teamName=p0.child("teamName").value.toString()
-                               val teamCaptain=p0.child("captainName").value.toString()
+                               val captainId=p0.child("captainId").value.toString()
                                val teamCity=p0.child("city").value.toString()
 
                                //cardView color
@@ -254,7 +253,7 @@ val playersTeamReference=FirebaseDatabase.getInstance().getReference("/PlayersTe
                                val green=(10..230).random()
                                val blue=(10..230).random()
                                val color= Color.argb(255,red,green,blue)
-                               adapter.add(MyTeamOnDashboard(teamLogo,teamName,teamCaptain,teamCity,team_Id,color))
+                               teamAdapter.add(MyTeamOnDashboard(teamLogo,teamName,captainId,teamCity,team_Id))
                            }
 
                        })
@@ -271,16 +270,14 @@ val playersTeamReference=FirebaseDatabase.getInstance().getReference("/PlayersTe
 
     class MyTeamOnDashboard(var teamLogo:String,
                             var teamName:String,
-                            var teamCaptain:String,
+                            var captainId:String,
                             var teamCity:String,
-                            var teamId:String,
-                            val color:Int):Item<ViewHolder>(){
+                            var teamId:String):Item<ViewHolder>(){
         override fun getLayout(): Int {
             return R.layout.my_team_list_ondashboard
         }
 
         override fun bind(viewHolder: ViewHolder, position: Int) {
-            viewHolder.itemView.team_logo_cardView.setCardBackgroundColor(color)
             val logo=viewHolder.itemView.findViewById<ImageView>(R.id.my_team_logo_dashboard)
             Picasso.get().load(teamLogo).into(logo)
             viewHolder.itemView.my_team_name_dashboard.text=teamName

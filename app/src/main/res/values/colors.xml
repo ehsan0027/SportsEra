@@ -11,10 +11,7 @@
     <color name="teamCardView">#dae1da</color>
     <color name="lightGray">#DEDEDE</color>
     <color name="teamNameCardView">#c3c9c3</color>
-
-
-
-
+    <color name="darkGray">#A9A9A9</color>
     <color name="White">#FFFFFF</color>
     <color name="Ivory">#FFFFF0</color>
     <color name="LightYellow">#FFFFE0</color>
