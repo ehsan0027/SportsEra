@@ -11,7 +11,7 @@
             android:layout_height="match_parent"
             app:cardCornerRadius="10dp"
             android:layout_margin="5dp"
-            app:cardBackgroundColor="@color/teamCardView"
+            app:cardBackgroundColor="@color/NavajoWhite"
             android:id="@+id/team_logo_cardView"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
