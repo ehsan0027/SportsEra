@@ -2,14 +2,12 @@ package view.match
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.example.sportsplayer.R
 import kotlinx.android.synthetic.main.activity_select_team.*
 import view.match.ui.SearchTeamForMatch
-import view.match.ui.SectionPagerAdapterMatch
 import view.match.ui.TeamAvailableFragment
 
 class SelectTeamActivity : AppCompatActivity(),
