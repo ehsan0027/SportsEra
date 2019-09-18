@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.View
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentTransaction
 import com.example.sportsplayer.R
 import com.google.firebase.database.FirebaseDatabase
 import com.squareup.picasso.Picasso
