@@ -59,7 +59,7 @@ class MatchDetails : AppCompatActivity(), SearchTeamForMatch.OnFragmentInteracti
 
         //Click Listener for Team_A and Team_B
       //  team_A_StartMatchActivity.setOnClickListener { selectTeamA() }
-        team_B_Match_Details.setOnClickListener { startActivityForResult<SelectTeamActivity>(team_B) }
+        team_B_Match_Details.setOnClickListener { startActivityForResult<SearchTeamForMatch>(team_B) }
 
         //RadioGroup Click Listener
         matchType_radio_group.setOnCheckedChangeListener { _, checkedId ->
