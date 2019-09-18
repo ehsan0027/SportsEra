@@ -21,12 +21,15 @@ import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_select_squad.*
 import kotlinx.android.synthetic.main.list_view_selected_squad.view.*
 import org.jetbrains.anko.find
+import view.PlayerDetail
 
 class SelectSquadActivity : AppCompatActivity() {
+
+
+
     val groupAdapter = GroupAdapter<ViewHolder>().apply { spanCount = 2 }
     val selectedSquad_List = ArrayList<String>()//Creating an empty arraylist
 
-    val myset = setOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

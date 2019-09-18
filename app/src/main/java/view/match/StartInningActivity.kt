@@ -18,6 +18,7 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.okButton
 import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.toast
+import view.GlobalVariable
 import view.matchscoring.MatchScoringActivity
 import view.team.TeamsPlayerReadyToPlayMatch
 
@@ -160,6 +161,8 @@ class StartInningActivity : AppCompatActivity() {
                     toast("Inning Started")
                     progressDialog.dismiss()
                     //Match Scoring Activity start
+                    GlobalVariable.currentStriker=striker
+                    GlobalVariable.currentNonStriker=nonStriker
                     startActivity<MatchScoringActivity>()
                     finish()
                 }
