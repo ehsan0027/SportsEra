@@ -1,5 +1,7 @@
 package view.fragment
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -32,6 +34,9 @@ class SearchPlayerToAddInTeam : AppCompatActivity() {
 
         firebaseDatabase = FirebaseDatabase.getInstance()
         ref = FirebaseDatabase.getInstance().reference.child("PlayerBasicProfile")
+
+        val text ="Search Player By Phone Number"
+        supportActionBar?.title=text
 
     }
 
@@ -96,6 +101,9 @@ class SearchPlayerToAddInTeam : AppCompatActivity() {
                                     ?.addOnCompleteListener { task ->
                                         if (task.isSuccessful) {
                                             toast("PlayerBasicProfile Added")
+                                            val intent = Intent()
+                                            setResult(Activity.RESULT_OK, intent)
+                                            finish()
                                             val teamRef=firebaseDatabase?.getReference("Team/$teamId")
                                             teamRef?.addListenerForSingleValueEvent(object:ValueEventListener{
                                                 override fun onCancelled(p0: DatabaseError) {
@@ -104,7 +112,7 @@ class SearchPlayerToAddInTeam : AppCompatActivity() {
 
                                                 override fun onDataChange(p0: DataSnapshot) {
 
-                                                    val team_Id=p0.child("teamId").value.toString()
+                                                    val captainId=p0.child("captainId").value.toString()
                                                     val teamLogo=p0.child("teamLogo").value.toString()
                                                     val teamName=p0.child("teamName").value.toString()
                                                     val teamCaptain=p0.child("captainName").value.toString()
@@ -116,6 +124,7 @@ class SearchPlayerToAddInTeam : AppCompatActivity() {
                                                         "teamName" to teamName,
                                                         "teamCaptain" to teamCaptain,
                                                         "teamCity" to teamCity ,
+                                                        "captainId" to captainId,
                                                         "Dashboard" to "dashboard")
 
                                                 }
