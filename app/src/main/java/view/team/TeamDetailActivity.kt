@@ -23,7 +23,7 @@ class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
 TeamStatsFragment.OnFragmentInteractionListener,
     TeamMemberFragment.OnFragmentInteractionListener,
     TeamMatchFragment.OnFragmentInteractionListener,
-        TeamRequestMatchFragment.OnFragmentInteractionListener
+    TeamRequestMatchFragment.OnFragmentInteractionListener
      {
 
 
@@ -90,7 +90,7 @@ TeamStatsFragment.OnFragmentInteractionListener,
 
              supportActionBar?.title=teamName
 
-             val fragmentAdapter=SectionPagerAdapter(teamId,captainId,supportFragmentManager)
+             val fragmentAdapter=SectionPagerAdapter(teamId,teamName,teamLogo,captainId,supportFragmentManager)
              viewPager.adapter=fragmentAdapter
              tabLayout.setupWithViewPager(viewPager)
 
@@ -107,16 +107,19 @@ TeamStatsFragment.OnFragmentInteractionListener,
                  R.id.challenge_for_match->{
 
                      val teamId=intent.getStringExtra("teamId")
-                     val teamLogo=intent.getStringExtra("teamLogo")
+                     val teamLogo=intent .getStringExtra("teamLogo")
                      val teamName=intent.getStringExtra("teamName")
                      val captainId =intent.getStringExtra("captainId")
+                     val teamCity =intent.getStringExtra("teamCity")
 
                      startActivity<MatchDetails>(
                          "teamId" to teamId,
                          "teamLogo" to teamLogo,
                          "teamName" to teamName,
-                         "captainId" to captainId
+                         "captainId" to captainId,
+                         "teamCity" to teamCity
                      )
+                     finish()
                  }
          }
      }

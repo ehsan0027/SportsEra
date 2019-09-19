@@ -4,13 +4,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
-class SectionPagerAdapter(private val teamId:String, private val captainId:String,fm:FragmentManager):FragmentPagerAdapter(fm)
+class SectionPagerAdapter(private val teamId:String, private val teamName:String, private val teamLogo:String, private val captainId:String,fm:FragmentManager):FragmentPagerAdapter(fm)
 {
     override fun getItem(position: Int): Fragment {
         return when(position)
         {
             0->{TeamMemberFragment(teamId,captainId)}
-            1->{TeamRequestMatchFragment()}
+            1->{TeamRequestMatchFragment(teamId,teamName,teamLogo,captainId)}
             2->{TeamStatsFragment()}
             3->{TeamMatchFragment()}
             else->{return TeamMatchFragment()}

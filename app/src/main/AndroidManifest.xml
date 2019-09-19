@@ -44,7 +44,7 @@
                     android:resource="@xml/searchable" />
         </activity>
         <activity android:name="view.PhoneAuthActivity" />
-        <activity android:name="view.Profile" />
+        <activity android:name="view.ProfilePackage.Profile" />
         <activity android:name="view.TeamRegistration" />
         <activity android:name="view.CurrentLocationDetector" />
         <activity android:name="view.fragment.SearchPlayerToAddInTeam" />

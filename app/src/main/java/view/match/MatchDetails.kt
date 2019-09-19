@@ -86,6 +86,7 @@ class MatchDetails : AppCompatActivity(){
     //saveMatch Button Click Listener
         send_challenge_request_button_match_details.setOnClickListener {
             sendRequestForMatch()
+            toast("Request For Challenge Sent")
         }
 
 
@@ -150,6 +151,9 @@ private fun sendRequestForMatch() {
     val team_A_id = intent.getStringExtra("teamId")
     val team_A_Logo=intent.getStringExtra("teamLogo")
     val team_A_Name=intent.getStringExtra("teamName")
+    val team_A_City = intent.getStringExtra("teamCity")
+    val team_A_Captain = intent.getStringExtra("captainId")
+
     Log.d("team",team_A_id)
     val overs = matchOvers_Match_Details.text.toString().trim()
     val city = matchCity_Match_Details.text.toString().trim()
@@ -191,13 +195,11 @@ private fun sendRequestForMatch() {
                 Log.d("MatchSaved ",requestId)
                 toast("Request Sent")
                 //progressDialog.dismiss()
-                startActivity<TossActivity>("teamA_Id" to team_A_id,
-                    "teamB_Id" to team_B_id,
-                    "teamALogo" to team_A_Logo,
-                    "teamBLogo" to team_B_Logo,
-                    "teamAName" to team_A_Name,
-                    "teamBName" to team_B_Name,
-                    "newRequestId" to newRequestId)
+                startActivity<TeamDetailActivity>("teamId" to team_A_id,
+                    "teamLogo" to team_A_Logo,
+                    "teamName" to team_A_Name,
+                    "teamCity" to team_A_City,
+                    "captainId" to team_A_Captain)
             }
         }.addOnFailureListener { exception ->
             toast(exception.localizedMessage.toString())
@@ -205,7 +207,7 @@ private fun sendRequestForMatch() {
 
         }
 
-        startActivity<TeamDetailActivity>()
+
 
 
 

@@ -1,9 +1,7 @@
 package model
 
-import java.util.*
-
 class MatchInvite(val matchType:String,
-                  val matchOver:String,
+                  val matchOvers:String,
                   val matchCity:String,
                   val matchVenue:String,
                   val matchDate:String,

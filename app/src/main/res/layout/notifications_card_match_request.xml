@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="200dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="10dp"
+        android:layout_margin="10dp"
+        app:cardBackgroundColor="@color/teamCardView"
+        android:id="@+id/notification_cardView"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/title_bar_of_match_card"
+                >
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/match_type_notification_card"
+                        android:text="Limited Overs"
+                        android:textSize="15sp"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/date_of_match"
+                        android:text="14-09-2019"
+                        android:textSize="15sp"
+                        android:paddingEnd="10dp"
+                        android:paddingStart="10dp"
+                        android:layout_toEndOf="@+id/match_type_notification_card"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/starting_time_of_match"
+                        android:text="7:00 AM"
+                        android:textSize="15sp"
+                        android:layout_toEndOf="@+id/date_of_match"
+
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="10dp"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ball_type_of_match"
+                        android:text="TapeBall"
+                        android:textSize="15sp"
+                        android:layout_alignParentEnd="true"
+
+                        />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/score_bar_of_match_card"
+                android:layout_below="@+id/title_bar_of_match_card"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal"
+                >
+
+
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    >
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/team_A_logo_notification_card"
+                        android:src="@mipmap/ic_launcher"
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="center"
+                        android:paddingStart="10dp"
+
+
+                        />
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:text="Team Name"
+                        android:id="@+id/team_A_name_notification_card"
+                        android:textAlignment="center"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textSize="15sp"
+                        android:paddingStart="10dp"
+                        android:textAllCaps="true"
+                        android:textColor="@color/Black"
+
+
+                        />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Challenges"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="15sp"
+                    android:paddingStart="10dp"
+                    android:textAllCaps="true"
+                    android:textColor="@color/Black"
+
+
+                    />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingEnd="10dp"
+                    >
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/team_B_logo_notification_card"
+                        android:src="@mipmap/ic_launcher"
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="center"
+                        android:paddingStart="10dp"
+                        />
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:text="Team Name"
+                        android:id="@+id/team_B_name_notification_card"
+                        android:textAlignment="center"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textSize="15sp"
+                        android:paddingStart="10dp"
+                        android:textAllCaps="true"
+                        android:textColor="@color/Black"
+
+
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/match_detail_notification_card"
+                android:layout_below="@+id/score_bar_of_match_card"
+
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Squad: "
+                    android:id="@+id/squad_text_notification_card"
+                    android:layout_marginStart="15dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/Black"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="11"
+                    android:id="@+id/squad_count_notification_card"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:textStyle="normal"
+                    android:textColor="@color/Black"
+                    />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Overs: "
+                    android:id="@+id/overs_text_notification_card"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/Black"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="50"
+                    android:id="@+id/overs_count_notification_card"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:textStyle="normal"
+                    android:textColor="@color/Black"
+                    />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Qadafi Stadium"
+                        android:id="@+id/venue_notification_card"
+                        android:textAlignment="center"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textSize="12sp"
+                        android:textStyle="normal"
+                        android:textColor="@color/Black"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=", "
+                        android:textAlignment="center"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textSize="12sp"
+                        android:textStyle="normal"
+                        android:textColor="@color/Black"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lahore"
+                        android:id="@+id/city_notification_card"
+                        android:textAlignment="center"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textSize="12sp"
+                        android:textStyle="normal"
+                        android:textColor="@color/Black"
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@+id/match_detail_notification_card"
+                >
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Accept"
+                    android:id="@+id/accept_match_challenge"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="10dp"
+                    style="@style/Widget.MaterialComponents.Button"
+                    />
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/change_details_match_challenge"
+                    android:text="Change Details"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/colorAccent"
+                    android:layout_marginHorizontal="10dp"
+                    style="@style/Widget.MaterialComponents.Button"
+                    />
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reject"
+                    android:id="@+id/reject_match_challenge"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/DarkGoldenrod"
+                    android:layout_marginHorizontal="10dp"
+                    style="@style/Widget.MaterialComponents.Button"
+                    />
+
+
+            </LinearLayout>
+
+
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
