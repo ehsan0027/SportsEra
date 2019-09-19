@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
 android:background="#DCDCDC">
@@ -15,8 +14,8 @@ android:background="#DCDCDC">
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:id="@+id/user_profile"
-            android:layout_marginRight="8dp"
-            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="30dp"
             android:src="@drawable/profile_pic"
@@ -27,24 +26,18 @@ android:background="#DCDCDC">
             android:layout_centerHorizontal="true"
             android:onClick="selectProfileImage"/>
 
-    <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/user_profile"
-            android:id="@+id/textInput_layout"
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="25dp"
 
-    >
-
-
-        <LinearLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/user_profile"
+                android:id="@+id/textInput_layout"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
                 android:orientation="vertical">
 
 
-            <com.google.android.material.textfield.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Full Name"
@@ -54,16 +47,16 @@ android:background="#DCDCDC">
                     android:textSize="20sp"
                     android:textColorHint="@color/textColor"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            >
-                <com.google.android.material.textfield.TextInputEditText
+                    >
+                    <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/fullnameEditText"
-                />
+                        />
 
-            </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Phone Number (+923XXXXXXXXX)"
@@ -72,20 +65,18 @@ android:background="#DCDCDC">
                     android:textColorHint="@color/textColor"
                     android:layout_marginTop="10dp"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-                <com.google.android.material.textfield.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="phone"
                         android:id="@+id/phoneNumber_field"
-                />
-            </com.google.android.material.textfield.TextInputLayout>
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
 
 
-        </LinearLayout>
+            </LinearLayout>
 
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.dx.dxloadingbutton.lib.LoadingButton
+        <com.dx.dxloadingbutton.lib.LoadingButton
             android:layout_marginHorizontal="25dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
