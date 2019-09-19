@@ -49,6 +49,7 @@
         <activity android:name="view.CurrentLocationDetector" />
         <activity android:name="view.fragment.SearchPlayerToAddInTeam" />
         <activity android:name="view.EditProfile"/>
+        <activity android:name="view.match.ui.SearchTeamForMatch" />
     </application>
 
 </manifest>

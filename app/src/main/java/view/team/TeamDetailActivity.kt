@@ -15,14 +15,14 @@ import com.google.firebase.database.ValueEventListener
 import com.pawegio.kandroid.visible
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_team_detail.*
-import org.jetbrains.anko.*
+import org.jetbrains.anko.startActivity
 import view.match.MatchDetails
 import view.team.ui.*
 
 class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
 TeamStatsFragment.OnFragmentInteractionListener,
-    TeamMatchFragment.OnFragmentInteractionListener,
     TeamMemberFragment.OnFragmentInteractionListener,
+    TeamMatchFragment.OnFragmentInteractionListener,
         TeamRequestMatchFragment.OnFragmentInteractionListener
      {
 
@@ -36,14 +36,6 @@ TeamStatsFragment.OnFragmentInteractionListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_team_detail)
-
-
-        // Restore instance state
-        if (savedInstanceState != null) {
-            onRestoreInstanceState(savedInstanceState)
-
-
-        }
 
         setViewsContent()
         //assign Click Listener to Button

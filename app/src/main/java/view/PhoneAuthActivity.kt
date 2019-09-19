@@ -11,10 +11,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.sportsplayer.R
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
-import com.google.firebase.auth.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthProvider
 import com.pawegio.kandroid.visible
 import kotlinx.android.synthetic.main.activity_phone_auth.*
-import kotlinx.android.synthetic.main.player_signup.*
 import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.toast
 import java.util.concurrent.TimeUnit

@@ -20,22 +20,8 @@ import view.team.TeamDetailActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MatchDetails : AppCompatActivity(), SearchTeamForMatch.OnFragmentInteractionListener {
+class MatchDetails : AppCompatActivity(){
 
-    override fun onFragmentInteraction(teamId: String,teamLogo:String,teamName:String) {
-        Log.d("onFragmentInteraction",teamId)
-        Log.d("onFragmentInteraction",teamLogo)
-
-        val intent = Intent()
-        intent.putExtra("teamId",teamId)
-        intent.putExtra("teamLogo",teamLogo)
-        intent.putExtra("teamName",teamName)
-        setResult(Activity.RESULT_OK, intent)
-
-
-    }
-
-    private lateinit var searchTeamForMatch: SearchTeamForMatch
 
     lateinit var matchType:String
     lateinit var ballType:String
@@ -55,12 +41,13 @@ class MatchDetails : AppCompatActivity(), SearchTeamForMatch.OnFragmentInteracti
 
         databaseRef= FirebaseDatabase.getInstance()
 
-        searchTeamForMatch=SearchTeamForMatch()
-
 
         //Click Listener for Team_A and Team_B
       //  team_A_StartMatchActivity.setOnClickListener { selectTeamA() }
-        team_B_Match_Details.setOnClickListener { }
+        team_B_Match_Details.setOnClickListener {
+
+            startActivityForResult<SearchTeamForMatch>(team_B)
+        }
 
         //RadioGroup Click Listener
         matchType_radio_group.setOnCheckedChangeListener { _, checkedId ->
@@ -188,7 +175,7 @@ private fun sendRequestForMatch() {
         Log.d("requestId ",requestId)
         newRequestId=requestId
 
-        val newMatchInvite=MatchInvite(matchType,overs,city,venue,date,time,ballType,team_A_id,team_B_id,squad,requestId)
+        val newMatchInvite=MatchInvite(matchType,overs,city,venue,date,time,ballType,squad,team_A_id,team_B_id,requestId)
 
         Log.d("Team_A_Id ",team_A_id)
         Log.d("team_B_Id ",team_B_id)
@@ -271,5 +258,6 @@ private fun sendRequestForMatch() {
     companion object{
         const val team_B=2
     }
+
 
 }

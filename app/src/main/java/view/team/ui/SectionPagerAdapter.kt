@@ -13,7 +13,7 @@ class SectionPagerAdapter(private val teamId:String, private val captainId:Strin
             1->{TeamRequestMatchFragment()}
             2->{TeamStatsFragment()}
             3->{TeamMatchFragment()}
-            else->{return TeamMemberFragment(teamId,captainId)}
+            else->{return TeamMatchFragment()}
         }
     }
 
@@ -30,7 +30,7 @@ class SectionPagerAdapter(private val teamId:String, private val captainId:Strin
             1->"Invites"
             2->"Stats"
             3->"Match"
-            else->{return "Member"}
+            else->{return "Match"}
         }
     }
 
