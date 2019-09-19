@@ -1,6 +1,8 @@
 package view.team.ui
 
+import android.app.DatePickerDialog
 import android.app.Dialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -30,6 +32,9 @@ import kotlinx.android.synthetic.main.fragment_notifications_layout.*
 import kotlinx.android.synthetic.main.notifications_card_match_request.view.*
 import model.MatchInvite
 import org.jetbrains.anko.find
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -74,7 +79,7 @@ class TeamRequestMatchFragment(
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        changeDetailPopUpDialog=Dialog(activity!!)  //Dialog Initialization
+        changeDetailPopUpDialog = Dialog(activity!!)  //Dialog Initialization
     }
 
     override fun onAttach(context: Context) {
@@ -95,6 +100,8 @@ class TeamRequestMatchFragment(
         super.onResume()
         matchInviteAdapter.clear()
         fetchNotificationsFromDatabase()
+
+
     }
 
     interface OnFragmentInteractionListener {
@@ -108,48 +115,125 @@ class TeamRequestMatchFragment(
         }
     }
 
-    private fun changeMatchInviteDetailsDialog(mdate:String, mtime:String, mvenue:String, msquad:String,movers:String,mInviteId:String)
-    {
+
+
+    private fun changeMatchInviteDetailsDialog(
+        mdate: String,
+        mtime: String,
+        mvenue: String,
+        msquad: String,
+        movers: String,
+        mInviteId: String
+    ) {
         changeDetailPopUpDialog.setCancelable(true)
-        val view=activity?.layoutInflater?.inflate(R.layout.change_match_invite_details,null)
+        val view = activity?.layoutInflater?.inflate(R.layout.change_match_invite_details, null)
         changeDetailPopUpDialog.setContentView(view)
 
-        val update=view?.find<Button>(R.id.update_button_change_details)
-        val cancel=view?.find<Button>(R.id.cancelButton_change_details)
-        val date=view?.find<EditText>(R.id.change_date_match_invite_detail)
-        val time=view?.find<EditText>(R.id.change_time_match_invite_detail)
-        val venue=view?.find<EditText>(R.id.change_venue_match_invite_detail)
-        val squad=view?.find<EditText>(R.id.change_squad_count_match_invite_detail)
-        val overs=view?.find<EditText>(R.id.change_overs_match_invite_detail)
+        val update = view?.find<Button>(R.id.update_button_change_details)
+        val cancel = view?.find<Button>(R.id.cancelButton_change_details)
+        val date = view?.find<EditText>(R.id.change_date_match_invite_detail)
+        val time = view?.find<EditText>(R.id.change_time_match_invite_detail)
+        val venue = view?.find<EditText>(R.id.change_venue_match_invite_detail)
+        val squad = view?.find<EditText>(R.id.change_squad_count_match_invite_detail)
+        val overs = view?.find<EditText>(R.id.change_overs_match_invite_detail)
         date?.setText(mdate)
         time?.setText(mtime)
         venue?.setText(mvenue)
         squad?.setText(msquad)
         overs?.setText(movers)
 
+        date?.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                val cal = Calendar.getInstance()
+                // cal.add(Calendar.YEAR)
+                val dateSetListener =
+                    DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                        cal.set(Calendar.YEAR, year)
+                        cal.set(Calendar.MONTH, monthOfYear)
+                        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                        val myFormat = "dd.MM.yyyy" // mention the format you need
+                        val sdf = SimpleDateFormat(myFormat, Locale.US)
+                        date.setText(sdf.format(cal.time))
+                    }
+
+                DatePickerDialog(
+                    activity, dateSetListener,
+                    cal.get(Calendar.YEAR),
+                    cal.get(Calendar.MONTH),
+                    cal.get(Calendar.DAY_OF_MONTH)
+                ).show()
+            }
+        }
+        time?.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                val matchHour = 0
+                val matchMinute = 0
+                val timePicker = TimePickerDialog(
+                    activity,
+                    TimePickerDialog.OnTimeSetListener { _, hourOfDay, minutes ->
+                        time.setText("$hourOfDay : $minutes")
+                    }, matchHour, matchMinute, false
+                )
+                timePicker.show()
+            }
+
+            date?.setOnClickListener {
+                val cal = Calendar.getInstance()
+                // cal.add(Calendar.YEAR)
+                val dateSetListener =
+                    DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                        cal.set(Calendar.YEAR, year)
+                        cal.set(Calendar.MONTH, monthOfYear)
+                        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                        val myFormat = "dd.MM.yyyy" // mention the format you need
+                        val sdf = SimpleDateFormat(myFormat, Locale.US)
+                        date.setText(sdf.format(cal.time))
+                    }
+
+                DatePickerDialog(
+                    activity, dateSetListener,
+                    cal.get(Calendar.YEAR),
+                    cal.get(Calendar.MONTH),
+                    cal.get(Calendar.DAY_OF_MONTH)
+                ).show()
+            }
+        }
+
+        time?.setOnClickListener {
+            val matchHour = 0
+            val matchMinute = 0
+            val timePicker = TimePickerDialog(activity,
+                TimePickerDialog.OnTimeSetListener { _, hourOfDay, minutes ->
+                    time.setText("$hourOfDay : $minutes")
+                }, matchHour, matchMinute, false
+            )
+            timePicker.show()
+        }
+
+
+
         cancel?.setOnClickListener { changeDetailPopUpDialog.dismiss() }
 
         update?.setOnClickListener {
 
-            val newDate=date?.text.toString().trim()
-            val newTime=time?.text.toString().trim()
-            val newVenue=venue?.text.toString().trim()
-            val newSquad=squad?.text.toString().trim()
-            val newOvers=overs?.text.toString().trim()
+            val newDate = date?.text.toString().trim()
+            val newTime = time?.text.toString().trim()
+            val newVenue = venue?.text.toString().trim()
+            val newSquad = squad?.text.toString().trim()
+            val newOvers = overs?.text.toString().trim()
 
             val newDatabaseReference = FirebaseDatabase.getInstance().reference
-            val updateMatchInvite = HashMap<String,Any>()
+            val updateMatchInvite = HashMap<String, Any>()
             updateMatchInvite["/MatchInvite/$mInviteId/matchDate"] = newDate
             updateMatchInvite["/MatchInvite/$mInviteId/matchTime"] = newTime
             updateMatchInvite["/MatchInvite/$mInviteId/matchVenue"] = newVenue
             updateMatchInvite["/MatchInvite/$mInviteId/squadCount"] = newSquad
             updateMatchInvite["/MatchInvite/$mInviteId/matchOvers"] = newOvers
 
-            newDatabaseReference.updateChildren(updateMatchInvite).addOnCompleteListener {
-                task ->
-                if(task.isSuccessful){
+            newDatabaseReference.updateChildren(updateMatchInvite).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
                     toast("Invite is updated")
-                    Log.d("Updated","Invitation is Updated")
+                    Log.d("Updated", "Invitation is Updated")
                     changeDetailPopUpDialog.cancel()
                 }
             }
@@ -160,17 +244,17 @@ class TeamRequestMatchFragment(
         changeDetailPopUpDialog.show()
     }
 
-    private fun updateMatchInviteDetails(position: Int){
+    private fun updateMatchInviteDetails(position: Int) {
 
-        val item=matchInviteAdapter.getItem(position) as MyTeamsNotifications
-        val date=item.matchDate
-        val time=item.matchTime
-        val venue=item.matchVenue
-        val squad=item.squadCount
-        val overs=item.matchOvers
-        val inviteId=item.matchInviteId
+        val item = matchInviteAdapter.getItem(position) as MyTeamsNotifications
+        val date = item.matchDate
+        val time = item.matchTime
+        val venue = item.matchVenue
+        val squad = item.squadCount
+        val overs = item.matchOvers
+        val inviteId = item.matchInviteId
 
-        changeMatchInviteDetailsDialog(date,time,venue,squad,overs,inviteId)
+        changeMatchInviteDetailsDialog(date, time, venue, squad, overs, inviteId)
     }
 
     private fun scheduleMatch(position: Int) {
@@ -223,8 +307,8 @@ class TeamRequestMatchFragment(
 
                 }
             }.addOnFailureListener { exception ->
-            toast(exception.localizedMessage)
-        }
+                toast(exception.localizedMessage)
+            }
 
 
     }

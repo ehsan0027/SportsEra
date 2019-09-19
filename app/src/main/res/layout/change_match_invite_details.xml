@@ -44,6 +44,9 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:inputType="date"
                 android:id="@+id/change_date_match_invite_detail"
                 />
 
@@ -63,6 +66,9 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:inputType="time"
                 android:id="@+id/change_time_match_invite_detail"
                 />
 
