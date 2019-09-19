@@ -25,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:id="@+id/title_bar_of_match_card"
+
                 >
 
                 <RelativeLayout

@@ -1,12 +1,17 @@
 package view.team.ui
 
+import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.example.sportsplayer.R
@@ -24,6 +29,7 @@ import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_notifications_layout.*
 import kotlinx.android.synthetic.main.notifications_card_match_request.view.*
 import model.MatchInvite
+import org.jetbrains.anko.find
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -37,7 +43,12 @@ private const val ARG_PARAM2 = "param2"
  * to handle interaction events.
  *
  */
-class TeamRequestMatchFragment(val teamId:String,val teamName:String,val teamLogo:String,val captainId:String) : Fragment() {
+class TeamRequestMatchFragment(
+    val teamId: String,
+    val teamName: String,
+    val teamLogo: String,
+    val captainId: String
+) : Fragment() {
     private var listener: OnFragmentInteractionListener? = null
 
     private var mAuth: FirebaseAuth? = null
@@ -45,6 +56,7 @@ class TeamRequestMatchFragment(val teamId:String,val teamName:String,val teamLog
 
 
     private val currentPlayer = FirebaseAuth.getInstance().uid.toString()
+    lateinit var changeDetailPopUpDialog: Dialog
 
 
     override fun onCreateView(
@@ -58,6 +70,11 @@ class TeamRequestMatchFragment(val teamId:String,val teamName:String,val teamLog
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        changeDetailPopUpDialog=Dialog(activity!!)  //Dialog Initialization
     }
 
     override fun onAttach(context: Context) {
@@ -78,8 +95,6 @@ class TeamRequestMatchFragment(val teamId:String,val teamName:String,val teamLog
         super.onResume()
         matchInviteAdapter.clear()
         fetchNotificationsFromDatabase()
-
-
     }
 
     interface OnFragmentInteractionListener {
@@ -91,6 +106,71 @@ class TeamRequestMatchFragment(val teamId:String,val teamName:String,val teamLog
         for (v in view) {
             v.visible = false
         }
+    }
+
+    private fun changeMatchInviteDetailsDialog(mdate:String, mtime:String, mvenue:String, msquad:String,movers:String,mInviteId:String)
+    {
+        changeDetailPopUpDialog.setCancelable(true)
+        val view=activity?.layoutInflater?.inflate(R.layout.change_match_invite_details,null)
+        changeDetailPopUpDialog.setContentView(view)
+
+        val update=view?.find<Button>(R.id.update_button_change_details)
+        val cancel=view?.find<Button>(R.id.cancelButton_change_details)
+        val date=view?.find<EditText>(R.id.change_date_match_invite_detail)
+        val time=view?.find<EditText>(R.id.change_time_match_invite_detail)
+        val venue=view?.find<EditText>(R.id.change_venue_match_invite_detail)
+        val squad=view?.find<EditText>(R.id.change_squad_count_match_invite_detail)
+        val overs=view?.find<EditText>(R.id.change_overs_match_invite_detail)
+        date?.setText(mdate)
+        time?.setText(mtime)
+        venue?.setText(mvenue)
+        squad?.setText(msquad)
+        overs?.setText(movers)
+
+        cancel?.setOnClickListener { changeDetailPopUpDialog.dismiss() }
+
+        update?.setOnClickListener {
+
+            val newDate=date?.text.toString().trim()
+            val newTime=time?.text.toString().trim()
+            val newVenue=venue?.text.toString().trim()
+            val newSquad=squad?.text.toString().trim()
+            val newOvers=overs?.text.toString().trim()
+
+            val newDatabaseReference = FirebaseDatabase.getInstance().reference
+            val updateMatchInvite = HashMap<String,Any>()
+            updateMatchInvite["/MatchInvite/$mInviteId/matchDate"] = newDate
+            updateMatchInvite["/MatchInvite/$mInviteId/matchTime"] = newTime
+            updateMatchInvite["/MatchInvite/$mInviteId/matchVenue"] = newVenue
+            updateMatchInvite["/MatchInvite/$mInviteId/squadCount"] = newSquad
+            updateMatchInvite["/MatchInvite/$mInviteId/matchOvers"] = newOvers
+
+            newDatabaseReference.updateChildren(updateMatchInvite).addOnCompleteListener {
+                task ->
+                if(task.isSuccessful){
+                    toast("Invite is updated")
+                    Log.d("Updated","Invitation is Updated")
+                    changeDetailPopUpDialog.cancel()
+                }
+            }
+
+        }
+
+        changeDetailPopUpDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        changeDetailPopUpDialog.show()
+    }
+
+    private fun updateMatchInviteDetails(position: Int){
+
+        val item=matchInviteAdapter.getItem(position) as MyTeamsNotifications
+        val date=item.matchDate
+        val time=item.matchTime
+        val venue=item.matchVenue
+        val squad=item.squadCount
+        val overs=item.matchOvers
+        val inviteId=item.matchInviteId
+
+        changeMatchInviteDetailsDialog(date,time,venue,squad,overs,inviteId)
     }
 
     private fun scheduleMatch(position: Int) {
@@ -109,30 +189,41 @@ class TeamRequestMatchFragment(val teamId:String,val teamName:String,val teamLog
         val team_B = v.team_B
 
         Log.d("Invitation_Id", invite_Id)
-        val match=MatchInvite(matchType,matchOvers,matchCity,matchVenue,matchDate,matchTime,ballType,squadCount,team_A,team_B,invite_Id)
+        val match = MatchInvite(
+            matchType,
+            matchOvers,
+            matchCity,
+            matchVenue,
+            matchDate,
+            matchTime,
+            ballType,
+            squadCount,
+            team_A,
+            team_B,
+            invite_Id
+        )
         val teamsMatchScheduleRef = FirebaseDatabase.getInstance().reference
-        teamsMatchScheduleRef.child("ScheduledMatch").child(invite_Id).setValue(match).addOnCompleteListener {
-            task->
-            if(task.isSuccessful)
-            {
-                //remove invitation
+        teamsMatchScheduleRef.child("ScheduledMatch").child(invite_Id).setValue(match)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    //remove invitation
 
-                val newDatabaseReference = FirebaseDatabase.getInstance().reference
-                val removeMatchInvite = HashMap<String, String?>()
-                removeMatchInvite["/TeamsMatchInvite/$team_A/$invite_Id"] = null
-                removeMatchInvite["/TeamsMatchInvite/$team_B/$invite_Id"] = null
-                removeMatchInvite["/MatchInvite/$invite_Id"] = null
-                newDatabaseReference.updateChildren(removeMatchInvite as Map<String, Any?>)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            toast("Match is Scheduled")
-                            Log.d("reject"," Scheduled")
+                    val newDatabaseReference = FirebaseDatabase.getInstance().reference
+                    val removeMatchInvite = HashMap<String, String?>()
+                    removeMatchInvite["/TeamsMatchInvite/$team_A/$invite_Id"] = null
+                    removeMatchInvite["/TeamsMatchInvite/$team_B/$invite_Id"] = null
+                    removeMatchInvite["/MatchInvite/$invite_Id"] = null
+                    newDatabaseReference.updateChildren(removeMatchInvite as Map<String, Any?>)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                toast("Match is Scheduled")
+                                Log.d("reject", " Scheduled")
+                            }
                         }
-                    }
 
-            }
-        }.addOnFailureListener {
-            exception ->  toast(exception.localizedMessage)
+                }
+            }.addOnFailureListener { exception ->
+            toast(exception.localizedMessage)
         }
 
 
@@ -141,10 +232,10 @@ class TeamRequestMatchFragment(val teamId:String,val teamName:String,val teamLog
     private fun rejectInvite(position: Int) {
 
 
-        val  item=matchInviteAdapter.getItem(position) as MyTeamsNotifications
-        val invitationId=item.matchInviteId
-        val team_A_Id=item.team_A
-        val team_B_Id=item.team_B
+        val item = matchInviteAdapter.getItem(position) as MyTeamsNotifications
+        val invitationId = item.matchInviteId
+        val team_A_Id = item.team_A
+        val team_B_Id = item.team_B
 
         val newDatabaseReference = FirebaseDatabase.getInstance().reference
         val removeMatchInvite = HashMap<String, String?>()
@@ -155,7 +246,7 @@ class TeamRequestMatchFragment(val teamId:String,val teamName:String,val teamLog
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     toast("Match Invitation is Removed")
-                    Log.d("reject"," Removed")
+                    Log.d("reject", " Removed")
                 }
             }
     }
@@ -288,15 +379,17 @@ class TeamRequestMatchFragment(val teamId:String,val teamName:String,val teamLog
             viewHolder.itemView.venue_notification_card.text = matchVenue
             viewHolder.itemView.city_notification_card.text = matchCity
 
-            viewHolder.itemView.reject_match_challenge.setOnClickListener {
-                ctx.rejectInvite(position)
+            viewHolder.itemView.accept_match_challenge.setOnClickListener {
+                ctx.scheduleMatch(position)
+            }
+
+            viewHolder.itemView.change_details_match_challenge.setOnClickListener {
+                ctx.updateMatchInviteDetails(position)
             }
 
 
-            viewHolder.itemView.accept_match_challenge.setOnClickListener {
-
-                ctx.scheduleMatch(position)
-
+            viewHolder.itemView.reject_match_challenge.setOnClickListener {
+                ctx.rejectInvite(position)
             }
 
 
