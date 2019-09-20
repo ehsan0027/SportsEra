@@ -93,8 +93,10 @@ class SearchPlayerToAddInTeam : AppCompatActivity() {
                             Log.d("Search_Player_playerId",playerId)
 
                             if(teamId.isNotEmpty()) {
+                                val teamSquad="TeamSquad"
                                 val updateTeamMember = HashMap<String, Any>()
                                 updateTeamMember["/TeamsPlayer/$teamId/$playerId"] = true
+                                updateTeamMember["/Team/$teamId/$teamSquad/$playerId"] = true
                                 updateTeamMember["/PlayersTeam/$playerId/$teamId"] = true
 
                                 newRef?.updateChildren(updateTeamMember)

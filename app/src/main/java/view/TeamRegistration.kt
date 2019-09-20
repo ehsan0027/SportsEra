@@ -9,20 +9,15 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
 import android.widget.RadioButton
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sportsplayer.R
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.pawegio.kandroid.progressDialog
-import com.squareup.picasso.Picasso
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.team_registration.*
 import model.Team
@@ -201,7 +196,9 @@ class TeamRegistration:AppCompatActivity(),View.OnClickListener
 
             val createTeamUpdateMember=HashMap<String,Any>()
             createTeamUpdateMember["/Team/$teamId"]=team
-            createTeamUpdateMember["/TeamsPlayer/$teamId/$captainId"]=true
+            createTeamUpdateMember["/Team/$teamId/TeamBench"]
+            createTeamUpdateMember["/Team/$teamId/TeamSquad"]
+            createTeamUpdateMember["/PlayersTeam/$captainId/$teamId"]=true
             createTeamUpdateMember["/PlayersTeam/$captainId/$teamId"]=true
 
             newDatabaseReference.updateChildren(createTeamUpdateMember).addOnCompleteListener { task->

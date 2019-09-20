@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="3dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        app:cardElevation="5dp"
+        app:cardCornerRadius="5dp"
+
+        app:cardBackgroundColor="@color/cardView"
+        android:id="@+id/cardView_squad_card"
+        >
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_margin="5dp"
+                android:src="@mipmap/ic_launcher"
+                android:layout_alignParentStart="true"
+                android:id="@+id/playerImage_squad_card_add"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_toEndOf="@id/playerImage_squad_card_add"
+                android:layout_marginTop="15dp"
+                android:layout_toStartOf="@+id/add_player_to_squad"
+                android:id="@+id/playerName_labelLayout">
+
+
+                <TextView android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/playerName_squad_card_add"
+                    style="@style/playerTextStyle"
+                    android:textColor="@color/Black"
+                    android:text="player Name"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/playerName_labelLayout"
+                android:layout_marginTop="8dp"
+                android:layout_toStartOf="@+id/add_player_to_squad"
+                android:layout_toEndOf="@id/playerImage_squad_card_add"
+                >
+
+
+                <TextView android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Player Role"
+                    android:textColor="@color/Black"
+                    style="@style/playerTextStyle"
+                    android:id="@+id/playerRole_squad_card_add"/>
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Remove"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="10dp"
+                android:id="@+id/remove_player_from_squad"
+                >
+
+            </com.google.android.material.button.MaterialButton>
+
+
+
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</RelativeLayout>

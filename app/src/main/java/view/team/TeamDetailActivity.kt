@@ -23,7 +23,8 @@ class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
 TeamStatsFragment.OnFragmentInteractionListener,
     TeamMemberFragment.OnFragmentInteractionListener,
     TeamMatchFragment.OnFragmentInteractionListener,
-    TeamRequestMatchFragment.OnFragmentInteractionListener
+    TeamRequestMatchFragment.OnFragmentInteractionListener,
+    TeamSquadFragment.OnFragmentInteractionListener
      {
 
 

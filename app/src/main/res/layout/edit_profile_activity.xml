@@ -64,20 +64,17 @@
 
         </RelativeLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/changePhoto_Layout"
-                android:id="@+id/textInput_layout"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                >
+
 
 
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                android:layout_below="@id/changePhoto_Layout"
+                android:id="@+id/textInput_layout"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:orientation="vertical">
 
 
                 <RadioGroup
@@ -265,8 +262,6 @@
 
 
             </LinearLayout>
-
-        </com.google.android.material.textfield.TextInputLayout>
 
 
     </RelativeLayout>

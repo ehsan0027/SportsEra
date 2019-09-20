@@ -11,14 +11,15 @@ class SectionPagerAdapter(private val teamId:String, private val teamName:String
         {
             0->{TeamMemberFragment(teamId,captainId)}
             1->{TeamRequestMatchFragment(teamId,teamName,teamLogo,captainId)}
-            2->{TeamStatsFragment()}
-            3->{TeamMatchFragment()}
+            2->{TeamSquadFragment(teamId)}
+            3->{TeamStatsFragment()}
+            4->{TeamMatchFragment()}
             else->{return TeamMatchFragment()}
         }
     }
 
     override fun getCount(): Int {
-        return 4
+        return 5
 
     }
 
@@ -28,8 +29,9 @@ class SectionPagerAdapter(private val teamId:String, private val teamName:String
         {
             0->"Member"
             1->"Invites"
-            2->"Stats"
-            3->"Match"
+            2->"Squad"
+            3->"Stats"
+            4->"Match"
             else->{return "Match"}
         }
     }

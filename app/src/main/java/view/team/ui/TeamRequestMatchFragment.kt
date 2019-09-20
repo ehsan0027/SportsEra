@@ -499,10 +499,6 @@ class TeamRequestMatchFragment(
             ) }
 
 
-
-
-
-
             viewHolder.itemView.notification_cardView
             viewHolder.itemView.match_type_notification_card.text = matchType
             viewHolder.itemView.ball_type_of_match.text = ballType
