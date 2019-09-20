@@ -118,7 +118,9 @@ class TeamRequestMatchFragment(
         mvenue: String,
         msquad: String,
         movers: String,
-        mInviteId: String
+        mInviteId: String,
+        mSender: String,
+        mReciever:String
     ) {
         changeDetailPopUpDialog.setCancelable(true)
         val view = activity?.layoutInflater?.inflate(R.layout.change_match_invite_details, null)
@@ -217,6 +219,11 @@ class TeamRequestMatchFragment(
             val newSquad = squad?.text.toString().trim()
             val newOvers = overs?.text.toString().trim()
 
+            Log.d("Sender",mSender)
+            Log.d("Sender",mReciever)
+            Log.d("Sender",mInviteId)
+
+
             val newDatabaseReference = FirebaseDatabase.getInstance().reference
             val updateMatchInvite = HashMap<String, Any>()
             updateMatchInvite["/MatchInvite/$mInviteId/matchDate"] = newDate
@@ -224,6 +231,9 @@ class TeamRequestMatchFragment(
             updateMatchInvite["/MatchInvite/$mInviteId/matchVenue"] = newVenue
             updateMatchInvite["/MatchInvite/$mInviteId/squadCount"] = newSquad
             updateMatchInvite["/MatchInvite/$mInviteId/matchOvers"] = newOvers
+            if (mReciever==currentPlayer){
+            updateMatchInvite["/MatchInvite/$mInviteId/sender"] = mReciever
+            updateMatchInvite["/MatchInvite/$mInviteId/reciever"] = mSender}
 
             newDatabaseReference.updateChildren(updateMatchInvite).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -248,8 +258,11 @@ class TeamRequestMatchFragment(
         val squad = item.squadCount
         val overs = item.matchOvers
         val inviteId = item.matchInviteId
+        val sender = item.sender
+        val receiver = item.receiver
+        Log.d("Update",inviteId)
 
-        changeMatchInviteDetailsDialog(date, time, venue, squad, overs, inviteId)
+        changeMatchInviteDetailsDialog(date, time, venue, squad, overs, inviteId,sender,receiver)
     }
 
     private fun scheduleMatch(position: Int) {
@@ -377,7 +390,7 @@ class TeamRequestMatchFragment(
                                                             val match_date = p0.child("matchDate")
                                                                 .value.toString()
                                                             val match_Invite_Id =
-                                                                p0.child("matchId").value.toString()
+                                                                p0.child("matchInvite").value.toString()
                                                             val match_overs = p0.child("matchOvers")
                                                                 .value.toString()
                                                             val match_time = p0.child("matchTime")
@@ -396,6 +409,7 @@ class TeamRequestMatchFragment(
                                                                 p0.child("sender").value.toString()
                                                             val reciever_Captain =
                                                                 p0.child("reciever").value.toString()
+                                                            Log.d("Update2",match_Invite_Id)
 
 
                                                             matchInviteAdapter.add(
@@ -476,6 +490,13 @@ class TeamRequestMatchFragment(
 
             if(ctx.currentPlayer==sender)
             { makeViewsInvisible(viewHolder.itemView.accept_match_challenge) }
+
+            else if(ctx.currentPlayer!=sender && ctx.currentPlayer!=receiver)
+            { makeViewsInvisible(
+                viewHolder.itemView.accept_match_challenge,
+                viewHolder.itemView.change_details_match_challenge,
+                viewHolder.itemView.reject_match_challenge
+            ) }
 
 
 
