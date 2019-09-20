@@ -172,7 +172,7 @@ class TeamMemberFragment(val teamId: String,val captainId:String) : Fragment(),V
         val removePlayer=HashMap<String,String?>()
         removePlayer["/TeamsPlayer/$teamId/$p_Id"]=null
         removePlayer["/PlayersTeam/$p_Id/$teamId"]=null
-        newDatabaseReference.updateChildren(removePlayer as Map<String, Any>).addOnCompleteListener {
+        newDatabaseReference.updateChildren(removePlayer as Map<String, Any?>).addOnCompleteListener {
 
                 task ->
             if(task.isSuccessful)

@@ -10,7 +10,10 @@ import android.view.View
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sportsplayer.R
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.match_details_layout.*
 import model.MatchInvite
@@ -29,6 +32,7 @@ class MatchDetails : AppCompatActivity(){
     lateinit var team_B_Logo:String
     lateinit var team_B_Name:String
     lateinit var newRequestId:String
+    lateinit var captain_B_Id:String
     var databaseRef: FirebaseDatabase?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -146,6 +150,22 @@ class MatchDetails : AppCompatActivity(){
 
     }
 
+    private fun teamBcaptain(teamId:String){
+        val newDatabaseReference=FirebaseDatabase.getInstance().reference
+        newDatabaseReference.child("Team").child(teamId).addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.exists()){
+                     captain_B_Id= p0.child("captainId").value.toString()
+                }
+            }
+
+        })
+    }
+
 private fun sendRequestForMatch() {
 
     val team_A_id = intent.getStringExtra("teamId")
@@ -171,6 +191,7 @@ private fun sendRequestForMatch() {
         && ballType.isNotEmpty()
         && team_A_id.isNotEmpty()
         && team_B_id.isNotEmpty()
+        && captain_B_Id.isNotEmpty()
     ) {
         val newDatabaseReference=databaseRef?.reference
 
@@ -179,7 +200,7 @@ private fun sendRequestForMatch() {
         Log.d("requestId ",requestId)
         newRequestId=requestId
 
-        val newMatchInvite=MatchInvite(matchType,overs,city,venue,date,time,ballType,squad,team_A_id,team_B_id,requestId)
+        val newMatchInvite=MatchInvite(matchType,overs,city,venue,date,time,ballType,squad,team_A_id,team_B_id,requestId,team_A_Captain,captain_B_Id)
 
         Log.d("Team_A_Id ",team_A_id)
         Log.d("team_B_Id ",team_B_id)
@@ -244,6 +265,9 @@ private fun sendRequestForMatch() {
                         team_B_id=team2_id
                         team_B_Logo=team2_logo
                         team_B_Name=team2_Name
+
+                        teamBcaptain(team_B_id)
+
                         Picasso.get().load(team2_logo).into(team_B_Match_Details)
                         selected_Team_B_Name_Match_Details.text=team2_Name
                     }

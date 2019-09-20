@@ -109,11 +109,6 @@ class TeamRequestMatchFragment(
         fun onFragmentInteraction(uri: Uri)
     }
 
-    private fun makeViewsInvisible(vararg view: View) {
-        for (v in view) {
-            v.visible = false
-        }
-    }
 
 
 
@@ -271,6 +266,8 @@ class TeamRequestMatchFragment(
         val matchVenue = v.matchVenue
         val team_A = v.team_A
         val team_B = v.team_B
+        val sender = v.sender
+        val receiver = v.receiver
 
         Log.d("Invitation_Id", invite_Id)
         val match = MatchInvite(
@@ -284,7 +281,9 @@ class TeamRequestMatchFragment(
             squadCount,
             team_A,
             team_B,
-            invite_Id
+            invite_Id,
+            sender,
+            receiver
         )
         val teamsMatchScheduleRef = FirebaseDatabase.getInstance().reference
         teamsMatchScheduleRef.child("ScheduledMatch").child(invite_Id).setValue(match)
@@ -393,7 +392,10 @@ class TeamRequestMatchFragment(
                                                                 p0.child("team_A").value.toString()
                                                             val team_B_Id =
                                                                 p0.child("team_B").value.toString()
-
+                                                            val sender_Capatain =
+                                                                p0.child("sender").value.toString()
+                                                            val reciever_Captain =
+                                                                p0.child("reciever").value.toString()
 
 
                                                             matchInviteAdapter.add(
@@ -409,6 +411,8 @@ class TeamRequestMatchFragment(
                                                                     team_A_Id,
                                                                     team_B_Id,
                                                                     match_Invite_Id,
+                                                                    sender_Capatain,
+                                                                    reciever_Captain,
                                                                     this@TeamRequestMatchFragment
                                                                 )
                                                             )
@@ -445,14 +449,39 @@ class TeamRequestMatchFragment(
         val team_A: String,
         val team_B: String,
         val matchInviteId: String,
+        val sender:String,
+        val receiver: String,
         val ctx: TeamRequestMatchFragment
     ) : Item<ViewHolder>() {
         override fun getLayout(): Int {
             return R.layout.notifications_card_match_request
         }
 
+        private fun makeViewsvisible(vararg view: View) {
+            for (v in view) {
+                v.visible = true
+            }
+        }
+
+        private fun makeViewsInvisible(vararg view: View) {
+            for (v in view) {
+                v.visible = false
+            }
+        }
+
+
+
 
         override fun bind(viewHolder: ViewHolder, position: Int) {
+
+            if(ctx.currentPlayer==sender)
+            { makeViewsInvisible(viewHolder.itemView.accept_match_challenge) }
+
+
+
+
+
+
             viewHolder.itemView.notification_cardView
             viewHolder.itemView.match_type_notification_card.text = matchType
             viewHolder.itemView.ball_type_of_match.text = ballType
