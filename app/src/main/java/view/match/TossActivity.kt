@@ -48,11 +48,6 @@ Log.d("Team_ID_Adapter",teamId)
     }
 
 
-    override fun onStart() {
-        super.onStart()
-
-    }
-
     override fun onResume() {
         super.onResume()
         groupAdapter.clear()

@@ -3,12 +3,12 @@ package view.team.ui
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.fragment.app.Fragment
 import com.example.sportsplayer.R
+import kotlinx.android.synthetic.main.fragment_team_match.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -52,6 +52,19 @@ class TeamMatchFragment : Fragment() {
         listener = null
     }
 
+    override fun onResume() {
+        super.onResume()
+        setViewsContent()
+    }
+
+
+    private fun setViewsContent() {
+        val fragmentAdapter = TeamMatchSectionPagerAdapter(childFragmentManager)
+        viewPager_team_matches.adapter = fragmentAdapter
+        tabLayout_team_matches.setupWithViewPager(viewPager_team_matches)
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -69,3 +82,4 @@ class TeamMatchFragment : Fragment() {
     }
 
 }
+

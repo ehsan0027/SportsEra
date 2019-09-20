@@ -304,10 +304,6 @@ fun makeLayoutVisible()
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
     private fun signOutUser() {
         mAuth?.signOut()
         startActivity<MainActivity>()

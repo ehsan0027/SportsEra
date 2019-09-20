@@ -159,7 +159,7 @@ class TeamRegistration:AppCompatActivity(),View.OnClickListener
                 saveTeam(imageLink)
             }
 
-        }?.addOnFailureListener { Exception ->
+        }.addOnFailureListener { Exception ->
             toast(Exception.localizedMessage.toString())
 
         }
@@ -196,13 +196,21 @@ class TeamRegistration:AppCompatActivity(),View.OnClickListener
 
             val createTeamUpdateMember=HashMap<String,Any>()
             createTeamUpdateMember["/Team/$teamId"]=team
-            createTeamUpdateMember["/Team/$teamId/TeamBench"]
-            createTeamUpdateMember["/Team/$teamId/TeamSquad"]
             createTeamUpdateMember["/PlayersTeam/$captainId/$teamId"]=true
-            createTeamUpdateMember["/PlayersTeam/$captainId/$teamId"]=true
+            createTeamUpdateMember["/TeamsPlayer/$teamId/$captainId"]=true
 
             newDatabaseReference.updateChildren(createTeamUpdateMember).addOnCompleteListener { task->
                 if(task.isSuccessful){
+
+                    val ref=FirebaseDatabase.getInstance().reference
+                    val setSquad=HashMap<String,Any>()
+                    setSquad["/Team/$teamId/TeamSquad/$captainId"]=true
+                    ref.updateChildren(setSquad).addOnCompleteListener {
+                        task ->
+                        if (task.isSuccessful){
+                            toast("Squad is Created")
+                        }
+                    }
 
                     toast("Team created")
                     progressDialog.dismiss()

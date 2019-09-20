@@ -128,7 +128,7 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
                                     //get the actual player
                                     val playerId = p0.child("playerId").value.toString()
                                     val playerName = p0.child("name").value.toString()
-                                    groupAdapter.add(SelectedTeamPlayer(playerName,playerId!!))
+                                    groupAdapter.add(SelectedTeamPlayer(playerName, playerId))
 
                                 }
 

@@ -84,10 +84,6 @@ class SearchTeamFragment : Fragment() {
     }
 
 
-    override fun onResume() {
-
-        super.onResume()
-    }
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnFragmentInteractionListener) {

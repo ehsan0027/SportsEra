@@ -106,7 +106,7 @@ private val SAMPLE_CROPPED_IMAGE_NAME="SampleCropImage"
                 savePlayerData(imageLink)
             }
 
-        }?.addOnFailureListener { Exception ->
+        }.addOnFailureListener { Exception ->
             toast(Exception.localizedMessage.toString())
 
         }

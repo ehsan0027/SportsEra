@@ -58,16 +58,6 @@ class Profile:AppCompatActivity(), PlayerFragmentStats.OnFragmentInteractionList
     }
 
 
-    override fun onStart() {
-        super.onStart()
-
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
     private fun setViewsContent()
     {
         val fragmentAdapter= ProfileSectionPagerAdapter(supportFragmentManager)
@@ -105,7 +95,7 @@ private fun getProfileData()
                             .fit() // use fit() and centerInside() for making it memory efficient.
                             .centerInside()
                             .into(playerImage_ProfileActivity)
-                        playerName_ProfileActivity.setText(name)
+                        playerName_ProfileActivity.text = name
 
                         progressDialog.dismiss()
 

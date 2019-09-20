@@ -67,6 +67,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="textPersonName"
                         android:ems="10"
+                    android:maxLength="5"
                         android:id="@+id/team_short_name"
                 />
             </com.google.android.material.textfield.TextInputLayout>

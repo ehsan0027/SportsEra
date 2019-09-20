@@ -1,4 +1,5 @@
-package view.ProfilePackage.ProfileFragments
+package view.team.ui.TeamMatchTabs
+
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -7,12 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.sportsplayer.R
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.fragment_general_info_profile.*
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.ViewHolder
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,23 +23,20 @@ private const val ARG_PARAM2 = "param2"
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [PlayerFragmentGeneral.OnFragmentInteractionListener] interface
+ * [TeamUpcomingMatchFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
  *
  */
-
-class PlayerFragmentGeneral:Fragment() {
-
+class TeamUpcomingMatchFragment : Fragment() {
     private var listener: OnFragmentInteractionListener? = null
-    var mAuth: FirebaseAuth?=null
-    var firebaseDatabase: FirebaseDatabase?=null
+    val upcomingMatchAdapter = GroupAdapter<ViewHolder>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_general_info_profile, container, false)
+        return inflater.inflate(R.layout.fragment_team_upcoming_match_recycler_view, container, false)
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -60,12 +58,6 @@ class PlayerFragmentGeneral:Fragment() {
         listener = null
     }
 
-    override fun onResume() {
-        super.onResume()
-        mAuth= FirebaseAuth.getInstance()
-        getProfileBasicData()
-    }
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -82,42 +74,41 @@ class PlayerFragmentGeneral:Fragment() {
         fun onFragmentInteraction(uri: Uri)
     }
 
-    private fun getProfileBasicData()
-    {
+    private fun fetchUpcomingMatchDetails(teamId:String){
+        val teamUpcomingMatch = "TeamUpcomingMatch"
+        val newDatabaseRef = FirebaseDatabase.getInstance().getReference("Team/$teamId/$teamUpcomingMatch")
+        newDatabaseRef.addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
 
-        val uid = mAuth?.uid
+            }
 
-        if(uid!=null)
-        {
-            val playerRef= FirebaseDatabase.getInstance().getReference("/PlayerBasicProfile/$uid") //by using firebase database instance we get reference to the specific Node
-            playerRef.addListenerForSingleValueEvent(object: ValueEventListener {
-                override fun onCancelled(p0: DatabaseError) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-                override fun onDataChange(p0: DataSnapshot) {
-                    if(p0.exists())
-                    {
-                        val gender=p0.child("gender").value.toString()
-                        val dateOfBirth=p0.child("dateOfBirth").value.toString()
-                        val phoneNo=p0.child("phoneNumber").value.toString()
-                        val playing_role=p0.child("playing_role").value.toString()
-                        val batting_style=p0.child("batting_style").value.toString()
-                        val bowling_style=p0.child("bowling_style").value.toString()
+            override fun onDataChange(p0: DataSnapshot) {
+                if(p0.exists()){
+val scheduleMatchRef=FirebaseDatabase.getInstance().getReference("ScheduledMatch")
+                    p0.children.forEach {
 
+                        val upcomingMatchId=it.key
+                        scheduleMatchRef.addListenerForSingleValueEvent(object :ValueEventListener{
+                            override fun onCancelled(p0: DatabaseError) {
+                            }
 
-                        gender_general_fragment.text = gender
-                        dob_general_fragment.text = dateOfBirth
-                        mobile_no_general_fragment.text = phoneNo
-                        playing_role_general_fragment.text = playing_role
-                        batting_style_general_fragment.text = batting_style
-                        bowling_style_general_fragment.text = bowling_style
+                            override fun onDataChange(p0: DataSnapshot) {
+                                val match_type = p0.child("matchType")
+                                val match_date = p0.child("matchDate")
+                                val match_time= p0.child("matchTime")
+                                val match_venue = p0.child("matchVenue")
+                                val match_city= p0.child("matchCity")
+                            }
+                        })
 
                     }
                 }
             }
-            )
-        }
+        })
+
     }
+
+    class UpcomingMatchViewHolder
 
 
 }

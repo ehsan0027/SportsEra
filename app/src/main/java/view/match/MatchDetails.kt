@@ -200,7 +200,7 @@ private fun sendRequestForMatch() {
         Log.d("requestId ",requestId)
         newRequestId=requestId
 
-        val newMatchInvite=MatchInvite(matchType,overs,city,venue,date,time,ballType,squad,team_A_id,team_B_id,requestId,team_A_Captain,captain_B_Id)
+        val newMatchInvite=MatchInvite(matchType,overs,city,venue,date,time,ballType,squad,team_A_id,team_B_id,team_A_Name,team_B_Name,team_A_Logo,team_B_Logo,requestId,team_A_Captain,captain_B_Id)
 
         Log.d("Team_A_Id ",team_A_id)
         Log.d("team_B_Id ",team_B_id)

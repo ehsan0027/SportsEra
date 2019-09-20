@@ -18,21 +18,24 @@ import kotlinx.android.synthetic.main.activity_team_detail.*
 import org.jetbrains.anko.startActivity
 import view.match.MatchDetails
 import view.team.ui.*
+import view.team.ui.TeamMatchTabs.TeamPreviousMatchesFragment
+import view.team.ui.TeamMatchTabs.TeamUpcomingMatchFragment
 
 class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
-TeamStatsFragment.OnFragmentInteractionListener,
+    TeamStatsFragment.OnFragmentInteractionListener,
     TeamMemberFragment.OnFragmentInteractionListener,
     TeamMatchFragment.OnFragmentInteractionListener,
     TeamRequestMatchFragment.OnFragmentInteractionListener,
-    TeamSquadFragment.OnFragmentInteractionListener
-     {
-
+    TeamSquadFragment.OnFragmentInteractionListener,
+    TeamUpcomingMatchFragment.OnFragmentInteractionListener,
+    TeamPreviousMatchesFragment.OnFragmentInteractionListener {
 
 
     override fun onFragmentInteraction(uri: Uri) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-         lateinit var captainId:String
+
+    lateinit var captainId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,9 +45,9 @@ TeamStatsFragment.OnFragmentInteractionListener,
         //assign Click Listener to Button
         challenge_for_match.setOnClickListener(this)
 
-        val captainId =intent.getStringExtra("captainId").toString()
+        val captainId = intent.getStringExtra("captainId").toString()
         val currentPlayer = FirebaseAuth.getInstance().uid.toString()
-        if (currentPlayer!=captainId){
+        if (currentPlayer != captainId) {
             makeViewsInvisible(challenge_for_match)
         }
 
@@ -52,84 +55,81 @@ TeamStatsFragment.OnFragmentInteractionListener,
     }
 
 
-         private fun getUserInfo(teamId:String)
-         {
-             val teamRef= FirebaseDatabase.getInstance().getReference("/Team/$teamId")
-             teamRef.addListenerForSingleValueEvent(object: ValueEventListener {
-                 override fun onCancelled(p0: DatabaseError) {
-                     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                 }
-                 override fun onDataChange(p0: DataSnapshot) {
-                     captainId=p0.child("captainId").value.toString()
-                     val playerRef= FirebaseDatabase.getInstance().getReference("/PlayerBasicProfile/$captainId")
-                     playerRef.addListenerForSingleValueEvent(object: ValueEventListener {
-                         override fun onCancelled(p0: DatabaseError) {
-                             TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                         }
+    private fun getUserInfo(teamId: String) {
+        val teamRef = FirebaseDatabase.getInstance().getReference("/Team/$teamId")
+        teamRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
 
-                         override fun onDataChange(p0: DataSnapshot) {
+            override fun onDataChange(p0: DataSnapshot) {
+                captainId = p0.child("captainId").value.toString()
+                val playerRef =
+                    FirebaseDatabase.getInstance().getReference("/PlayerBasicProfile/$captainId")
+                playerRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
 
-                             val captainName=p0.child("name").value.toString()
-                             teamCaptain_TeamDetailActivity.text=captainName
-                         }
-                     })
-                 }
-             })
-         }
+                    override fun onDataChange(p0: DataSnapshot) {
 
-
-
-
-         private fun setViewsContent()
-         {
-             val teamId=intent.getStringExtra("teamId")
-             val teamLogo=intent.getStringExtra("teamLogo")
-             val teamName=intent.getStringExtra("teamName")
-             val teamCity=intent.getStringExtra("teamCity")
-             val captainId =intent.getStringExtra("captainId")
-             Log.d("CaptainId",captainId)
-
-             supportActionBar?.title=teamName
-
-             val fragmentAdapter=SectionPagerAdapter(teamId,teamName,teamLogo,captainId,supportFragmentManager)
-             viewPager.adapter=fragmentAdapter
-             tabLayout.setupWithViewPager(viewPager)
-
-             Picasso.get().load(teamLogo).into(team_logo_TeamDetailActivity)
-             teamCity_TeamDetailActivity.text=teamCity
-             getUserInfo(teamId)
+                        val captainName = p0.child("name").value.toString()
+                        teamCaptain_TeamDetailActivity.text = captainName
+                    }
+                })
+            }
+        })
+    }
 
 
-         }
+    private fun setViewsContent() {
+        val teamId = intent.getStringExtra("teamId")
+        val teamLogo = intent.getStringExtra("teamLogo")
+        val teamName = intent.getStringExtra("teamName")
+        val teamCity = intent.getStringExtra("teamCity")
+        val captainId = intent.getStringExtra("captainId")
+        Log.d("CaptainId", captainId)
 
-         override fun onClick(view: View?) {
-             when(view?.id)
-             {
-                 R.id.challenge_for_match->{
+        supportActionBar?.title = teamName
 
-                     val teamId=intent.getStringExtra("teamId")
-                     val teamLogo=intent .getStringExtra("teamLogo")
-                     val teamName=intent.getStringExtra("teamName")
-                     val captainId =intent.getStringExtra("captainId")
-                     val teamCity =intent.getStringExtra("teamCity")
+        val fragmentAdapter =
+            SectionPagerAdapter(teamId, teamName, teamLogo, captainId, supportFragmentManager)
+        viewPager.adapter = fragmentAdapter
+        tabLayout.setupWithViewPager(viewPager)
 
-                     startActivity<MatchDetails>(
-                         "teamId" to teamId,
-                         "teamLogo" to teamLogo,
-                         "teamName" to teamName,
-                         "captainId" to captainId,
-                         "teamCity" to teamCity
-                     )
-                     finish()
-                 }
-         }
-     }
-         private fun makeViewsInvisible(vararg view:View)
-         {
-             for(v in view)
-             {
-                 v.visible=false
-             }
-         }
+        Picasso.get().load(teamLogo).into(team_logo_TeamDetailActivity)
+        teamCity_TeamDetailActivity.text = teamCity
+        getUserInfo(teamId)
 
-     }
+
+    }
+
+    override fun onClick(view: View?) {
+        when (view?.id) {
+            R.id.challenge_for_match -> {
+
+                val teamId = intent.getStringExtra("teamId")
+                val teamLogo = intent.getStringExtra("teamLogo")
+                val teamName = intent.getStringExtra("teamName")
+                val captainId = intent.getStringExtra("captainId")
+                val teamCity = intent.getStringExtra("teamCity")
+
+                startActivity<MatchDetails>(
+                    "teamId" to teamId,
+                    "teamLogo" to teamLogo,
+                    "teamName" to teamName,
+                    "captainId" to captainId,
+                    "teamCity" to teamCity
+                )
+                finish()
+            }
+        }
+    }
+
+    private fun makeViewsInvisible(vararg view: View) {
+        for (v in view) {
+            v.visible = false
+        }
+    }
+
+}

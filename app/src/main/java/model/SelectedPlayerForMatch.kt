@@ -43,6 +43,5 @@ data class SelectedPlayerForMatch(
         false,
         false,
         false
-    ) {
-    }
+    )
 }

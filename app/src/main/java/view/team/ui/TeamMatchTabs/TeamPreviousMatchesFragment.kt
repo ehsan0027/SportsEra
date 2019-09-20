@@ -1,4 +1,4 @@
-package view.team.ui
+package view.team.ui.TeamMatchTabs
 
 import android.content.Context
 import android.net.Uri
@@ -17,11 +17,11 @@ private const val ARG_PARAM2 = "param2"
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [TeamUpcomingMatchOrLiveFragment.OnFragmentInteractionListener] interface
+ * [TeamPreviousMatchesFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
  *
  */
-class TeamUpcomingOrLiveMatchFragment : Fragment() {
+class TeamPreviousMatchesFragment: Fragment() {
     private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreateView(
@@ -29,7 +29,7 @@ class TeamUpcomingOrLiveMatchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_team_upcoming_or_live_match_recycler_view, container, false)
+        return inflater.inflate(R.layout.fragment_previous_matches, container, false)
     }
 
     // TODO: Rename method, update argument and hook method into UI event

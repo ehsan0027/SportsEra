@@ -1,0 +1,35 @@
+package view.team.ui
+
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import view.team.ui.TeamMatchTabs.TeamPreviousMatchesFragment
+import view.team.ui.TeamMatchTabs.TeamUpcomingMatchFragment
+
+class TeamMatchSectionPagerAdapter(fm:FragmentManager):FragmentPagerAdapter(fm)
+{
+    override fun getItem(position: Int): Fragment {
+        return when(position)
+        {
+            0->{TeamUpcomingMatchFragment()}
+            1->{TeamPreviousMatchesFragment()}
+            else->{return TeamUpcomingMatchFragment()}
+        }
+    }
+
+    override fun getCount(): Int {
+        return 2
+
+    }
+
+    override fun getPageTitle(position: Int): CharSequence? {
+
+        return when(position)
+        {
+            0->"Upcoming"
+            1->"Previous"
+            else->{return "Upcoming"}
+        }
+    }
+
+}
