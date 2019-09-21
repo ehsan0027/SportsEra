@@ -18,7 +18,7 @@ android:background="#DCDCDC">
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="30dp"
-            android:src="@drawable/profile_pic"
+            android:src="@drawable/profile_img_2"
             android:clickable="true"
             android:focusable="true"
             app:civ_border_color="@color/DimGray"
@@ -26,11 +26,24 @@ android:background="#DCDCDC">
             android:layout_centerHorizontal="true"
             android:onClick="selectProfileImage"/>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Profile Image"
+            android:textSize="16sp"
+            android:textColor="@color/Black"
+            android:layout_below="@id/user_profile"
+            android:id="@+id/label_profile_pic"
+            android:gravity="center"
+            >
+
+        </TextView>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/user_profile"
+                android:layout_below="@id/label_profile_pic"
                 android:id="@+id/textInput_layout"
                 android:layout_marginStart="25dp"
                 android:layout_marginEnd="25dp"

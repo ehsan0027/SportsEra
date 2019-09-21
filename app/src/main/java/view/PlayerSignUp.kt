@@ -86,6 +86,7 @@ private val SAMPLE_CROPPED_IMAGE_NAME="SampleCropImage"
         var imageLink: String
         val playerId = playerAuth?.uid
         val imageName = "Profile/$playerId.jpg"
+
         val storageRef = myStorageReference!!.child(imageName)
         storageRef.putFile(selectedProfileUri!!).addOnProgressListener { task->
 
@@ -213,6 +214,7 @@ private val SAMPLE_CROPPED_IMAGE_NAME="SampleCropImage"
                 }
                 UCrop.REQUEST_CROP->{
                     selectedProfileUri= UCrop.getOutput(data)
+
                     if(selectedProfileUri != null) {
                         user_profile.setImageURI(selectedProfileUri)
                     }
@@ -325,15 +327,11 @@ private val SAMPLE_CROPPED_IMAGE_NAME="SampleCropImage"
                                 "number" to number,
                                 "signUp" to "7")
                     }else{
-                        toast("select profile")
-                        alert {
-                            title = "Missing Profile Image"
-                            message = "please select profile image"
-                            neutralPressed("OK"){
-                                    dialog ->
-                                dialog.dismiss()
-                            }
-                        }.show()
+
+
+                        val path =Uri.parse("android.resource://" + this.packageName + "/"+"${R.drawable.profile_img_2}")
+                        if (selectedProfileUri==null)
+                        { selectedProfileUri=path}
                     }
                 }
 
