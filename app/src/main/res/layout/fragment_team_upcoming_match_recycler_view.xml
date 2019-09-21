@@ -24,7 +24,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical"
             android:layout_marginTop="2dp"
-            android:id="@+id/match_schedule_recycler_view"
+            android:id="@+id/upcoming_match_recycler_view"
             android:layout_marginStart="2dp"
 
             >

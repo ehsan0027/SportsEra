@@ -22,7 +22,7 @@ private const val ARG_PARAM2 = "param2"
  * to handle interaction events.
  *
  */
-class TeamMatchFragment : Fragment() {
+class TeamMatchFragment (private val teamId:String)  : Fragment() {
     private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreateView(
@@ -59,7 +59,7 @@ class TeamMatchFragment : Fragment() {
 
 
     private fun setViewsContent() {
-        val fragmentAdapter = TeamMatchSectionPagerAdapter(childFragmentManager)
+        val fragmentAdapter = TeamMatchSectionPagerAdapter(teamId,childFragmentManager)
         viewPager_team_matches.adapter = fragmentAdapter
         tabLayout_team_matches.setupWithViewPager(viewPager_team_matches)
 

@@ -6,14 +6,14 @@ import androidx.fragment.app.FragmentPagerAdapter
 import view.team.ui.TeamMatchTabs.TeamPreviousMatchesFragment
 import view.team.ui.TeamMatchTabs.TeamUpcomingMatchFragment
 
-class TeamMatchSectionPagerAdapter(fm:FragmentManager):FragmentPagerAdapter(fm)
+class TeamMatchSectionPagerAdapter(private val teamId:String,fm:FragmentManager):FragmentPagerAdapter(fm)
 {
     override fun getItem(position: Int): Fragment {
         return when(position)
         {
-            0->{TeamUpcomingMatchFragment()}
+            0->{TeamUpcomingMatchFragment(teamId)}
             1->{TeamPreviousMatchesFragment()}
-            else->{return TeamUpcomingMatchFragment()}
+            else->{return TeamUpcomingMatchFragment(teamId)}
         }
     }
 

@@ -12,7 +12,7 @@
         app:cardCornerRadius="10dp"
         android:layout_margin="10dp"
         app:cardBackgroundColor="@color/teamCardView"
-        android:id="@+id/match_cardView"
+        android:id="@+id/upcoming_match_cardView"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         >
