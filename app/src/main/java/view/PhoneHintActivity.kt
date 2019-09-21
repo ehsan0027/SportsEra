@@ -4,14 +4,12 @@ import android.app.Activity
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.credentials.Credential
 import com.google.android.gms.auth.api.credentials.HintRequest
 import com.google.android.gms.common.api.GoogleApiClient
 import org.jetbrains.anko.longToast
-import org.jetbrains.anko.toast
 
 class PhoneHintActivity: FragmentActivity(), GoogleApiClient.ConnectionCallbacks {
     override fun onConnected(p0: Bundle?) {
@@ -48,11 +46,14 @@ class PhoneHintActivity: FragmentActivity(), GoogleApiClient.ConnectionCallbacks
         val hintRequest: HintRequest = HintRequest.Builder()
             .setPhoneNumberIdentifierSupported(true)
             .build()
+
         val intent: PendingIntent = Auth.CredentialsApi.getHintPickerIntent(
             apiClient, hintRequest
         )
         startIntentSenderForResult(intent.intentSender, RESOLVE_HINT, null, 0, 0, 0)
             }
+
+
 
 
 

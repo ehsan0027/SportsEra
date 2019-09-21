@@ -17,11 +17,11 @@ private const val ARG_PARAM2 = "param2"
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [TeamPreviousMatchesFragment.OnFragmentInteractionListener] interface
+ * [TeamCompletedMatchesFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
  *
  */
-class TeamPreviousMatchesFragment: Fragment() {
+class TeamCompletedMatchesFragment: Fragment() {
     private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreateView(
@@ -29,7 +29,7 @@ class TeamPreviousMatchesFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_previous_matches, container, false)
+        return inflater.inflate(R.layout.fragment_team_completed_matches, container, false)
     }
 
     // TODO: Rename method, update argument and hook method into UI event

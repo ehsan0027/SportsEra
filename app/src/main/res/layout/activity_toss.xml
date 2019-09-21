@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:text="Toss won Team Elected To"
-                android:id="@+id/teamElectecd_label"
+                android:id="@+id/teamElected_label"
                 android:textSize="20sp"
              android:layout_alignParentTop="true"
                 />
@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@id/teamElectecd_label"
+        android:layout_below="@id/teamElected_label"
         android:id="@+id/battin_bowling_layout"
 android:layout_margin="10dp"
         >

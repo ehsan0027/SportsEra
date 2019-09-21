@@ -9,10 +9,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.example.sportsplayer.R
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.pawegio.kandroid.visible
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
@@ -34,6 +36,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class TeamUpcomingMatchFragment (private val teamId:String)  : Fragment() {
     private var listener: OnFragmentInteractionListener? = null
+    private val currentPlayer = FirebaseAuth.getInstance().uid.toString()
     val upcomingMatchAdapter = GroupAdapter<ViewHolder>()
 
     override fun onCreateView(
@@ -69,6 +72,7 @@ class TeamUpcomingMatchFragment (private val teamId:String)  : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        upcomingMatchAdapter.clear()
         fetchUpcomingMatchDetails(teamId)
     }
 
@@ -111,6 +115,7 @@ class TeamUpcomingMatchFragment (private val teamId:String)  : Fragment() {
 
                             override fun onDataChange(p0: DataSnapshot) {
                                 val match_type = p0.child("matchType").value.toString()
+                                val match_overs = p0.child("matchOvers").value.toString()
                                 val match_date = p0.child("matchDate").value.toString()
                                 val match_time = p0.child("matchTime").value.toString()
                                 val match_venue = p0.child("matchVenue").value.toString()
@@ -119,13 +124,15 @@ class TeamUpcomingMatchFragment (private val teamId:String)  : Fragment() {
                                 val team_B_Name = p0.child("team_B_Name").value.toString()
                                 val team_A_Logo = p0.child("team_A_Logo").value.toString()
                                 val team_B_Logo = p0.child("team_B_Logo").value.toString()
+                                val sender = p0.child("sender").value.toString()
 
-                                upcomingMatchAdapter.add(UpcomingMatchViewHolder(match_type,match_date,match_time,match_venue,match_city,team_A_Name,team_B_Name,team_A_Logo,team_B_Logo))
+
+                                upcomingMatchAdapter.add(UpcomingMatchViewHolder(match_type,match_overs,match_date,match_time,match_venue,match_city,team_A_Name,team_B_Name,team_A_Logo,team_B_Logo,sender,this@TeamUpcomingMatchFragment))
                             }
                         })
 
                     }
-                    upcoming_match_recycler_view.adapter=upcomingMatchAdapter
+                    upcoming_match_recycler_view?.adapter=upcomingMatchAdapter
                 }
             }
         })
@@ -135,6 +142,7 @@ class TeamUpcomingMatchFragment (private val teamId:String)  : Fragment() {
     class UpcomingMatchViewHolder(
 
         var match_type: String,
+        var match_overs: String,
         var match_date: String,
         var match_time: String,
         var match_venue: String,
@@ -142,17 +150,36 @@ class TeamUpcomingMatchFragment (private val teamId:String)  : Fragment() {
         var team_A_Name: String,
         var team_B_Name: String,
         var team_A_Logo: String,
-        var team_B_Logo: String
-    ) : Item<ViewHolder>() {
+        var team_B_Logo: String,
+        var sender: String,
+        val ctx:TeamUpcomingMatchFragment) : Item<ViewHolder>() {
         override fun getLayout(): Int {
             return R.layout.fragment_team_upcoming_match_card
         }
 
+        private fun makeViewsInvisible(vararg view: View) {
+            for (v in view) {
+                v.visible = false
+            }
+        }
 
         override fun bind(viewHolder: ViewHolder, position: Int) {
             viewHolder.itemView.upcoming_match_cardView
 
             viewHolder.itemView.title_of_match_upcoming.text = match_type
+
+            if (match_type!="Test"){
+                viewHolder.itemView.overs_of_match_upcoming.text = match_overs
+            }else{
+                makeViewsInvisible(viewHolder.itemView.overs_of_match_upcoming)
+            }
+
+
+            if (ctx.currentPlayer!=sender){
+                makeViewsInvisible(viewHolder.itemView.start_match_button)
+            }
+
+
             viewHolder.itemView.date_of_match_upcoming.text = match_date
             viewHolder.itemView.starting_time_of_match_upcoming.text = match_time
             viewHolder.itemView.venue_of_match_on_match_card_upcoming.text = match_venue
@@ -166,9 +193,6 @@ class TeamUpcomingMatchFragment (private val teamId:String)  : Fragment() {
 
             val logo_team_B=viewHolder.itemView.findViewById<ImageView>(R.id.team_B_logo_match_card_upcoming)
             Picasso.get().load(team_B_Logo).into(logo_team_B)
-
         }
-
-
     }
 }

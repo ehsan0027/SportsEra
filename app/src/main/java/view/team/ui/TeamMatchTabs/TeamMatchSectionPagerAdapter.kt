@@ -3,7 +3,7 @@ package view.team.ui
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import view.team.ui.TeamMatchTabs.TeamPreviousMatchesFragment
+import view.team.ui.TeamMatchTabs.TeamCompletedMatchesFragment
 import view.team.ui.TeamMatchTabs.TeamUpcomingMatchFragment
 
 class TeamMatchSectionPagerAdapter(private val teamId:String,fm:FragmentManager):FragmentPagerAdapter(fm)
@@ -12,7 +12,7 @@ class TeamMatchSectionPagerAdapter(private val teamId:String,fm:FragmentManager)
         return when(position)
         {
             0->{TeamUpcomingMatchFragment(teamId)}
-            1->{TeamPreviousMatchesFragment()}
+            1->{TeamCompletedMatchesFragment()}
             else->{return TeamUpcomingMatchFragment(teamId)}
         }
     }
@@ -27,7 +27,7 @@ class TeamMatchSectionPagerAdapter(private val teamId:String,fm:FragmentManager)
         return when(position)
         {
             0->"Upcoming"
-            1->"Previous"
+            1->"Completed"
             else->{return "Upcoming"}
         }
     }

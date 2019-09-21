@@ -27,6 +27,7 @@ import java.io.File
 import java.util.*
 import kotlin.collections.HashMap
 
+
 @Suppress("DEPRECATION")
 class TeamRegistration:AppCompatActivity(),View.OnClickListener
 {
@@ -137,9 +138,15 @@ class TeamRegistration:AppCompatActivity(),View.OnClickListener
     private fun uploadTeamLogo(){
         val dialog=progressDialog(message = "please wait a bit", title = "uploading image")
         dialog.show()
-        var imageLink: String
+        var imageLink:String
         var uId=UUID.randomUUID().toString()
         val imageName = "TeamLogo/$uId.jpg"
+
+        val path =Uri.parse("android.resource://" + this.packageName + "/"+"${R.drawable.teamlogo1}")
+
+        Log.d("DefaultUri","$path")
+if (selectedLogoUri == null)
+    selectedLogoUri=path
         val storageRef = myStorageReference!!.child(imageName)
         storageRef.putFile(selectedLogoUri!!).addOnProgressListener { task->
 
@@ -154,7 +161,7 @@ class TeamRegistration:AppCompatActivity(),View.OnClickListener
             val result = snapshot.metadata!!.reference!!.downloadUrl
             result.addOnSuccessListener {
                 imageLink = it.toString()
-                Log.d("ImageLink", imageLink)
+                Log.d("ImageLink", imageLink.toString())
                 dialog.dismiss()
                 saveTeam(imageLink)
             }
@@ -173,7 +180,9 @@ class TeamRegistration:AppCompatActivity(),View.OnClickListener
         val teamName=team_name.text.toString()
         val shortName=team_short_name.text.toString()
         val city=team_city.text.toString()
-        if (teamName.isNotEmpty() && shortName.isNotEmpty() && city.isNotEmpty() && level.isNotEmpty())
+
+
+        if (teamName.isNotEmpty() && shortName.isNotEmpty() && city.isNotEmpty() && level.isNotEmpty() && logoUrl.isNotEmpty())
         {
 
             val progressDialog: ProgressDialog = ProgressDialog.show(this, "Creating Team", "saving team...")
@@ -223,6 +232,8 @@ class TeamRegistration:AppCompatActivity(),View.OnClickListener
 
             }
 
+        }else{
+            toast("Please Fill All Fields and also Add Team Logo")
         }
 
     }
@@ -237,6 +248,7 @@ class TeamRegistration:AppCompatActivity(),View.OnClickListener
                 }catch(e:Exception)
                 {
                     toast(e.localizedMessage)
+                    Log.d("Default","${e.localizedMessage}")
                 }
             }
         }

@@ -59,7 +59,7 @@ class MatchDetails : AppCompatActivity(){
             matchType=radio.text.toString()
             when(matchType){
                 "Test"->{ matchOvers_Match_Details.visibility= View.GONE }
-                "Limited Over"->{matchOvers_Match_Details.visibility=View.VISIBLE}
+                "Limited Overs"->{matchOvers_Match_Details.visibility=View.VISIBLE}
             }
             toast("Match Type: $matchType")
         }
@@ -175,12 +175,15 @@ private fun sendRequestForMatch() {
     val team_A_Captain = intent.getStringExtra("captainId")
 
     Log.d("team",team_A_id)
-    val overs = matchOvers_Match_Details.text.toString().trim()
+    var overs = matchOvers_Match_Details.text.toString().trim()
     val city = matchCity_Match_Details.text.toString().trim()
     val venue = matchVenue_Match_Details.text.toString().trim()
     val date = matchDate_Match_Details.text.toString().trim()
     val time = matchTime_Match_Details.text.toString().trim()
     val squad = squad_count_Match_Details.text.toString().trim()
+    if (matchType=="Test"){
+        overs = "450"
+    }
     if (overs.isNotEmpty()
         && city.isNotEmpty()
         && venue.isNotEmpty()

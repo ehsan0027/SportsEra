@@ -1,6 +1,6 @@
 package model
 
-data class Team( var teamLogo:String?=null,
+data class Team( var teamLogo:String?,
                 val teamName:String,
                  val shortName:String,
                  val captainId:String,

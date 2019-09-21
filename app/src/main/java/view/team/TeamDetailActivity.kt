@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_team_detail.*
 import org.jetbrains.anko.startActivity
 import view.match.MatchDetails
 import view.team.ui.*
-import view.team.ui.TeamMatchTabs.TeamPreviousMatchesFragment
+import view.team.ui.TeamMatchTabs.TeamCompletedMatchesFragment
 import view.team.ui.TeamMatchTabs.TeamUpcomingMatchFragment
 
 class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
@@ -28,7 +28,7 @@ class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
     TeamRequestMatchFragment.OnFragmentInteractionListener,
     TeamSquadFragment.OnFragmentInteractionListener,
     TeamUpcomingMatchFragment.OnFragmentInteractionListener,
-    TeamPreviousMatchesFragment.OnFragmentInteractionListener {
+    TeamCompletedMatchesFragment.OnFragmentInteractionListener {
 
 
     override fun onFragmentInteraction(uri: Uri) {

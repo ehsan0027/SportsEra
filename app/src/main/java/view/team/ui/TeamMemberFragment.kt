@@ -254,7 +254,7 @@ class TeamMemberFragment(val teamId: String,val captainId:String) : Fragment(),V
                         }
                     }
 
-                    recyclerView_TeamMemberFragment.adapter=groupAdapter
+                    recyclerView_TeamMemberFragment?.adapter=groupAdapter
 
                 }
             }

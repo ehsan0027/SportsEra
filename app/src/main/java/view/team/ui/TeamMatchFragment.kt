@@ -54,6 +54,7 @@ class TeamMatchFragment (private val teamId:String)  : Fragment() {
 
     override fun onResume() {
         super.onResume()
+
         setViewsContent()
     }
 

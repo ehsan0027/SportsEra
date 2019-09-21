@@ -279,6 +279,35 @@ android:background="@color/white_layout">
 
         </androidx.cardview.widget.CardView>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/profile_cardView"
+            android:id="@+id/upcoming_match_layout"
+            >
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            app:cardElevation="5dp"
+            app:cardCornerRadius="10dp"
+            android:id="@+id/empty_match_card_on_dashboard"
+            app:cardBackgroundColor="@color/lightGray"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your Live and Upcoming Matches will be shown here."
+                android:textSize="25sp"
+                android:textColor="@color/Black"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:paddingHorizontal="25dp"
+                >
+
+            </TextView>
+
+        </com.google.android.material.card.MaterialCardView>
+
 
 
         <androidx.cardview.widget.CardView
@@ -288,7 +317,6 @@ android:background="@color/white_layout">
                 android:elevation="10dp"
                 android:layout_margin="2dp"
                 app:cardElevation="10dp"
-                android:layout_below="@id/profile_cardView"
                 android:id="@+id/live_match_list_card_view_dashboard"
                 app:cardBackgroundColor="@color/cardView"
                 tools:targetApi="o" app:cardMaxElevation="10dp">
@@ -300,24 +328,22 @@ android:background="@color/white_layout">
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:orientation="horizontal"
                     android:layout_marginTop="2dp"
-                    android:id="@+id/match_card_recycler_view_dashboard"
+                    android:id="@+id/upcoming_match_card_recycler_view_dashboard"
                     android:layout_marginStart="2dp"
 
                     >
 
             </androidx.recyclerview.widget.RecyclerView>
 
-
-
-
         </androidx.cardview.widget.CardView>
 
+        </RelativeLayout>
         <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="5dp"
                 android:id="@+id/team_list_card_view_dashboard"
-                android:layout_below="@id/live_match_list_card_view_dashboard"
+                android:layout_below="@id/upcoming_match_layout"
                 android:elevation="10dp"
                 android:layout_margin="2dp"
                 app:cardElevation="10dp"

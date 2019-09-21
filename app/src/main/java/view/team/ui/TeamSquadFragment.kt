@@ -231,7 +231,7 @@ class TeamSquadFragment(val teamId:String) : Fragment() {
                         }
                     }
 
-                    playing_squad_recycler_view.adapter=squadAdapter
+                    playing_squad_recycler_view?.adapter=squadAdapter
 
                 }
             }

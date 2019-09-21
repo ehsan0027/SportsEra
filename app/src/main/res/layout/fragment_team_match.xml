@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabGravity="fill"
-        app:tabMode="fixed"
+        app:tabMode="scrollable"
         android:id="@+id/tabLayout_team_matches"
         style="@style/Widget.MaterialComponents.TabLayout.Colored"
         app:tabIndicator="@color/WhiteSmoke"

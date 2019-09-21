@@ -4,26 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="200dp">
+    android:layout_height="220dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:cardCornerRadius="10dp"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         app:cardBackgroundColor="@color/teamCardView"
         android:id="@+id/upcoming_match_cardView"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         >
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="6"
+            >
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_weight="1"
                 android:id="@+id/title_bar_of_match_card"
                 >
                 <TextView
@@ -32,70 +36,70 @@
                     android:id="@+id/title_of_match_upcoming"
                     android:text="Limited Overs"
                     android:textSize="15sp"
-                    android:paddingStart="10dp"
+                    android:layout_marginStart="10dp"
                     />
-                <RelativeLayout
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    >
+                    android:text=" "
+                    android:textSize="15sp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/overs_of_match_upcoming"
+                    android:text="10"
+                    android:textSize="15sp"
+                    />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/day_of_match_upcoming"
-                        android:text="Sat"
-                        android:maxLength="3"
-                        android:textSize="15sp"
-                        />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date: "
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="20dp"
+
+                    />
+
+
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/date_of_match_upcoming"
                         android:text="14-09-2019"
                         android:textSize="15sp"
-                        android:paddingEnd="10dp"
-                        android:paddingStart="10dp"
-                        android:layout_toEndOf="@+id/day_of_match_upcoming"
-                        />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/starting_time_of_match_upcoming"
-                        android:text="7:00 AM"
-                        android:textSize="15sp"
-                        android:layout_toEndOf="@+id/date_of_match_upcoming"
+                    />
 
-                        />
-                </RelativeLayout>
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingEnd="10dp"
-                    >
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/status_of_match_upcoming"
                         android:text="Upcoming"
+                        android:textColor="@color/DarkGreen"
+                        android:layout_weight="1"
                         android:textSize="15sp"
-                        android:layout_alignParentEnd="true"
+                        android:gravity="end"
+                        android:layout_gravity="end"
 
                         />
-                </RelativeLayout>
 
             </LinearLayout>
+
 
 
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:id="@+id/score_bar_of_match_card"
-                android:layout_below="@+id/title_bar_of_match_card"
-                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:layout_gravity="center"
                 android:orientation="horizontal"
                 >
 
@@ -105,6 +109,7 @@
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:layout_gravity="center"
                     >
                     <de.hdodenhof.circleimageview.CircleImageView
@@ -140,6 +145,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:layout_weight="1"
                     android:padding="10dp"
                     android:layout_gravity="center"
                     >
@@ -176,6 +182,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:layout_weight="1"
                     android:layout_gravity="center"
                     android:padding="10dp"
                     >
@@ -199,6 +206,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:paddingEnd="10dp"
+                    android:layout_weight="1"
                     >
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:layout_width="50dp"
@@ -229,39 +237,44 @@
 
             </LinearLayout>
 
-
-
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:id="@+id/series_detail_layout_match_card"
-                android:layout_centerInParent="true"
-                android:layout_below="@+id/score_bar_of_match_card"
-                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:gravity="center"
                 >
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Match 1 0f 5"
-                    android:id="@+id/series_detail_text_view_match_card_upcoming"
-                    android:textAlignment="center"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textSize="12sp"
-                    android:textColor="@color/DimGray"
-                    />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Starts At "
+                    android:textSize="15sp"
+                    android:textColor="@color/DarkBlue"
+                    android:layout_marginStart="10dp"
 
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/starting_time_of_match_upcoming"
+                    android:text="7:00 AM"
+                    android:textSize="15sp"
+                    android:textColor="@color/Black"
+
+                    />
             </LinearLayout>
 
+
+
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:id="@+id/match_location_on_match_card"
-                android:layout_centerInParent="true"
-                android:layout_below="@+id/series_detail_layout_match_card"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:id="@+id/series_detail_layout_match_card"
                 >
 
                 <TextView
@@ -285,6 +298,20 @@
                     android:textSize="15sp"
                     android:textColor="@color/Black"
                     />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:id="@+id/match_location_on_match_card"
+                >
+
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -302,14 +329,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Start Match"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="10dp"
                 android:id="@+id/start_match_button"
-                android:layout_below="@+id/match_location_on_match_card">
+                >
 
             </com.google.android.material.button.MaterialButton>
 
-
-
-        </RelativeLayout>
+        </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 

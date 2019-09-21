@@ -1,16 +1,11 @@
 package com.example.sportsplayer
 
-import Util.GpsUtils
 import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.getSystemService
 import com.google.firebase.auth.FirebaseAuth
-import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
-import org.jetbrains.anko.yesButton
-import view.CurrentLocationDetector
 import view.Dashboard
 import view.PlayerSignUp
 import kotlin.system.exitProcess
@@ -40,7 +35,7 @@ class MainActivity :AppCompatActivity()
     public override fun onStart() {
         super.onStart()
 
-        //check if Internet is availabl
+        //check if Internet is available
         // Check if user is signed in (non-null) and update UI accordingly.
             val currentUser = auth.currentUser
             if (currentUser != null) {

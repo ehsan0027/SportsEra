@@ -22,6 +22,10 @@
     <string name="team_detail">Team Detail</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
+    <string name="U_13">U-13</string>
+    <string name="U_16">U-16</string>
+    <string name="U_19">U-19</string>
+    <string name="mature">Mature</string>
 
     //Playing Role Spinner Items
     <string-array name="Playing_Role">

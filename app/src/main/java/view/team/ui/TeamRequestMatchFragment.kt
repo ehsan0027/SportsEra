@@ -185,431 +185,532 @@ class TeamRequestMatchFragment(
         date?.setOnClickListener { v -> setDate(v) }
 
         time?.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) { setTime(v) }
-        }
-            time?.setOnClickListener { setTime(it) }
-
-
-
-            cancel?.setOnClickListener { changeDetailPopUpDialog.dismiss() }
-
-            update?.setOnClickListener {
-
-                val newDate = date?.text.toString().trim()
-                val newTime = time?.text.toString().trim()
-                val newVenue = venue?.text.toString().trim()
-                val newSquad = squad?.text.toString().trim()
-                val newOvers = overs?.text.toString().trim()
-
-                Log.d("Sender", mSender)
-                Log.d("Sender", mReciever)
-                Log.d("Sender", mInviteId)
-
-
-                val newDatabaseReference = FirebaseDatabase.getInstance().reference
-                val updateMatchInvite = HashMap<String, Any>()
-                updateMatchInvite["/MatchInvite/$mInviteId/matchDate"] = newDate
-                updateMatchInvite["/MatchInvite/$mInviteId/matchTime"] = newTime
-                updateMatchInvite["/MatchInvite/$mInviteId/matchVenue"] = newVenue
-                updateMatchInvite["/MatchInvite/$mInviteId/squadCount"] = newSquad
-                updateMatchInvite["/MatchInvite/$mInviteId/matchOvers"] = newOvers
-                if (mReciever == currentPlayer) {
-                    updateMatchInvite["/MatchInvite/$mInviteId/sender"] = mReciever
-                    updateMatchInvite["/MatchInvite/$mInviteId/reciever"] = mSender
-                }
-
-                newDatabaseReference.updateChildren(updateMatchInvite)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            toast("Invite is updated")
-                            Log.d("Updated", "Invitation is Updated")
-                            changeDetailPopUpDialog.cancel()
-                        }
-                    }
-
+            if (hasFocus) {
+                setTime(v)
             }
-
-            changeDetailPopUpDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            changeDetailPopUpDialog.show()
         }
-
-        private fun updateMatchInviteDetails(position: Int) {
-
-            val item = matchInviteAdapter.getItem(position) as MyTeamsNotifications
-            val date = item.matchDate
-            val time = item.matchTime
-            val venue = item.matchVenue
-            val squad = item.squadCount
-            val overs = item.matchOvers
-            val inviteId = item.matchInviteId
-            val sender = item.sender
-            val receiver = item.receiver
-            Log.d("Update", inviteId)
-
-            changeMatchInviteDetailsDialog(
-                date,
-                time,
-                venue,
-                squad,
-                overs,
-                inviteId,
-                sender,
-                receiver
-            )
-        }
-
-        private fun scheduleMatch(position: Int) {
-
-            val v = matchInviteAdapter.getItem(position) as MyTeamsNotifications
-            val invite_Id = v.matchInviteId
-            val matchType = v.matchType
-            val matchOvers = v.matchOvers
-            val ballType = v.ballType
-            val squadCount = v.squadCount
-            val matchCity = v.matchCity
-            val matchDate = v.matchDate
-            val matchTime = v.matchTime
-            val matchVenue = v.matchVenue
-            val team_A = v.team_A
-            val team_B = v.team_B
-            val team_A_Name =v.team_A_Name
-            val team_B_Name =v.team_B_Name
-            val team_A_Logo=v.team_A_Logo
-            val team_B_Logo=v.team_B_Logo
-            val sender = v.sender
-            val receiver = v.receiver
-
-            Log.d("Invitation_Id", invite_Id)
-            val match = MatchInvite(
-                matchType,
-                matchOvers,
-                matchCity,
-                matchVenue,
-                matchDate,
-                matchTime,
-                ballType,
-                squadCount,
-                team_A,
-                team_B,
-                team_A_Name,
-                team_B_Name,
-                team_A_Logo,
-                team_B_Logo,
-                invite_Id,
-                sender,
-                receiver
-            )
-            val teamsMatchScheduleRef = FirebaseDatabase.getInstance().reference
-            teamsMatchScheduleRef.child("ScheduledMatch").child(invite_Id).setValue(match)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        //remove invitation
-
-                        val newDatabaseReference = FirebaseDatabase.getInstance().reference
-                        val removeMatchInvite = HashMap<String, String?>()
-                        removeMatchInvite["/TeamsMatchInvite/$team_A/$invite_Id"] = null
-                        removeMatchInvite["/TeamsMatchInvite/$team_B/$invite_Id"] = null
-                        removeMatchInvite["/MatchInvite/$invite_Id"] = null
-                        Log.d("teamId",team_A)
-                        Log.d("teamId",team_B)
-                        newDatabaseReference.updateChildren(removeMatchInvite as Map<String, Any?>)
-                            .addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    toast("Match is Scheduled")
-                                    val teamUpcomingMatchRef=FirebaseDatabase.getInstance().reference
-                                    val teamUpcomingMatch="TeamUpcomingMatch"
-                                    val setUpcomingMatch=HashMap<String,Any>()
-                                    Log.d("teamId",team_A)
-                                    Log.d("teamId",team_B)
-                                    setUpcomingMatch["Team/$team_A/$teamUpcomingMatch/$invite_Id"]=true
-                                    setUpcomingMatch["Team/$team_B/$teamUpcomingMatch/$invite_Id"]=true
-                                    teamUpcomingMatchRef.updateChildren(setUpcomingMatch).addOnCompleteListener {
-                                        task ->if (task.isSuccessful){
-                                        toast("Upcoming Match Id is sent to Team")
-                                        Log.d("Upcoming","Upcoming Match Id is sent to Team")
-                                    }
-
-                                    }
+        time?.setOnClickListener { setTime(it) }
 
 
 
-                                    Log.d("reject", " Scheduled")
-                                }
-                            }
+        cancel?.setOnClickListener { changeDetailPopUpDialog.dismiss() }
 
-                    }
-                }.addOnFailureListener { exception ->
-                    toast(exception.localizedMessage)
-                }
+        update?.setOnClickListener {
 
+            val newDate = date?.text.toString().trim()
+            val newTime = time?.text.toString().trim()
+            val newVenue = venue?.text.toString().trim()
+            val newSquad = squad?.text.toString().trim()
+            val newOvers = overs?.text.toString().trim()
 
-        }
+            Log.d("Sender", mSender)
+            Log.d("Sender", mReciever)
+            Log.d("Sender", mInviteId)
 
-        private fun rejectInvite(position: Int) {
-
-
-            val item = matchInviteAdapter.getItem(position) as MyTeamsNotifications
-            val invitationId = item.matchInviteId
-            val team_A_Id = item.team_A
-            val team_B_Id = item.team_B
 
             val newDatabaseReference = FirebaseDatabase.getInstance().reference
-            val removeMatchInvite = HashMap<String, String?>()
-            removeMatchInvite["/TeamsMatchInvite/$team_A_Id/$invitationId"] = null
-            removeMatchInvite["/TeamsMatchInvite/$team_B_Id/$invitationId"] = null
-            removeMatchInvite["/MatchInvite/$invitationId"] = null
-            newDatabaseReference.updateChildren(removeMatchInvite as Map<String, Any?>)
+            val updateMatchInvite = HashMap<String, Any>()
+            updateMatchInvite["/MatchInvite/$mInviteId/matchDate"] = newDate
+            updateMatchInvite["/MatchInvite/$mInviteId/matchTime"] = newTime
+            updateMatchInvite["/MatchInvite/$mInviteId/matchVenue"] = newVenue
+            updateMatchInvite["/MatchInvite/$mInviteId/squadCount"] = newSquad
+            updateMatchInvite["/MatchInvite/$mInviteId/matchOvers"] = newOvers
+            if (mReciever == currentPlayer) {
+                updateMatchInvite["/MatchInvite/$mInviteId/sender"] = mReciever
+                updateMatchInvite["/MatchInvite/$mInviteId/reciever"] = mSender
+            }
+
+            newDatabaseReference.updateChildren(updateMatchInvite)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        toast("Match Invitation is Removed")
-                        Log.d("reject", " Removed")
+                        toast("Invite is updated")
+                        Log.d("Updated", "Invitation is Updated")
+                        changeDetailPopUpDialog.cancel()
                     }
                 }
+
         }
 
-        private fun fetchNotificationsFromDatabase() {
-            mAuth = FirebaseAuth.getInstance()
-            val playerId = mAuth?.uid.toString()
-            val teamRef = FirebaseDatabase.getInstance()
-            val teamsMatchInviteRef = FirebaseDatabase.getInstance()
-            val playersTeamReference =
-                FirebaseDatabase.getInstance().getReference("/PlayersTeam/$playerId")
-            playersTeamReference.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError) {}
-                override fun onDataChange(p0: DataSnapshot) {
-                    if (p0.exists()) {
-                        Log.d("FetchMatch", "PlayerId Received")
-                        p0.children.forEach {
-                            val teamId = it.key
-                            teamRef.getReference("/TeamsMatchInvite/$teamId").also { task ->
-                                task.addListenerForSingleValueEvent(object : ValueEventListener {
-                                    override fun onCancelled(p0: DatabaseError) {
-                                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                                    }
+        changeDetailPopUpDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        changeDetailPopUpDialog.show()
+    }
 
-                                    override fun onDataChange(p0: DataSnapshot) {
-                                        if (p0.exists()) {
-                                            Log.d("FetchMatch", teamId)
-                                            p0.children.forEach {
-                                                val matchInviteId = it.key
-                                                teamsMatchInviteRef.getReference("/MatchInvite/$matchInviteId")
-                                                    .also { task ->
-                                                        task.addListenerForSingleValueEvent(object :
-                                                            ValueEventListener {
-                                                            override fun onCancelled(p0: DatabaseError) {
-                                                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                                                            }
+    private fun updateMatchInviteDetails(position: Int) {
 
+        val item = matchInviteAdapter.getItem(position) as MyTeamsNotifications
+        val date = item.matchDate
+        val time = item.matchTime
+        val venue = item.matchVenue
+        val squad = item.squadCount
+        val overs = item.matchOvers
+        val inviteId = item.matchInviteId
+        val sender = item.sender
+        val receiver = item.receiver
+        Log.d("Update", inviteId)
 
-                                                            override fun onDataChange(p0: DataSnapshot) {
+        changeMatchInviteDetailsDialog(
+            date,
+            time,
+            venue,
+            squad,
+            overs,
+            inviteId,
+            sender,
+            receiver
+        )
+    }
 
-                                                                val ballType = p0.child("ballType")
-                                                                    .value.toString()
-                                                                val matchCity =
-                                                                    p0.child("matchCity")
-                                                                        .value.toString()
-                                                                val match_date =
-                                                                    p0.child("matchDate")
-                                                                        .value.toString()
-                                                                val match_Invite_Id =
-                                                                    p0.child("matchInvite")
-                                                                        .value.toString()
-                                                                val match_overs =
-                                                                    p0.child("matchOvers")
-                                                                        .value.toString()
-                                                                val match_time =
-                                                                    p0.child("matchTime")
-                                                                        .value.toString()
-                                                                val matchType =
-                                                                    p0.child("matchType")
-                                                                        .value.toString()
-                                                                val matchVenue =
-                                                                    p0.child("matchVenue")
-                                                                        .value.toString()
-                                                                val squadCount =
-                                                                    p0.child("squadCount")
-                                                                        .value.toString()
-                                                                val team_A_Id =
-                                                                    p0.child("team_A_Id")
-                                                                        .value.toString()
-                                                                val team_B_Id =
-                                                                    p0.child("team_B_Id")
-                                                                        .value.toString()
-                                                                val team_A_Name = p0.child("team_A_Name").value.toString()
-                                                                val team_B_Name = p0.child("team_B_Name").value.toString()
-                                                                val team_A_Logo = p0.child("team_A_Logo").value.toString()
-                                                                val team_B_Logo = p0.child("team_B_Logo").value.toString()
-                                                                val sender_Capatain =
-                                                                    p0.child("sender")
-                                                                        .value.toString()
-                                                                val reciever_Captain =
-                                                                    p0.child("reciever")
-                                                                        .value.toString()
-                                                                Log.d("Update2", match_Invite_Id)
+    private fun scheduleMatch(position: Int) {
 
+        val v = matchInviteAdapter.getItem(position) as MyTeamsNotifications
+        val invite_Id = v.matchInviteId
+        val matchType = v.matchType
+        val matchOvers = v.matchOvers
+        val ballType = v.ballType
+        val squadCount = v.squadCount
+        val matchCity = v.matchCity
+        val matchDate = v.matchDate
+        val matchTime = v.matchTime
+        val matchVenue = v.matchVenue
+        val team_A = v.team_A
+        val team_B = v.team_B
+        val team_A_Name = v.team_A_Name
+        val team_B_Name = v.team_B_Name
+        val team_A_Logo = v.team_A_Logo
+        val team_B_Logo = v.team_B_Logo
+        val sender = v.sender
+        val receiver = v.receiver
 
-                                                                matchInviteAdapter.add(
-                                                                    MyTeamsNotifications(
-                                                                        matchType,
-                                                                        match_overs,
-                                                                        matchCity,
-                                                                        matchVenue,
-                                                                        match_date,
-                                                                        match_time,
-                                                                        ballType,
-                                                                        squadCount,
-                                                                        team_A_Id,
-                                                                        team_B_Id,
-                                                                        team_A_Name,
-                                                                        team_B_Name,
-                                                                        team_A_Logo,
-                                                                        team_B_Logo,
-                                                                        match_Invite_Id,
-                                                                        sender_Capatain,
-                                                                        reciever_Captain,
-                                                                        this@TeamRequestMatchFragment
+        Log.d("Invitation_Id", invite_Id)
+        val match = MatchInvite(
+            matchType,
+            matchOvers,
+            matchCity,
+            matchVenue,
+            matchDate,
+            matchTime,
+            ballType,
+            squadCount,
+            team_A,
+            team_B,
+            team_A_Name,
+            team_B_Name,
+            team_A_Logo,
+            team_B_Logo,
+            invite_Id,
+            sender,
+            receiver
+        )
+        val teamsMatchScheduleRef = FirebaseDatabase.getInstance().reference
+        teamsMatchScheduleRef.child("ScheduledMatch").child(invite_Id).setValue(match)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    //remove invitation
+
+                    val newDatabaseReference = FirebaseDatabase.getInstance().reference
+                    val removeMatchInvite = HashMap<String, String?>()
+                    removeMatchInvite["/TeamsMatchInvite/$team_A/$invite_Id"] = null
+                    removeMatchInvite["/TeamsMatchInvite/$team_B/$invite_Id"] = null
+                    removeMatchInvite["/MatchInvite/$invite_Id"] = null
+                    Log.d("teamId", team_A)
+                    Log.d("teamId", team_B)
+                    newDatabaseReference.updateChildren(removeMatchInvite as Map<String, Any?>)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                toast("Match is Scheduled")
+                                val teamUpcomingMatchRef = FirebaseDatabase.getInstance().reference
+                                val teamUpcomingMatch = "TeamUpcomingMatch"
+                                val setUpcomingMatch = HashMap<String, Any>()
+                                Log.d("teamId", team_A)
+                                Log.d("teamId", team_B)
+                                setUpcomingMatch["Team/$team_A/$teamUpcomingMatch/$invite_Id"] =
+                                    true
+                                setUpcomingMatch["Team/$team_B/$teamUpcomingMatch/$invite_Id"] =
+                                    true
+                                teamUpcomingMatchRef.updateChildren(setUpcomingMatch)
+                                    .addOnCompleteListener { task ->
+                                        if (task.isSuccessful) {
+
+                                            val newdataBaseRef =
+                                                FirebaseDatabase.getInstance().reference
+
+                                            val newdataBaseRef_B =
+                                                FirebaseDatabase.getInstance().reference
+
+                                            newdataBaseRef.child("TeamsPlayer").child(team_A)
+                                                .addListenerForSingleValueEvent(
+                                                    object : ValueEventListener {
+                                                        override fun onCancelled(p0: DatabaseError) {
+                                                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                                        }
+
+                                                        override fun onDataChange(p0: DataSnapshot) {
+
+                                                            if (p0.exists()) {
+                                                                val playerRef =
+                                                                    FirebaseDatabase.getInstance()
+                                                                        .reference
+                                                                val setPlayerUpcomingMatch =
+                                                                    HashMap<String, Any>()
+                                                                p0.children.forEach {
+                                                                    val p_id = it.key
+
+                                                                    setPlayerUpcomingMatch["PlayersUpcomingMatch/$p_id/$invite_Id"] =
+                                                                        true
+
+                                                                    playerRef.updateChildren(
+                                                                        setPlayerUpcomingMatch
                                                                     )
-                                                                )
+                                                                        .addOnCompleteListener { task ->
+                                                                            if (task.isSuccessful) {
+                                                                                Log.d(
+                                                                                    "Player",
+                                                                                    "Team A Upcoming Match is Set in Player"
+                                                                                )
+                                                                            }
+                                                                        }
+
+                                                                }
                                                             }
-                                                        })
+                                                        }
+
                                                     }
-                                            }
+                                                )
+
+
+
+                                            newdataBaseRef_B.child("TeamsPlayer").child(team_B)
+                                                .addListenerForSingleValueEvent(
+                                                    object : ValueEventListener {
+                                                        override fun onCancelled(p0: DatabaseError) {
+                                                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                                        }
+
+                                                        override fun onDataChange(p0: DataSnapshot) {
+
+                                                            if (p0.exists()) {
+                                                                val playerRef =
+                                                                    FirebaseDatabase.getInstance()
+                                                                        .reference
+                                                                val setPlayerUpcomingMatch =
+                                                                    HashMap<String, Any>()
+                                                                p0.children.forEach {
+                                                                    val p_id = it.key
+
+                                                                    setPlayerUpcomingMatch["PlayersUpcomingMatch/$p_id/$invite_Id"] =
+                                                                        true
+
+                                                                    playerRef.updateChildren(
+                                                                        setPlayerUpcomingMatch
+                                                                    )
+                                                                        .addOnCompleteListener { task ->
+                                                                            if (task.isSuccessful) {
+                                                                                Log.d(
+                                                                                    "Player",
+                                                                                    "Team B Upcoming Match is Set in Player"
+                                                                                )
+                                                                            }
+                                                                        }
+
+                                                                }
+                                                            }
+                                                        }
+
+                                                    }
+                                                )
+
+
+                                            toast("Upcoming Match Id is sent to Team")
+                                            Log.d("Upcoming", "Upcoming Match Id is sent to Team")
                                         }
 
                                     }
 
-                                })
+                                Log.d("reject", " Scheduled")
                             }
                         }
 
-                        notifications_recycler_view.adapter = matchInviteAdapter
+                }
+            }.addOnFailureListener { exception ->
+                toast(exception.localizedMessage)
+            }
 
+
+    }
+
+    private fun rejectInvite(position: Int) {
+
+
+        val item = matchInviteAdapter.getItem(position) as MyTeamsNotifications
+        val invitationId = item.matchInviteId
+        val team_A_Id = item.team_A
+        val team_B_Id = item.team_B
+
+        val newDatabaseReference = FirebaseDatabase.getInstance().reference
+        val removeMatchInvite = HashMap<String, String?>()
+        removeMatchInvite["/TeamsMatchInvite/$team_A_Id/$invitationId"] = null
+        removeMatchInvite["/TeamsMatchInvite/$team_B_Id/$invitationId"] = null
+        removeMatchInvite["/MatchInvite/$invitationId"] = null
+        newDatabaseReference.updateChildren(removeMatchInvite as Map<String, Any?>)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    toast("Match Invitation is Removed")
+                    Log.d("reject", " Removed")
+                }
+            }
+    }
+
+    private fun fetchNotificationsFromDatabase() {
+        mAuth = FirebaseAuth.getInstance()
+        val playerId = mAuth?.uid.toString()
+        val teamRef = FirebaseDatabase.getInstance()
+        val teamsMatchInviteRef = FirebaseDatabase.getInstance()
+        val playersTeamReference =
+            FirebaseDatabase.getInstance().getReference("/PlayersTeam/$playerId")
+        playersTeamReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.exists()) {
+                    Log.d("FetchMatch", "PlayerId Received")
+                    p0.children.forEach {
+                        val teamId = it.key
+                        teamRef.getReference("/TeamsMatchInvite/$teamId").also { task ->
+                            task.addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onCancelled(p0: DatabaseError) {
+                                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                }
+
+                                override fun onDataChange(p0: DataSnapshot) {
+                                    if (p0.exists()) {
+                                        Log.d("FetchMatch", teamId)
+                                        p0.children.forEach {
+                                            val matchInviteId = it.key
+                                            teamsMatchInviteRef.getReference("/MatchInvite/$matchInviteId")
+                                                .also { task ->
+                                                    task.addListenerForSingleValueEvent(object :
+                                                        ValueEventListener {
+                                                        override fun onCancelled(p0: DatabaseError) {
+                                                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                                        }
+
+
+                                                        override fun onDataChange(p0: DataSnapshot) {
+
+                                                            val ballType = p0.child("ballType")
+                                                                .value.toString()
+                                                            val matchCity =
+                                                                p0.child("matchCity")
+                                                                    .value.toString()
+                                                            val match_date =
+                                                                p0.child("matchDate")
+                                                                    .value.toString()
+                                                            val match_Invite_Id =
+                                                                p0.child("matchInvite")
+                                                                    .value.toString()
+                                                            val match_overs =
+                                                                p0.child("matchOvers")
+                                                                    .value.toString()
+                                                            val match_time =
+                                                                p0.child("matchTime")
+                                                                    .value.toString()
+                                                            val matchType =
+                                                                p0.child("matchType")
+                                                                    .value.toString()
+                                                            val matchVenue =
+                                                                p0.child("matchVenue")
+                                                                    .value.toString()
+                                                            val squadCount =
+                                                                p0.child("squadCount")
+                                                                    .value.toString()
+                                                            val team_A_Id =
+                                                                p0.child("team_A_Id")
+                                                                    .value.toString()
+                                                            val team_B_Id =
+                                                                p0.child("team_B_Id")
+                                                                    .value.toString()
+                                                            val team_A_Name =
+                                                                p0.child("team_A_Name")
+                                                                    .value.toString()
+                                                            val team_B_Name =
+                                                                p0.child("team_B_Name")
+                                                                    .value.toString()
+                                                            val team_A_Logo =
+                                                                p0.child("team_A_Logo")
+                                                                    .value.toString()
+                                                            val team_B_Logo =
+                                                                p0.child("team_B_Logo")
+                                                                    .value.toString()
+                                                            val sender_Capatain =
+                                                                p0.child("sender")
+                                                                    .value.toString()
+                                                            val reciever_Captain =
+                                                                p0.child("reciever")
+                                                                    .value.toString()
+                                                            Log.d("Update2", match_Invite_Id)
+
+
+                                                            matchInviteAdapter.add(
+                                                                MyTeamsNotifications(
+                                                                    matchType,
+                                                                    match_overs,
+                                                                    matchCity,
+                                                                    matchVenue,
+                                                                    match_date,
+                                                                    match_time,
+                                                                    ballType,
+                                                                    squadCount,
+                                                                    team_A_Id,
+                                                                    team_B_Id,
+                                                                    team_A_Name,
+                                                                    team_B_Name,
+                                                                    team_A_Logo,
+                                                                    team_B_Logo,
+                                                                    match_Invite_Id,
+                                                                    sender_Capatain,
+                                                                    reciever_Captain,
+                                                                    this@TeamRequestMatchFragment
+                                                                )
+                                                            )
+                                                        }
+                                                    })
+                                                }
+                                        }
+                                    }
+
+                                }
+
+                            })
+                        }
                     }
+
+                    notifications_recycler_view?.adapter = matchInviteAdapter
+
+                }
+            }
+        })
+
+    }
+
+
+    class MyTeamsNotifications(
+        val matchType: String,
+        val matchOvers: String,
+        val matchCity: String,
+        val matchVenue: String,
+        val matchDate: String,
+        val matchTime: String,
+        val ballType: String,
+        val squadCount: String,
+        val team_A: String,
+        val team_B: String,
+        val team_A_Name: String,
+        val team_B_Name: String,
+        val team_A_Logo: String,
+        val team_B_Logo: String,
+        val matchInviteId: String,
+        val sender: String,
+        val receiver: String,
+        val ctx: TeamRequestMatchFragment
+    ) : Item<ViewHolder>() {
+        override fun getLayout(): Int {
+            return R.layout.notifications_card_match_request
+        }
+
+        private fun makeViewsvisible(vararg view: View) {
+            for (v in view) {
+                v.visible = true
+            }
+        }
+
+        private fun makeViewsInvisible(vararg view: View) {
+            for (v in view) {
+                v.visible = false
+            }
+        }
+
+
+        override fun bind(viewHolder: ViewHolder, position: Int) {
+
+            if (ctx.currentPlayer == sender) {
+                makeViewsInvisible(viewHolder.itemView.accept_match_challenge)
+            } else if (ctx.currentPlayer != sender && ctx.currentPlayer != receiver) {
+                makeViewsInvisible(
+                    viewHolder.itemView.accept_match_challenge,
+                    viewHolder.itemView.change_details_match_challenge,
+                    viewHolder.itemView.reject_match_challenge
+                )
+            }
+
+
+            viewHolder.itemView.notification_cardView
+            viewHolder.itemView.match_type_notification_card.text = matchType
+            viewHolder.itemView.ball_type_of_match.text = ballType
+            viewHolder.itemView.date_of_match.text = matchDate
+            viewHolder.itemView.starting_time_of_match.text = matchTime
+            viewHolder.itemView.squad_count_notification_card.text = squadCount
+            viewHolder.itemView.overs_count_notification_card.text = matchOvers
+            viewHolder.itemView.venue_notification_card.text = matchVenue
+            viewHolder.itemView.city_notification_card.text = matchCity
+
+            viewHolder.itemView.accept_match_challenge.setOnClickListener {
+                ctx.scheduleMatch(position)
+            }
+
+            viewHolder.itemView.change_details_match_challenge.setOnClickListener {
+                ctx.updateMatchInviteDetails(position)
+            }
+
+
+            viewHolder.itemView.reject_match_challenge.setOnClickListener {
+                ctx.rejectInvite(position)
+            }
+
+
+            val teamARef = FirebaseDatabase.getInstance().getReference("/Team/$team_A")
+            teamARef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+
+                    val nameTeamA = p0.child("teamName").value.toString()
+                    val logoTeamA = p0.child("teamLogo").value.toString()
+                    Log.d("FetchMatch", nameTeamA)
+
+                    viewHolder.itemView.team_A_name_notification_card.text = nameTeamA
+                    val logo_team_A =
+                        viewHolder.itemView.findViewById<ImageView>(R.id.team_A_logo_notification_card)
+                    Picasso.get().load(logoTeamA).into(logo_team_A)
+
+                }
+            })
+
+
+            val teamBRef = FirebaseDatabase.getInstance().getReference("/Team/$team_B")
+            teamBRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+
+                    val nameTeamB = p0.child("teamName").value.toString()
+                    val logoTeamB = p0.child("teamLogo").value.toString()
+
+
+                    Log.d("FetchMatch", nameTeamB)
+
+                    viewHolder.itemView.team_B_name_notification_card.text = nameTeamB
+                    val logo_team_B =
+                        viewHolder.itemView.findViewById<ImageView>(R.id.team_B_logo_notification_card)
+                    Picasso.get().load(logoTeamB).into(logo_team_B)
+
                 }
             })
 
         }
-
-
-        class MyTeamsNotifications(
-            val matchType: String,
-            val matchOvers: String,
-            val matchCity: String,
-            val matchVenue: String,
-            val matchDate: String,
-            val matchTime: String,
-            val ballType: String,
-            val squadCount: String,
-            val team_A: String,
-            val team_B: String,
-            val team_A_Name: String,
-            val team_B_Name: String,
-            val team_A_Logo: String,
-            val team_B_Logo: String,
-            val matchInviteId: String,
-            val sender: String,
-            val receiver: String,
-            val ctx: TeamRequestMatchFragment
-        ) : Item<ViewHolder>() {
-            override fun getLayout(): Int {
-                return R.layout.notifications_card_match_request
-            }
-
-            private fun makeViewsvisible(vararg view: View) {
-                for (v in view) {
-                    v.visible = true
-                }
-            }
-
-            private fun makeViewsInvisible(vararg view: View) {
-                for (v in view) {
-                    v.visible = false
-                }
-            }
-
-
-            override fun bind(viewHolder: ViewHolder, position: Int) {
-
-                if (ctx.currentPlayer == sender) {
-                    makeViewsInvisible(viewHolder.itemView.accept_match_challenge)
-                } else if (ctx.currentPlayer != sender && ctx.currentPlayer != receiver) {
-                    makeViewsInvisible(
-                        viewHolder.itemView.accept_match_challenge,
-                        viewHolder.itemView.change_details_match_challenge,
-                        viewHolder.itemView.reject_match_challenge
-                    )
-                }
-
-
-                viewHolder.itemView.notification_cardView
-                viewHolder.itemView.match_type_notification_card.text = matchType
-                viewHolder.itemView.ball_type_of_match.text = ballType
-                viewHolder.itemView.date_of_match.text = matchDate
-                viewHolder.itemView.starting_time_of_match.text = matchTime
-                viewHolder.itemView.squad_count_notification_card.text = squadCount
-                viewHolder.itemView.overs_count_notification_card.text = matchOvers
-                viewHolder.itemView.venue_notification_card.text = matchVenue
-                viewHolder.itemView.city_notification_card.text = matchCity
-
-                viewHolder.itemView.accept_match_challenge.setOnClickListener {
-                    ctx.scheduleMatch(position)
-                }
-
-                viewHolder.itemView.change_details_match_challenge.setOnClickListener {
-                    ctx.updateMatchInviteDetails(position)
-                }
-
-
-                viewHolder.itemView.reject_match_challenge.setOnClickListener {
-                    ctx.rejectInvite(position)
-                }
-
-
-                val teamARef = FirebaseDatabase.getInstance().getReference("/Team/$team_A")
-                teamARef.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onCancelled(p0: DatabaseError) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                    }
-
-                    override fun onDataChange(p0: DataSnapshot) {
-
-                        val nameTeamA = p0.child("teamName").value.toString()
-                        val logoTeamA = p0.child("teamLogo").value.toString()
-                        Log.d("FetchMatch", nameTeamA)
-
-                        viewHolder.itemView.team_A_name_notification_card.text = nameTeamA
-                        val logo_team_A =
-                            viewHolder.itemView.findViewById<ImageView>(R.id.team_A_logo_notification_card)
-                        Picasso.get().load(logoTeamA).into(logo_team_A)
-
-                    }
-                })
-
-
-                val teamBRef = FirebaseDatabase.getInstance().getReference("/Team/$team_B")
-                teamBRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onCancelled(p0: DatabaseError) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                    }
-
-                    override fun onDataChange(p0: DataSnapshot) {
-
-                        val nameTeamB = p0.child("teamName").value.toString()
-                        val logoTeamB = p0.child("teamLogo").value.toString()
-
-
-                        Log.d("FetchMatch", nameTeamB)
-
-                        viewHolder.itemView.team_B_name_notification_card.text = nameTeamB
-                        val logo_team_B =
-                            viewHolder.itemView.findViewById<ImageView>(R.id.team_B_logo_notification_card)
-                        Picasso.get().load(logoTeamB).into(logo_team_B)
-
-                    }
-                })
-
-            }
-        }
     }
+}
 
 
