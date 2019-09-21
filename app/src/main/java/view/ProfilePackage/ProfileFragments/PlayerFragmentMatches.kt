@@ -159,8 +159,6 @@ class PlayerFragmentMatches:Fragment() {
 
             viewHolder.itemView.team_A_total_overs_match_card.text=match_overs
             viewHolder.itemView.team_B_total_overs_match_card.text=match_overs
-            viewHolder.itemView.date_of_match.text=match_date
-            viewHolder.itemView.starting_time_of_match.text=match_time
 
 
 

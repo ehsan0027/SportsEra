@@ -19,7 +19,7 @@ import com.pawegio.kandroid.onQuerySubmit
 import com.pawegio.kandroid.toast
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_search_player_to_add_in_team.*
-import model.PlayerBasicProfile
+import model.player.PlayerBasicProfile
 import org.jetbrains.anko.startActivity
 import view.team.TeamDetailActivity
 

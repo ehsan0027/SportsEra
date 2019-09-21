@@ -1,4 +1,4 @@
-package model
+package model.player
 
 data class PlayerBasicProfile(
                    //General Profile

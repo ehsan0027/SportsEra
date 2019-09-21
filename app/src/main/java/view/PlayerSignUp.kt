@@ -20,7 +20,7 @@ import com.google.firebase.storage.StorageReference
 import com.pawegio.kandroid.progressDialog
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.player_signup.*
-import model.*
+import model.player.*
 import org.jetbrains.anko.*
 import java.io.File
 
