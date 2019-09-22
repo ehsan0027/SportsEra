@@ -117,12 +117,15 @@ class TeamUpcomingMatchFragment(private val teamId: String) : Fragment() {
                                 }
 
                                 override fun onDataChange(p0: DataSnapshot) {
+                                    val match_Id= p0.child("matchInvite").value.toString()
                                     val match_type = p0.child("matchType").value.toString()
                                     val match_overs = p0.child("matchOvers").value.toString()
                                     val match_date = p0.child("matchDate").value.toString()
                                     val match_time = p0.child("matchTime").value.toString()
                                     val match_venue = p0.child("matchVenue").value.toString()
                                     val match_city = p0.child("matchCity").value.toString()
+                                    val team_A_Id = p0.child("team_A_Id").value.toString()
+                                    val team_B_Id = p0.child("team_B_Id").value.toString()
                                     val team_A_Name = p0.child("team_A_Name").value.toString()
                                     val team_B_Name = p0.child("team_B_Name").value.toString()
                                     val team_A_Logo = p0.child("team_A_Logo").value.toString()
@@ -132,12 +135,15 @@ class TeamUpcomingMatchFragment(private val teamId: String) : Fragment() {
 
                                     upcomingMatchAdapter.add(
                                         UpcomingMatchViewHolder(
+                                            match_Id,
                                             match_type,
                                             match_overs,
                                             match_date,
                                             match_time,
                                             match_venue,
                                             match_city,
+                                            team_A_Id,
+                                            team_B_Id,
                                             team_A_Name,
                                             team_B_Name,
                                             team_A_Logo,
@@ -158,9 +164,27 @@ class TeamUpcomingMatchFragment(private val teamId: String) : Fragment() {
     }
 
     fun startTossActivity(position: Int) {
+val item=upcomingMatchAdapter.getItem(position) as UpcomingMatchViewHolder
+
+
+
+        val match_id=item.match_Id
+        val team_A_id=item.team_A_Id
+        val team_B_id=item.team_B_Id
+        val team_A_name=item.team_A_Name
+        val team_B_name=item.team_B_Name
+        val team_A_logo=item.team_A_Logo
+        val team_B_logo=item.team_B_Logo
 
 
         val intent = Intent(activity, TossActivity::class.java)
+        intent.putExtra("match_Id",match_id)
+        intent.putExtra("team_A_Id",team_A_id)
+        intent.putExtra("team_B_Id",team_B_id)
+        intent.putExtra("team_A_Name",team_A_name)
+        intent.putExtra("team_B_Name",team_B_name)
+        intent.putExtra("team_A_Logo",team_A_logo)
+        intent.putExtra("team_B_Logo",team_B_logo)
         startActivity(intent)
         activity?.onBackPressed()
     }
@@ -168,12 +192,15 @@ class TeamUpcomingMatchFragment(private val teamId: String) : Fragment() {
 
     class UpcomingMatchViewHolder(
 
+        var match_Id: String,
         var match_type: String,
         var match_overs: String,
         var match_date: String,
         var match_time: String,
         var match_venue: String,
         var match_city: String,
+        var team_A_Id: String,
+        var team_B_Id: String,
         var team_A_Name: String,
         var team_B_Name: String,
         var team_A_Logo: String,

@@ -16,9 +16,14 @@ class MatchInvite(val matchType:String,
                   val team_B_Logo:String,
                   val matchInvite:String,
                   val sender:String,
-                  val reciever:String
+                  val reciever:String,
+                  val tossWonTeamElectedTo:String,
+                  val tossWonByTeam:String,
+                  val team_A_Squad: ArrayList<String>? =null,
+                  val team_B_Squad: ArrayList<String>? =null
+
                   )
 {
-    constructor():this("","","","","","","","","","","","","","","",""," ")
+    constructor():this("","","","","","","","","","","","","","","",""," ","","",null,null)
 
 }

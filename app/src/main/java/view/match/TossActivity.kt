@@ -8,6 +8,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_toss.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.okButton
+import org.jetbrains.anko.startActivity
 
 class TossActivity : AppCompatActivity() {
 
@@ -106,6 +107,13 @@ class TossActivity : AppCompatActivity() {
 
     }
 
+
+    //TO DO, BUILD AND RUN ........SELECT STRIKER/NON STRIKER/BOWLER
+    //I WILL BACK 2:20
+
+
+
+
     private fun startInning(battingTeamId:String) {
         Log.d("TOSSACTIVITY","BT_id $battingTeamId")
         if (battingTeamId.isNotEmpty()
@@ -115,19 +123,18 @@ class TossActivity : AppCompatActivity() {
             && teamB_Id.isNotEmpty()
         ) {
             Log.d("TOSSACTIVITY","StartInningActivity")
-/**
             startActivity<StartInningActivity>(
                 "battingTeamId" to battingTeamId,
                 "battingTeamName" to battingTeamName,
                 "newMatchId" to newMatchId,
                 "teamA_Id" to teamA_Id,
-                "teamB_Id" to teamB_Id
+                "teamB_Id" to teamB_Id,
+                "tossWonTeamElectedTo" to tossWonTeamElectedTo
             )
-            **/
         } else {
             alert {
-                title = "No Slection"
-                message = "please selecte Toss won team (batting/bowling)"
+                title = "No Selection"
+                message = "Please Select Toss Winning Team and Their Choice (batting/bowling)"
                 setFinishOnTouchOutside(false)
                 okButton { dialog ->
                     dialog.dismiss()
@@ -144,14 +151,14 @@ class TossActivity : AppCompatActivity() {
 
     private fun showTeams() {
 
-        teamA_Id = intent.getStringExtra("teamA_Id")
-        teamB_Id = intent.getStringExtra("teamB_Id")
-        teamA_Name = intent.getStringExtra("teamAName")
-        teamB_Name = intent.getStringExtra("teamBName")
-        newMatchId = intent.getStringExtra("newMatchId")
+        teamA_Id = intent.getStringExtra("team_A_Id")
+        teamB_Id = intent.getStringExtra("team_B_Id")
+        teamA_Name = intent.getStringExtra("team_A_Name")
+        teamB_Name = intent.getStringExtra("team_B_Name")
+        newMatchId = intent.getStringExtra("match_Id")
 
-        val teamA_Logo = intent.getStringExtra("teamALogo")
-        val teamB_Logo = intent.getStringExtra("teamBLogo")
+        val teamA_Logo = intent.getStringExtra("team_A_Logo")
+        val teamB_Logo = intent.getStringExtra("team_B_Logo")
 
         Picasso.get().load(teamA_Logo).into(teamA_Logo_TossActivity)
         Picasso.get().load(teamB_Logo).into(teamB_Logo_TossActivity)

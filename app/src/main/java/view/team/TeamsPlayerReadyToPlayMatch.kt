@@ -67,8 +67,8 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
          if(found)
          {Log.d("Reselection","found")
              alert {
-                 title="PlayerBasicProfile Reselection"
-                 message="$name already selected for Bating"
+                 title="Player Reselection"
+                 message="$name Already Selected"
                  okButton { dialog -> dialog.dismiss() }
              }.show()
          } else
@@ -108,7 +108,7 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
     private fun getTeamSquad(teamId:String,newMatchId:String) {
         Log.d("FetchTeam_ID", teamId)
         val playerRef= FirebaseDatabase.getInstance()
-        val teamsPlayerRef = FirebaseDatabase.getInstance().getReference("Match/$newMatchId/$teamId")
+        val teamsPlayerRef = FirebaseDatabase.getInstance().getReference("/Team/$teamId/TeamSquad")
         teamsPlayerRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) { Log.d("FetchTeam_ID", "onCancelled") }
             override fun onDataChange(p0: DataSnapshot) {

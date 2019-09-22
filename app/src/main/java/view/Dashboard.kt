@@ -33,6 +33,9 @@ import view.ProfilePackage.Profile
 import view.fragment.SearchTeamFragment
 import view.match.MatchDetails
 import view.team.TeamDetailActivity
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Suppress("DEPRECATION")
 class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionListener
@@ -123,8 +126,24 @@ class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionLis
                 val playerImage=p0.child("profile_img").value.toString()
                 val playerName=p0.child("name").value.toString()
                 val playingRole=p0.child("playing_role").value.toString()
-                val playerAge=p0.child("age").value.toString()
                 val playerCity=p0.child("Location").value.toString()
+
+
+                val playerDob=p0.child("dateOfBirth").value.toString()
+                var date: Date? = null
+                val sdf = SimpleDateFormat("dd.MM.yyyy")
+                try { date = sdf.parse(playerDob) } catch (e: ParseException) { e.printStackTrace() }
+                if (date == null) return
+                val dob: Calendar = Calendar.getInstance()
+                val today: Calendar = Calendar.getInstance()
+                dob.time = date
+                val year = dob.get(Calendar.YEAR)//get dateOfBirth Year
+                val month = dob.get(Calendar.MONTH)
+                val day = dob.get(Calendar.DAY_OF_MONTH)
+                dob.set(year, month, day)
+                var age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR)
+                if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) { age-- }
+                playerAge_DashboardActivity.text=age.toString()
 
 
                 Picasso
@@ -135,7 +154,6 @@ class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionLis
                     .into(profile_Image_DashboardActivity)
                 playerName_DashboardActivity.text=playerName
                 playerRole_DashboardActivity.text=playingRole
-                playerAge_DashboardActivity.text=playerAge
                 playerCity_DashboardActivity.text=playerCity
 
             }
@@ -183,27 +201,6 @@ class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionLis
                 val playerMatches=p0.child("matches").value.toString()
 
                 matches_figures_Dashboard.text=playerMatches
-
-
-            }
-        })
-    }
-
-
-    private fun calculateAge(){
-
-
-        val playerRef= FirebaseDatabase.getInstance().getReference("/PlayerBasicProfile/$currentPlayer")
-        playerRef.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-
-                val playerDob=p0.child("dateOfBirth").value.toString()
-
-                
 
 
             }
