@@ -11,6 +11,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_start_inning.*
 import model.player.PlayerPlayingMatch
 import org.jetbrains.anko.alert
@@ -237,11 +238,11 @@ class StartInningActivity : AppCompatActivity() {
         ballType: String,
         mVenue: String,
         mCity: String,
-        sender:String,
-        squadCount:String,
-        receiver:String)
-    {
-       ///       val match=MatchInvite(mType,overs,mCity,mVenue,date,time,ballType,squadCount,teamA_Id,teamB_Id,)
+        sender: String,
+        squadCount: String,
+        receiver: String
+    ) {
+        ///       val match=MatchInvite(mType,overs,mCity,mVenue,date,time,ballType,squadCount,teamA_Id,teamB_Id,)
     }
 
 
@@ -250,23 +251,30 @@ class StartInningActivity : AppCompatActivity() {
         if (data != null && resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 STRIKER_RC -> {
+
                     val name = data.getStringExtra("name")
+                    val player_img = data.getStringExtra("player_img")
                     striker = data.getStringExtra("playerId")
+                    Picasso.get().load(player_img).into(striker_imageButton_StartInning)
                     playerReSelection(name, STRIKER_RC)
                     striker_Name_StartInning.text = name
                     toast(name)
                 }
                 NON_STRIKER_RC -> {
                     val name = data.getStringExtra("name")
+                    val player_img = data.getStringExtra("player_img")
                     nonStriker = data.getStringExtra("playerId")
+                    Picasso.get().load(player_img).into(non_Striker_imageButton_StartInning)
                     playerReSelection(name, NON_STRIKER_RC)
                     non_striker_Name_StartInning.text = name
                     toast(name)
                 }
                 BOWLER_RC -> {
                     val name = data.getStringExtra("name")
+                    val player_img = data.getStringExtra("player_img")
                     bowler = data.getStringExtra("playerId")
                     bowler_Name_StartInning.text = name
+                    Picasso.get().load(player_img).into(bowler_imageButton_StartInning)
                     toast(name)
                 }
 

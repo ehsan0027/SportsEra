@@ -12,6 +12,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.pawegio.kandroid.toast
 import com.pawegio.kandroid.visible
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_team_detail.*
@@ -67,6 +68,18 @@ class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
             }
 
             override fun onDataChange(p0: DataSnapshot) {
+
+
+                val teamSquadCount =p0.child("TeamSquad").childrenCount
+                Log.d("Team Squad Count","$teamSquadCount")
+                if (teamSquadCount < 2)
+                {
+                    makeViewsInvisible(challenge_for_match)
+                toast("Please Add Players in Your Team to Challenge Opponent")
+                }
+
+
+
                 captainId_A = p0.child("captainId").value.toString()
                 val playerRef =
                     FirebaseDatabase.getInstance().getReference("/PlayerBasicProfile/$captainId_A")

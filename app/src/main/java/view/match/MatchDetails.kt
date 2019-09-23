@@ -226,6 +226,7 @@ private fun sendRequestForMatch() {
                     "captainId_A" to team_A_Captain,
                 "team_B_Id" to team_B_id
                 )
+                finish()
             }
         }.addOnFailureListener { exception ->
             toast(exception.localizedMessage.toString())

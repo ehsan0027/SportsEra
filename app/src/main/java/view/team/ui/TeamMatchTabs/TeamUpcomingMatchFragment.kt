@@ -16,7 +16,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.pawegio.kandroid.toast
 import com.pawegio.kandroid.visible
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
@@ -181,7 +180,6 @@ val item=upcomingMatchAdapter.getItem(position) as UpcomingMatchViewHolder
         val team_B_name=item.team_B_Name
         val team_A_logo=item.team_A_Logo
         val team_B_logo=item.team_B_Logo
-
 
         val intent = Intent(activity, TossActivity::class.java)
         intent.putExtra("match_Id",match_id)

@@ -32,6 +32,7 @@ import org.jetbrains.anko.startActivity
 import view.ProfilePackage.Profile
 import view.fragment.SearchTeamFragment
 import view.match.MatchDetails
+import view.match.TossActivity
 import view.team.TeamDetailActivity
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -414,6 +415,9 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
                                     if (p0.exists()) {
 
                                         val match_type = p0.child("matchType").value.toString()
+                                        val team_A_Id = p0.child("team_A_Id").value.toString()
+                                        val team_B_Id = p0.child("team_B_Id").value.toString()
+                                        val match_Id= p0.child("matchInvite").value.toString()
                                         val match_overs = p0.child("matchOvers").value.toString()
                                         val match_date = p0.child("matchDate").value.toString()
                                         val match_time = p0.child("matchTime").value.toString()
@@ -428,6 +432,9 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
 
                                         upcomingMatchAdapter.add(
                                             UpcomingMatchViewHolder(
+                                                match_Id,
+                                                team_A_Id,
+                                                team_B_Id,
                                                 match_type,
                                                 match_overs,
                                                 match_date,
@@ -455,8 +462,37 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
 
     }
 
+
+    fun startTossActivity(position: Int) {
+        val item=upcomingMatchAdapter.getItem(position) as UpcomingMatchViewHolder
+
+
+
+        val match_id=item.match_Id
+        val team_A_id=item.team_A_Id
+        val team_B_id=item.team_B_Id
+        val team_A_name=item.team_A_Name
+        val team_B_name=item.team_B_Name
+        val team_A_logo=item.team_A_Logo
+        val team_B_logo=item.team_B_Logo
+
+        startActivity<TossActivity>("match_Id" to match_id,
+            "team_A_Id" to team_A_id,
+            "team_B_Id" to team_B_id,
+            "team_A_Name" to team_A_name,
+            "team_B_Name" to team_B_name,
+            "team_A_Logo" to team_A_logo,
+            "team_B_Logo" to team_B_logo
+        )
+
+    }
+
+
     class UpcomingMatchViewHolder(
 
+        var match_Id: String,
+        var team_A_Id: String,
+        var team_B_Id: String,
         var match_type: String,
         var match_overs: String,
         var match_date: String,
@@ -495,8 +531,11 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
             if (ctx.currentPlayer != sender) {
                 makeViewsInvisible(viewHolder.itemView.start_match_button)
             }
-
-
+            viewHolder.itemView.start_match_button.setOnClickListener { v ->
+                run {
+                    ctx.startTossActivity(position)
+                }
+            }
             viewHolder.itemView.date_of_match_upcoming.text = match_date
             viewHolder.itemView.starting_time_of_match_upcoming.text = match_time
             viewHolder.itemView.venue_of_match_on_match_card_upcoming.text = match_venue

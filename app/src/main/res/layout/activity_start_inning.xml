@@ -52,7 +52,7 @@
             >
 
 
-        <ImageButton
+        <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:layout_margin="15dp"
@@ -62,7 +62,7 @@
 
             >
 
-        </ImageButton>
+        </de.hdodenhof.circleimageview.CircleImageView>
 
         <TextView
                 android:layout_width="wrap_content"
@@ -88,7 +88,7 @@
             >
 
 
-        <ImageButton
+        <de.hdodenhof.circleimageview.CircleImageView
 
                 android:layout_width="110dp"
                 android:layout_height="110dp"
@@ -99,7 +99,7 @@
 
               >
 
-        </ImageButton>
+        </de.hdodenhof.circleimageview.CircleImageView>
         <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
@@ -151,7 +151,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             >
-    <ImageButton
+    <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:layout_margin="15dp"
@@ -159,7 +159,7 @@
         android:background="@drawable/bowler"
             android:id="@+id/bowler_imageButton_StartInning"
             >
-    </ImageButton>
+    </de.hdodenhof.circleimageview.CircleImageView>
 
     <TextView
             android:layout_width="100dp"

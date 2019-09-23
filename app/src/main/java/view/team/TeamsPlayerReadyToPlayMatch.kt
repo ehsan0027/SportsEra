@@ -11,6 +11,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
@@ -41,14 +42,15 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
             val team_player = player as SelectedTeamPlayer
             val name=team_player.name
             val playerId=team_player.player_id
+            val player_img =team_player.player_img
             Log.d("GroupAdapter","Clicked")
             toast("Clicked")
-   isPlayerAlreadySelected(playerId,name)
+   isPlayerAlreadySelected(playerId,name,player_img)
           }
     }
 
 
-    private fun isPlayerAlreadySelected(playerId:String, name: String) {
+    private fun isPlayerAlreadySelected(playerId:String, name: String,player_img:String) {
         val matchRef=FirebaseDatabase.getInstance().getReference("/MatchScore/$newMatchId/$teamId")
  matchRef.addListenerForSingleValueEvent(object :ValueEventListener{
      override fun onCancelled(p0: DatabaseError) {}
@@ -73,23 +75,24 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
              }.show()
          } else
          {Log.d("Reselection","not found")
-             setPlayer(playerId,name)
+             setPlayer(playerId,name,player_img)
          }
 
      }else{
          Log.d("ONDATACHANGE","no data found")
-          setPlayer(playerId,name)
+          setPlayer(playerId,name,player_img)
      }
      }
  })
     }
 
 
-    fun setPlayer(playerId: String,name: String)
+    fun setPlayer(playerId: String,name: String,player_img:String)
     {
         val intent = Intent()
         intent.putExtra("name",name)
         intent.putExtra("playerId",playerId)
+        intent.putExtra("player_img",player_img)
         setResult(Activity.RESULT_OK, intent)
         finish()
 
@@ -98,14 +101,12 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
         super.onResume()
         teamId=intent.getStringExtra("teamId")
         newMatchId=intent.getStringExtra("newMatchId")
-        Log.d("FetchMatch_ID", newMatchId)
-
         groupAdapter.clear()
-        getTeamSquad(teamId,newMatchId)
+        getTeamSquad(teamId)
     }
 
 
-    private fun getTeamSquad(teamId:String,newMatchId:String) {
+    private fun getTeamSquad(teamId:String) {
         Log.d("FetchTeam_ID", teamId)
         val playerRef= FirebaseDatabase.getInstance()
         val teamsPlayerRef = FirebaseDatabase.getInstance().getReference("/Team/$teamId/TeamSquad")
@@ -128,7 +129,9 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
                                     //get the actual player
                                     val playerId = p0.child("playerId").value.toString()
                                     val playerName = p0.child("name").value.toString()
-                                    groupAdapter.add(SelectedTeamPlayer(playerName, playerId))
+                                    val profile_img = p0.child("profile_img").value.toString()
+
+                                    groupAdapter.add(SelectedTeamPlayer(playerName, playerId,profile_img))
 
                                 }
 
@@ -142,13 +145,14 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
     }
 
 
-        class SelectedTeamPlayer(val name: String,val player_id:String) : Item<ViewHolder>() {
+        class SelectedTeamPlayer(val name: String,val player_id:String, val player_img:String) : Item<ViewHolder>() {
             override fun getLayout(): Int {
                 return R.layout.player_in_selected_team_to_start_inning
             }
 
             override fun bind(viewHolder: ViewHolder, position: Int) {
                 viewHolder.itemView.playerName_PlayerInTeamToStartInning.text = name
+                Picasso.get().load(player_img).into(viewHolder.itemView.player_img_player_selection)
 
             }
 
