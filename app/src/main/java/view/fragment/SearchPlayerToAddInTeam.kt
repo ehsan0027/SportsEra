@@ -20,8 +20,6 @@ import com.pawegio.kandroid.toast
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_search_player_to_add_in_team.*
 import model.player.PlayerBasicProfile
-import org.jetbrains.anko.startActivity
-import view.team.TeamDetailActivity
 
 class SearchPlayerToAddInTeam : AppCompatActivity() {
     // TODO: Rename and change types of parameters
@@ -58,6 +56,7 @@ class SearchPlayerToAddInTeam : AppCompatActivity() {
 
         }
     }
+
     private fun searchPlayer(inputText:String)
     {
 
@@ -106,36 +105,6 @@ class SearchPlayerToAddInTeam : AppCompatActivity() {
                                             val intent = Intent()
                                             setResult(Activity.RESULT_OK, intent)
                                             finish()
-                                            val teamRef=firebaseDatabase?.getReference("Team/$teamId")
-                                            teamRef?.addListenerForSingleValueEvent(object:ValueEventListener{
-                                                override fun onCancelled(p0: DatabaseError) {
-                                                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                                                }
-
-                                                override fun onDataChange(p0: DataSnapshot) {
-
-                                                    val captainId=p0.child("captainId").value.toString()
-                                                    val teamLogo=p0.child("teamLogo").value.toString()
-                                                    val teamName=p0.child("teamName").value.toString()
-                                                    val teamCaptain=p0.child("captainName").value.toString()
-                                                    val teamCity=p0.child("city").value.toString()
-
-                                                    startActivity<TeamDetailActivity>(
-                                                        "teamId" to teamId,
-                                                        "teamLogo" to teamLogo,
-                                                        "teamName" to teamName,
-                                                        "teamCaptain" to teamCaptain,
-                                                        "teamCity" to teamCity ,
-                                                        "captainId" to captainId,
-                                                        "Dashboard" to "dashboard")
-
-                                                }
-
-                                            })
-
-
-
-
                                             //startActivity<TeamDetailActivity>()
 
                                         }

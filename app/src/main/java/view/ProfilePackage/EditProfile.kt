@@ -9,7 +9,10 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.RadioButton
+import android.widget.Spinner
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sportsplayer.R
@@ -209,7 +212,7 @@ class EditProfile:AppCompatActivity(){
                 val playerImage=p0.child("profile_img").value.toString()
                 val playerName=p0.child("name").value.toString()
                 val mobileNumber=p0.child("phoneNumber").value.toString()
-                val playerLocation=p0.child("Location").value.toString()
+                val playerCity=p0.child("city").value.toString()
                 val playerDob=p0.child("dateOfBirth").value.toString()
                 val playerPR=p0.child("playing_role").value.toString()
                 val playerBatS=p0.child("batting_style").value.toString()
@@ -223,7 +226,7 @@ class EditProfile:AppCompatActivity(){
                     .into(change_photo_edit_profile)
                 edit_name_edit_profile.setText(playerName)
                 edit_phone_number_edit_profile.setText(mobileNumber)
-                edit_location_edit_profile.setText(playerLocation)
+                edit_location_edit_profile.setText(playerCity)
                 date_of_birth_edit_profile.setText(playerDob)
 
 
@@ -285,7 +288,7 @@ class EditProfile:AppCompatActivity(){
             userUpdate["$currentPlayer/gender"] = gender
             userUpdate["$currentPlayer/name"] = name
             userUpdate["$currentPlayer/phoneNumber"] = phoneNumber
-            userUpdate["$currentPlayer/Location"] = location
+            userUpdate["$currentPlayer/city"] = location
             userUpdate["$currentPlayer/dateOfBirth"] = dob
             userUpdate["$currentPlayer/playing_role"] = playingRole
             userUpdate["$currentPlayer/batting_style"] = battingStyle
@@ -300,7 +303,7 @@ class EditProfile:AppCompatActivity(){
             }?.addOnFailureListener { Exception-> toast(Exception.localizedMessage) }
         }
         else{
-            toast("Failure of Updating Data")
+            toast("Please Fill All Fields")
         }
 
 

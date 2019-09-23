@@ -78,7 +78,25 @@
     <style name="Divider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">2dp</item>
+        <item name="android:layout_margin">5dp</item>
         <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
+    <style name="comma">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:text">", "</item>
+    </style>
+
+    <style name="dash">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:text">" - "</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:gravity">center</item>
+
     </style>
 
 

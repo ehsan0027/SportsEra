@@ -3,8 +3,8 @@ package view.ProfilePackage
 import android.app.ProgressDialog
 import android.net.Uri
 import android.os.Bundle
-import com.example.sportsplayer.R
 import androidx.appcompat.app.AppCompatActivity
+import com.example.sportsplayer.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

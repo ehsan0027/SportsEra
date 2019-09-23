@@ -1,5 +1,6 @@
 package view.team.ui
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
@@ -34,14 +35,14 @@ import org.jetbrains.anko.find
 import view.fragment.SearchPlayerToAddInTeam
 
 
-class TeamMemberFragment(val teamId: String,val captainId:String) : Fragment(),View.OnClickListener {
+class TeamMemberFragment(val team_A_Id: String,val captainId_A:String) : Fragment(),View.OnClickListener {
     private var listener: OnFragmentInteractionListener? = null
     val groupAdapter= GroupAdapter<ViewHolder>() //groupi Adapter
 
     constructor():this("","")
     lateinit var removePopUpDialog: Dialog
     private val currentPlayer = FirebaseAuth.getInstance().uid.toString()
-    private val requestCode = 1
+    private val SearchPlayer_RC = 1
 
 
     override fun onCreateView(
@@ -100,7 +101,6 @@ class TeamMemberFragment(val teamId: String,val captainId:String) : Fragment(),V
         removePopUpDialog.setCancelable(true)
         val view=activity?.layoutInflater?.inflate(R.layout.remove_player_popup,null)
         removePopUpDialog.setContentView(view)
-        val cancel=view?.find<TextView>(R.id.cancel_text_RemovePlayerPopUp)
         val image=view?.find<ImageView>(R.id.profile_Image_RemovePlayerPopUp)
         val phone=view?.find<TextView>(R.id.player_phn_RemovePlayerPopUp)
         val batting_S=view?.find<TextView>(R.id.playerBatting_S_RemovePlayerPopUp)
@@ -108,7 +108,10 @@ class TeamMemberFragment(val teamId: String,val captainId:String) : Fragment(),V
         val playerCity=view?.find<TextView>(R.id.playerCity_RemovePlayerPopUp)
         val remove=view?.find<Button>(R.id.removeButton_RemovePlayerPopUp)
         val cancelButton=view?.find<Button>(R.id.cancelButton_RemovePlayerPopUp)
-        cancel?.setOnClickListener { removePopUpDialog.dismiss() }
+
+        if (currentPlayer == captainId_A){
+            remove?.visible = true
+        }else{remove?.visibility=View.GONE}
         cancelButton?.setOnClickListener { removePopUpDialog.dismiss() }
         Picasso.get().load(p_image).into(image)
         phone?.text=phn
@@ -149,29 +152,41 @@ class TeamMemberFragment(val teamId: String,val captainId:String) : Fragment(),V
     override fun onResume() {
         super.onResume()
         groupAdapter.clear()
-        fetchTeamMember(teamId)
+        fetchTeamMember(team_A_Id)
         //assign Click Listener to Button
         removeMe_Button_team_member.setOnClickListener(this)
         addPlayer_Button_team_member.setOnClickListener(this)
 
-        if (currentPlayer!=captainId) {
+        if (currentPlayer!=captainId_A) {
             makeViewsInvisible(addPlayer_Button_team_member)
+        }
+        if (currentPlayer==captainId_A) {
+            makeViewsInvisible(removeMe_Button_team_member)
         }
     }
 
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+
+        if(resultCode==Activity.RESULT_OK && data != null)
+        {
+            when(requestCode)
+            {
+                SearchPlayer_RC->{toast("Player Added")}
+            }
+        }
+    }
     private fun removeSelectedPlayer(p_Id: String)
     {
 
-        toast(currentPlayer)
-        if (currentPlayer==captainId){
-            toast("You can't be removed while captain")
-        }
-        else{
         val newDatabaseReference=FirebaseDatabase.getInstance().reference
         val removePlayer=HashMap<String,String?>()
-        removePlayer["/TeamsPlayer/$teamId/$p_Id"]=null
-        removePlayer["/PlayersTeam/$p_Id/$teamId"]=null
+        removePlayer["/TeamsPlayer/$team_A_Id/$p_Id"]=null
+        removePlayer["/PlayersTeam/$p_Id/$team_A_Id"]=null
+        removePlayer["/Team/$team_A_Id/TeamSquad/$p_Id"]=null
+        removePlayer["/Team/$team_A_Id/TeamBench/$p_Id"]=null
         newDatabaseReference.updateChildren(removePlayer as Map<String, Any?>).addOnCompleteListener {
 
                 task ->
@@ -180,7 +195,6 @@ class TeamMemberFragment(val teamId: String,val captainId:String) : Fragment(),V
                 removePopUpDialog.dismiss()
             }
         }
-        }
     }
 
     override fun onClick(view: View?) {
@@ -188,8 +202,8 @@ class TeamMemberFragment(val teamId: String,val captainId:String) : Fragment(),V
         {
             R.id.addPlayer_Button_team_member->{
                 val intent = Intent(activity, SearchPlayerToAddInTeam::class.java)
-                intent.putExtra("teamId", teamId)
-                this.startActivityForResult(intent, requestCode)
+                intent.putExtra("teamId", team_A_Id)
+                this.startActivityForResult(intent, SearchPlayer_RC)
             }
             R.id.removeMe_Button_team_member->{
                 removeMe(currentPlayer)
@@ -241,7 +255,7 @@ class TeamMemberFragment(val teamId: String,val captainId:String) : Fragment(),V
                                     val playerName=p0.child("name").value.toString()
                                     val player_id=p0.child("playerId").value.toString()
                                     val playerImage=p0.child("profile_img").value.toString()
-                                    val pCity=p0.child("Location").value.toString()
+                                    val pCity=p0.child("city").value.toString()
                                     //cardView color
                                     val red=(10..230).random()
                                     val green=(10..230).random()
@@ -284,6 +298,8 @@ class TeamMemberFragment(val teamId: String,val captainId:String) : Fragment(),V
             Picasso.get().load(playerImage).into(image)
             viewHolder.itemView.playerName_teamMemberList.text=playerName
             viewHolder.itemView.playerRole_teamMemberList.text=playerRole
+
+
         }
 
 

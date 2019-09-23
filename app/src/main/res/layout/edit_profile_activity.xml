@@ -158,7 +158,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Location"
+                        android:hint="City"
                         app:hintAnimationEnabled="true"
                         app:hintEnabled="true"
                         app:boxStrokeColor="@android:color/holo_green_dark"

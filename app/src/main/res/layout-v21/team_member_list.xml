@@ -14,7 +14,7 @@
         app:cardElevation="5dp"
         app:cardCornerRadius="5dp"
         
-        app:cardBackgroundColor="@color/cardView"
+        app:cardBackgroundColor="@color/DarkGoldenrod"
         android:id="@+id/cardView_teamMemberList"
 >
         <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
@@ -40,7 +40,7 @@
                   android:layout_height="wrap_content"
                   android:id="@+id/playerName_teamMemberList"
                   style="@style/playerTextStyle"
-                  android:text="player Name"/>
+                  android:text="Player Name"/>
 
     </LinearLayout>
 
@@ -63,15 +63,6 @@
     </LinearLayout>
 
 
-    <TextView android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_centerVertical="true"
-              android:layout_marginEnd="10dp"
-              android:hint="City Name"
-              style="@style/teamNameTextStyle"
-              android:id="@+id/playerCity_teamMemberList"
-              android:layout_alignParentEnd="true"
-        />
         </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>
 

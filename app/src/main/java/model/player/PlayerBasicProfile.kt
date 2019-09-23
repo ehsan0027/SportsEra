@@ -10,7 +10,6 @@ data class PlayerBasicProfile(
                    val dateOfBirth:String?="",
                    val age:Int=20,
                    val city:String?="",
-                   val Location:String?="",
                    var playing_role:String?="",
                    var batting_style:String?="",
                    var bowling_style:String?=""

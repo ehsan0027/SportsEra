@@ -85,7 +85,6 @@ class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
         })
     }
 
-
     private fun setViewsContent() {
         team_A_Id = intent.getStringExtra("team_A_Id")
         team_A_Logo = intent.getStringExtra("team_A_Logo")

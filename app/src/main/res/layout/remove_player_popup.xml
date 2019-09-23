@@ -19,19 +19,7 @@
         android:layout_height="380dp"
        android:background="@color/darkGray">
 
-    <TextView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:text="X"
-            android:background="@drawable/ovel_shap_button"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-        android:id="@+id/cancel_text_RemovePlayerPopUp"
-            >
-    </TextView>
+
 
     <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="120dp"

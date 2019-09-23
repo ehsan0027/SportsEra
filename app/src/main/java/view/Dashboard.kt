@@ -38,23 +38,22 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Suppress("DEPRECATION")
-class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionListener
-{
+class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionListener {
 
     override fun onFragmentInteraction(uri: Uri) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    val CODE_IMAGE_GALLERY=1
-    val SAMPLE_CROPPED_IMAGE_NAME="SampleCropImage"
+    val CODE_IMAGE_GALLERY = 1
+    val SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage"
     private var selectedProfileUri: Uri? = null
 
 
-    private lateinit var currentPlayer:String
-   private lateinit var searchTeamFragment: SearchTeamFragment
-    val teamAdapter=GroupAdapter<ViewHolder>()
+    private lateinit var currentPlayer: String
+    private lateinit var searchTeamFragment: SearchTeamFragment
+    val teamAdapter = GroupAdapter<ViewHolder>()
 
-    val upcomingMatchAdapter=GroupAdapter<ViewHolder>()
+    val upcomingMatchAdapter = GroupAdapter<ViewHolder>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,10 +64,10 @@ class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionLis
 
         teamAdapter.setOnItemClickListener { item, view ->
 
-            val team=item as MyTeamOnDashboard
-            Log.d("Dashboard_TeamName",team.teamName)
-            Log.d("Dashboard_TeamCaptain",team.captainId)
-            Log.d("Dashboard_TeamCity",team.teamCity)
+            val team = item as MyTeamOnDashboard
+            Log.d("Dashboard_TeamName", team.teamName)
+            Log.d("Dashboard_TeamCaptain", team.captainId)
+            Log.d("Dashboard_TeamCity", team.teamCity)
 
 
             startActivity<TeamDetailActivity>(
@@ -77,24 +76,16 @@ class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionLis
                 "team_A_Name" to team.teamName,
                 "team_A_City" to team.teamCity,
                 "captainId_A" to team.captainId
-                )
+            )
 
         }
 
-
-        //retrieve team data from the database
-        fetchTeamFromDatabase(currentPlayer)
-
-        //retrieve team data from the database
-        fetchUpcomingMatchDetails(currentPlayer)
-
         //get the instance of SearchTeamFragment
-        searchTeamFragment= SearchTeamFragment()
+        searchTeamFragment = SearchTeamFragment()
 
         //Listener to check the fragments on the Stack
         supportFragmentManager.addOnBackStackChangedListener {
-            if(supportFragmentManager.backStackEntryCount ==0)
-            {
+            if (supportFragmentManager.backStackEntryCount == 0) {
                 makeViewsVisible(dashboard_layout)
             }
 
@@ -106,33 +97,52 @@ class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionLis
         super.onActivityResult(requestCode, resultCode, data)
         if (data != null && resultCode == Activity.RESULT_OK)
 
-            when(requestCode){
+            when (requestCode) {
 
             }
 
     }
 
-    fun getUserInfo()
-    {
 
-        val playerRef= FirebaseDatabase.getInstance().getReference("/PlayerBasicProfile/$currentPlayer")
-        playerRef.addListenerForSingleValueEvent(object: ValueEventListener {
+    override fun onResume() {
+        super.onResume()
+
+        teamAdapter.clear()
+        upcomingMatchAdapter.clear()
+        //retrieve team data from the database
+        fetchTeamFromDatabase(currentPlayer)
+
+        //retrieve team data from the database
+        fetchUpcomingMatchDetails(currentPlayer)
+
+
+    }
+
+    fun getUserInfo() {
+
+        val playerRef =
+            FirebaseDatabase.getInstance().getReference("/PlayerBasicProfile/$currentPlayer")
+        playerRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onDataChange(p0: DataSnapshot) {
 
-                val playerImage=p0.child("profile_img").value.toString()
-                val playerName=p0.child("name").value.toString()
-                val playingRole=p0.child("playing_role").value.toString()
-                val playerCity=p0.child("Location").value.toString()
+                val playerImage = p0.child("profile_img").value.toString()
+                val playerName = p0.child("name").value.toString()
+                val playingRole = p0.child("playing_role").value.toString()
+                val playerCity = p0.child("city").value.toString()
 
 
-                val playerDob=p0.child("dateOfBirth").value.toString()
+                val playerDob = p0.child("dateOfBirth").value.toString()
                 var date: Date? = null
                 val sdf = SimpleDateFormat("dd.MM.yyyy")
-                try { date = sdf.parse(playerDob) } catch (e: ParseException) { e.printStackTrace() }
+                try {
+                    date = sdf.parse(playerDob)
+                } catch (e: ParseException) {
+                    e.printStackTrace()
+                }
                 if (date == null) return
                 val dob: Calendar = Calendar.getInstance()
                 val today: Calendar = Calendar.getInstance()
@@ -142,8 +152,10 @@ class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionLis
                 val day = dob.get(Calendar.DAY_OF_MONTH)
                 dob.set(year, month, day)
                 var age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR)
-                if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) { age-- }
-                playerAge_DashboardActivity.text=age.toString()
+                if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
+                    age--
+                }
+                playerAge_DashboardActivity.text = age.toString()
 
 
                 Picasso
@@ -152,35 +164,37 @@ class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionLis
                     .fit() // use fit() and centerInside() for making it memory efficient.
                     .centerInside()
                     .into(profile_Image_DashboardActivity)
-                playerName_DashboardActivity.text=playerName
-                playerRole_DashboardActivity.text=playingRole
-                playerCity_DashboardActivity.text=playerCity
+                playerName_DashboardActivity.text = playerName
+                playerRole_DashboardActivity.text = playingRole
+                playerCity_DashboardActivity.text = playerCity
 
             }
         })
 
-        val playerRefRuns= FirebaseDatabase.getInstance().getReference("/BattingStats/$currentPlayer")
-        playerRefRuns.addListenerForSingleValueEvent(object: ValueEventListener {
+        val playerRefRuns =
+            FirebaseDatabase.getInstance().getReference("/BattingStats/$currentPlayer")
+        playerRefRuns.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onDataChange(p0: DataSnapshot) {
 
-                val playerRuns=p0.child("runs").value.toString()
+                val playerRuns = p0.child("runs").value.toString()
 
-                batting_figures_dashboard.text=playerRuns
+                batting_figures_dashboard.text = playerRuns
 
             }
         })
 
-        val playerRefWickets= FirebaseDatabase.getInstance().getReference("/BowlingStats/$currentPlayer")
-        playerRefWickets.addListenerForSingleValueEvent(object: ValueEventListener {
+        val playerRefWickets =
+            FirebaseDatabase.getInstance().getReference("/BowlingStats/$currentPlayer")
+        playerRefWickets.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
 
-                val playerWickets=p0.child("wicket").value.toString()
+                val playerWickets = p0.child("wicket").value.toString()
 
-                bowling_figures_dashboard.text=playerWickets
+                bowling_figures_dashboard.text = playerWickets
 
             }
 
@@ -189,8 +203,9 @@ class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionLis
             }
         })
 
-        val playerRefMatches= FirebaseDatabase.getInstance().getReference("/BattingStats/$currentPlayer")
-        playerRefMatches.addListenerForSingleValueEvent(object: ValueEventListener {
+        val playerRefMatches =
+            FirebaseDatabase.getInstance().getReference("/BattingStats/$currentPlayer")
+        playerRefMatches.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -198,9 +213,9 @@ class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionLis
             override fun onDataChange(p0: DataSnapshot) {
 
 
-                val playerMatches=p0.child("matches").value.toString()
+                val playerMatches = p0.child("matches").value.toString()
 
-                matches_figures_Dashboard.text=playerMatches
+                matches_figures_Dashboard.text = playerMatches
 
 
             }
@@ -209,15 +224,15 @@ class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionLis
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-           val inflater= menuInflater
-           inflater.inflate(R.menu.dashboard_menu,menu)
-        val menuItem:MenuItem=menu!!.findItem(R.id.actionbar_search)
-        val searchView=menuItem.actionView as SearchView
+        val inflater = menuInflater
+        inflater.inflate(R.menu.dashboard_menu, menu)
+        val menuItem: MenuItem = menu!!.findItem(R.id.actionbar_search)
+        val searchView = menuItem.actionView as SearchView
         searchView.setOnSearchClickListener {
             makeViewsInvisible(dashboard_layout)
             supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.fragmentContainer,searchTeamFragment)
+                .replace(R.id.fragmentContainer, searchTeamFragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack("searchTeamFragment")
                 .commit()
@@ -228,20 +243,20 @@ class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionLis
 
 
     }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 
-        when(item?.itemId)
-        {
-            R.id.profile->startActivity<Profile>()
-            R.id.editProfile->{
+        when (item?.itemId) {
+            R.id.profile -> startActivity<Profile>()
+            R.id.editProfile -> {
                 startActivity<EditProfile>()
             }//Upcoming Matches Activity
-            R.id.startMatch->{
-               startActivity<MatchDetails>()
+            R.id.startMatch -> {
+                startActivity<MatchDetails>()
             }
-            R.id.signOut->signOutUser()
-            R.id.createTeam->startActivity<TeamRegistration>()
-            R.id.create_team_Button->startActivity<TeamRegistration>()
+            R.id.signOut -> signOutUser()
+            R.id.createTeam -> startActivity<TeamRegistration>()
+            R.id.create_team_Button -> startActivity<TeamRegistration>()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -251,37 +266,29 @@ class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionLis
         getUserInfo()
     }
 
-    private fun makeViewsInvisible(vararg view:View)
-    {
-        for(v in view)
-        {
-            v.visible=false
+    private fun makeViewsInvisible(vararg view: View) {
+        for (v in view) {
+            v.visible = false
         }
     }
 
-        private fun makeViewsVisible(vararg view:View)
-        {
-            for(v in view)
-            {
-                v.visible=true
-            }
+    private fun makeViewsVisible(vararg view: View) {
+        for (v in view) {
+            v.visible = true
         }
+    }
 
-fun makeLayoutVisible()
-{
-    makeViewsVisible(dashboard_layout)
-    return
-}
+    fun makeLayoutVisible() {
+        makeViewsVisible(dashboard_layout)
+        return
+    }
 
 
     override fun onBackPressed() {
 
-        if(supportFragmentManager.backStackEntryCount>0)
-        {
+        if (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStackImmediate()
-        }
-
-        else {
+        } else {
 
             super.onBackPressed()
             finish()
@@ -289,71 +296,80 @@ fun makeLayoutVisible()
     }
 
     private fun signOutUser() {
-         val m= FirebaseAuth.getInstance()
-         m.signOut()
+        val m = FirebaseAuth.getInstance()
+        m.signOut()
         startActivity<MainActivity>()
     }
 
     //Team Card Started
 
-private fun fetchTeamFromDatabase(playerId:String)
-{
+    private fun fetchTeamFromDatabase(playerId: String) {
 
-val teamRef=FirebaseDatabase.getInstance()
-val playersTeamReference=FirebaseDatabase.getInstance().getReference("/PlayersTeam/$playerId")
-    playersTeamReference.addListenerForSingleValueEvent(object: ValueEventListener {
-        override fun onCancelled(p0: DatabaseError) {}
-        override fun onDataChange(p0: DataSnapshot) {
-           if(p0.exists())
-           {
-               p0.children.forEach{
-                   val teamId=it.key
-                    teamRef.getReference("/Team/$teamId").also { task ->
-                       task.addListenerForSingleValueEvent(object:ValueEventListener{
-                           override fun onCancelled(p0: DatabaseError) {
-                               TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                           }
+        val teamRef = FirebaseDatabase.getInstance()
+        val playersTeamReference =
+            FirebaseDatabase.getInstance().getReference("/PlayersTeam/$playerId")
+        playersTeamReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.exists()) {
+                    p0.children.forEach {
+                        val teamId = it.key
+                        teamRef.getReference("/Team/$teamId").also { task ->
+                            task.addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onCancelled(p0: DatabaseError) {
+                                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                }
 
-                           override fun onDataChange(p0: DataSnapshot) {
-                               //get the actual Team (Name and Logo)
-                               val team_Id=p0.child("teamId").value.toString()
-                               val teamLogo=p0.child("teamLogo").value.toString()
-                               val teamName=p0.child("teamName").value.toString()
-                               val captainId=p0.child("captainId").value.toString()
-                               val teamCity=p0.child("city").value.toString()
+                                override fun onDataChange(p0: DataSnapshot) {
+                                    //get the actual Team (Name and Logo)
+                                    val team_Id = p0.child("teamId").value.toString()
+                                    val teamLogo = p0.child("teamLogo").value.toString()
+                                    val teamName = p0.child("teamName").value.toString()
+                                    val captainId = p0.child("captainId").value.toString()
+                                    val teamCity = p0.child("city").value.toString()
 
-                               //cardView color
-                            //   val red=(10..230).random()
-                            //   val green=(10..230).random()
-                            //   val blue=(10..230).random()
-                            //   val color= Color.argb(255,red,green,blue)
-                               teamAdapter.add(MyTeamOnDashboard(teamLogo,teamName,captainId,teamCity,team_Id))
-                           }
+                                    //cardView color
+                                    //   val red=(10..230).random()
+                                    //   val green=(10..230).random()
+                                    //   val blue=(10..230).random()
+                                    //   val color= Color.argb(255,red,green,blue)
+                                    teamAdapter.add(
+                                        MyTeamOnDashboard(
+                                            teamLogo,
+                                            teamName,
+                                            captainId,
+                                            teamCity,
+                                            team_Id
+                                        )
+                                    )
+                                }
 
-                       })
-                   }
-               }
+                            })
+                        }
+                    }
 
-               dashboard_team_recyclerView.adapter=teamAdapter
+                    dashboard_team_recyclerView.adapter = teamAdapter
 
-           }
-        }
-    })
-}
+                }
+            }
+        })
+    }
 
-    class MyTeamOnDashboard(var teamLogo:String,
-                            var teamName:String,
-                            var captainId:String,
-                            var teamCity:String,
-                            var teamId:String):Item<ViewHolder>(){
+    class MyTeamOnDashboard(
+        var teamLogo: String,
+        var teamName: String,
+        var captainId: String,
+        var teamCity: String,
+        var teamId: String
+    ) : Item<ViewHolder>() {
         override fun getLayout(): Int {
             return R.layout.my_team_list_ondashboard
         }
 
         override fun bind(viewHolder: ViewHolder, position: Int) {
-            val logo=viewHolder.itemView.findViewById<ImageView>(R.id.my_team_logo_dashboard)
+            val logo = viewHolder.itemView.findViewById<ImageView>(R.id.my_team_logo_dashboard)
             Picasso.get().load(teamLogo).into(logo)
-            viewHolder.itemView.my_team_name_dashboard.text=teamName
+            viewHolder.itemView.my_team_name_dashboard.text = teamName
 
         }
 
@@ -372,7 +388,7 @@ val playersTeamReference=FirebaseDatabase.getInstance().getReference("/PlayersTe
         newDatabaseRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 longToast("Non Empty Card Shown")
-                Log.d("empty","NonEmpty Card Shown")
+                Log.d("empty", "NonEmpty Card Shown")
             }
 
             override fun onDataChange(p0: DataSnapshot) {
@@ -383,56 +399,56 @@ val playersTeamReference=FirebaseDatabase.getInstance().getReference("/PlayersTe
                     p0.children.forEach {
 
                         val upcomingMatchId = it.key
-                        scheduleMatchRef.child("$upcomingMatchId").addListenerForSingleValueEvent(object :
-                            ValueEventListener {
-                            override fun onCancelled(p0: DatabaseError) {
-                            }
+                        scheduleMatchRef.child("$upcomingMatchId")
+                            .addListenerForSingleValueEvent(object :
+                                ValueEventListener {
+                                override fun onCancelled(p0: DatabaseError) {
+                                }
 
-                            override fun onDataChange(p0: DataSnapshot) {
-
-
-                                //INSTALL SUCCESSFULLY
+                                override fun onDataChange(p0: DataSnapshot) {
 
 
+                                    //INSTALL SUCCESSFULLY
 
-                                if(p0.exists()) {
 
-    val match_type = p0.child("matchType").value.toString()
-    val match_overs = p0.child("matchOvers").value.toString()
-    val match_date = p0.child("matchDate").value.toString()
-    val match_time = p0.child("matchTime").value.toString()
-    val match_venue = p0.child("matchVenue").value.toString()
-    val match_city = p0.child("matchCity").value.toString()
-    val team_A_Name = p0.child("team_A_Name").value.toString()
-    val team_B_Name = p0.child("team_B_Name").value.toString()
-    val team_A_Logo = p0.child("team_A_Logo").value.toString()
-    val team_B_Logo = p0.child("team_B_Logo").value.toString()
-    val sender = p0.child("sender").value.toString()
-    empty_match_card_on_dashboard.visible=false
+                                    if (p0.exists()) {
 
-    upcomingMatchAdapter.add(
-        UpcomingMatchViewHolder(
-            match_type,
-            match_overs,
-            match_date,
-            match_time,
-            match_venue,
-            match_city,
-            team_A_Name,
-            team_B_Name,
-            team_A_Logo,
-            team_B_Logo,
-            sender,
-            this@Dashboard
-        )
-    )
+                                        val match_type = p0.child("matchType").value.toString()
+                                        val match_overs = p0.child("matchOvers").value.toString()
+                                        val match_date = p0.child("matchDate").value.toString()
+                                        val match_time = p0.child("matchTime").value.toString()
+                                        val match_venue = p0.child("matchVenue").value.toString()
+                                        val match_city = p0.child("matchCity").value.toString()
+                                        val team_A_Name = p0.child("team_A_Name").value.toString()
+                                        val team_B_Name = p0.child("team_B_Name").value.toString()
+                                        val team_A_Logo = p0.child("team_A_Logo").value.toString()
+                                        val team_B_Logo = p0.child("team_B_Logo").value.toString()
+                                        val sender = p0.child("sender").value.toString()
+                                        empty_match_card_on_dashboard.visible = false
 
-}
-                            }
-                        })
+                                        upcomingMatchAdapter.add(
+                                            UpcomingMatchViewHolder(
+                                                match_type,
+                                                match_overs,
+                                                match_date,
+                                                match_time,
+                                                match_venue,
+                                                match_city,
+                                                team_A_Name,
+                                                team_B_Name,
+                                                team_A_Logo,
+                                                team_B_Logo,
+                                                sender,
+                                                this@Dashboard
+                                            )
+                                        )
+
+                                    }
+                                }
+                            })
 
                     }
-                    upcoming_match_card_recycler_view_dashboard?.adapter=upcomingMatchAdapter
+                    upcoming_match_card_recycler_view_dashboard?.adapter = upcomingMatchAdapter
                 }
             }
         })
@@ -452,7 +468,8 @@ val playersTeamReference=FirebaseDatabase.getInstance().getReference("/PlayersTe
         var team_A_Logo: String,
         var team_B_Logo: String,
         var sender: String,
-        val ctx:Dashboard) : Item<ViewHolder>() {
+        val ctx: Dashboard
+    ) : Item<ViewHolder>() {
         override fun getLayout(): Int {
             return R.layout.fragment_team_upcoming_match_card
         }
@@ -468,14 +485,14 @@ val playersTeamReference=FirebaseDatabase.getInstance().getReference("/PlayersTe
 
             viewHolder.itemView.title_of_match_upcoming.text = match_type
 
-            if (match_type!="Test"){
+            if (match_type != "Test") {
                 viewHolder.itemView.overs_of_match_upcoming.text = match_overs
-            }else{
+            } else {
                 makeViewsInvisible(viewHolder.itemView.overs_of_match_upcoming)
             }
 
 
-            if (ctx.currentPlayer!=sender){
+            if (ctx.currentPlayer != sender) {
                 makeViewsInvisible(viewHolder.itemView.start_match_button)
             }
 
@@ -488,10 +505,12 @@ val playersTeamReference=FirebaseDatabase.getInstance().getReference("/PlayersTe
             viewHolder.itemView.team_B_name_match_card_upcoming.text = team_B_Name
 
 
-            val logo_team_A=viewHolder.itemView.findViewById<ImageView>(R.id.team_A_logo_match_card_upcoming)
+            val logo_team_A =
+                viewHolder.itemView.findViewById<ImageView>(R.id.team_A_logo_match_card_upcoming)
             Picasso.get().load(team_A_Logo).into(logo_team_A)
 
-            val logo_team_B=viewHolder.itemView.findViewById<ImageView>(R.id.team_B_logo_match_card_upcoming)
+            val logo_team_B =
+                viewHolder.itemView.findViewById<ImageView>(R.id.team_B_logo_match_card_upcoming)
             Picasso.get().load(team_B_Logo).into(logo_team_B)
 
         }
