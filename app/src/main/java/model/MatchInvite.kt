@@ -18,12 +18,10 @@ class MatchInvite(val matchType:String,
                   val sender:String,
                   val reciever:String,
                   val tossWonTeamElectedTo:String,
-                  val tossWonByTeam:String,
-                  val team_A_Squad: ArrayList<String>? =null,
-                  val team_B_Squad: ArrayList<String>? =null
+                  val tossWonByTeam:String
 
                   )
 {
-    constructor():this("","","","","","","","","","","","","","","",""," ","","",null,null)
+    constructor():this("","","","","","","","","","","","","","","",""," ","","")
 
 }

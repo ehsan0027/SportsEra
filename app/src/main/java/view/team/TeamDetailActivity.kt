@@ -35,7 +35,11 @@ class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    lateinit var captainId: String
+    lateinit var captainId_A: String
+    lateinit var team_A_Id: String
+    lateinit var team_A_Name: String
+    lateinit var team_A_Logo: String
+    lateinit var team_A_City: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +49,7 @@ class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
         //assign Click Listener to Button
         challenge_for_match.setOnClickListener(this)
 
-        val captainId = intent.getStringExtra("captainId").toString()
+        val captainId = intent.getStringExtra("captainId_A").toString()
         val currentPlayer = FirebaseAuth.getInstance().uid.toString()
         if (currentPlayer != captainId) {
             makeViewsInvisible(challenge_for_match)
@@ -63,9 +67,9 @@ class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                captainId = p0.child("captainId").value.toString()
+                captainId_A = p0.child("captainId").value.toString()
                 val playerRef =
-                    FirebaseDatabase.getInstance().getReference("/PlayerBasicProfile/$captainId")
+                    FirebaseDatabase.getInstance().getReference("/PlayerBasicProfile/$captainId_A")
                 playerRef.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
                         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -83,23 +87,23 @@ class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
 
 
     private fun setViewsContent() {
-        val teamId = intent.getStringExtra("teamId")
-        val teamLogo = intent.getStringExtra("teamLogo")
-        val teamName = intent.getStringExtra("teamName")
-        val teamCity = intent.getStringExtra("teamCity")
-        val captainId = intent.getStringExtra("captainId")
-        Log.d("CaptainId", captainId)
+        team_A_Id = intent.getStringExtra("team_A_Id")
+        team_A_Logo = intent.getStringExtra("team_A_Logo")
+        team_A_Name = intent.getStringExtra("team_A_Name")
+        team_A_City = intent.getStringExtra("team_A_City")
+        captainId_A = intent.getStringExtra("captainId_A")
+        Log.d("CaptainId", captainId_A)
 
-        supportActionBar?.title = teamName
+        supportActionBar?.title = team_A_Name
 
         val fragmentAdapter =
-            SectionPagerAdapter(teamId, teamName, teamLogo, captainId, supportFragmentManager)
+            SectionPagerAdapter(team_A_Id, team_A_Name, team_A_Logo, captainId_A, supportFragmentManager)
         viewPager.adapter = fragmentAdapter
         tabLayout.setupWithViewPager(viewPager)
 
-        Picasso.get().load(teamLogo).into(team_logo_TeamDetailActivity)
-        teamCity_TeamDetailActivity.text = teamCity
-        getUserInfo(teamId)
+        Picasso.get().load(team_A_Logo).into(team_logo_TeamDetailActivity)
+        teamCity_TeamDetailActivity.text = team_A_City
+        getUserInfo(team_A_Id)
 
 
     }
@@ -108,18 +112,13 @@ class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
         when (view?.id) {
             R.id.challenge_for_match -> {
 
-                val teamId = intent.getStringExtra("teamId")
-                val teamLogo = intent.getStringExtra("teamLogo")
-                val teamName = intent.getStringExtra("teamName")
-                val captainId = intent.getStringExtra("captainId")
-                val teamCity = intent.getStringExtra("teamCity")
 
                 startActivity<MatchDetails>(
-                    "teamId" to teamId,
-                    "teamLogo" to teamLogo,
-                    "teamName" to teamName,
-                    "captainId" to captainId,
-                    "teamCity" to teamCity
+                    "team_A_Id" to team_A_Id,
+                    "team_A_Logo" to team_A_Logo,
+                    "team_A_Name" to team_A_Name,
+                    "captainId_A" to captainId_A,
+                    "teamCity_A" to team_A_City
                 )
                 finish()
             }

@@ -4,6 +4,7 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import view.Dashboard
@@ -21,6 +22,7 @@ class MainActivity :AppCompatActivity()
         super.onCreate(savedInstanceState)
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         // [END initialize_auth]
     }
 

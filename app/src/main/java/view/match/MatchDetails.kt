@@ -103,8 +103,8 @@ class MatchDetails : AppCompatActivity(){
         val teamData=intent.extras
         if(teamData!==null)
         {
-            val teamId=teamData.getString("teamId")
-            val teamLogo=teamData.getString("teamLogo")
+            val teamId=teamData.getString("team_A_Id")
+            val teamLogo=teamData.getString("team_A_Logo")
             Log.d("Select Team Activity",teamId)
         }else{
             Log.d("Select Team Activity","  NULL")
@@ -168,11 +168,11 @@ class MatchDetails : AppCompatActivity(){
 
 private fun sendRequestForMatch() {
 
-    val team_A_id = intent.getStringExtra("teamId")
-    val team_A_Logo=intent.getStringExtra("teamLogo")
-    val team_A_Name=intent.getStringExtra("teamName")
-    val team_A_City = intent.getStringExtra("teamCity")
-    val team_A_Captain = intent.getStringExtra("captainId")
+    val team_A_id = intent.getStringExtra("team_A_Id")
+    val team_A_Logo=intent.getStringExtra("team_A_Logo")
+    val team_A_Name=intent.getStringExtra("team_A_Name")
+    val team_A_City = intent.getStringExtra("teamCity_A")
+    val team_A_Captain = intent.getStringExtra("captainId_A")
 
     Log.d("team",team_A_id)
     var overs = matchOvers_Match_Details.text.toString().trim()
@@ -203,7 +203,7 @@ private fun sendRequestForMatch() {
         Log.d("requestId ",requestId)
         newRequestId=requestId
 
-        val newMatchInvite=MatchInvite(matchType,overs,city,venue,date,time,ballType,squad,team_A_id,team_B_id,team_A_Name,team_B_Name,team_A_Logo,team_B_Logo,requestId,team_A_Captain,captain_B_Id)
+        val newMatchInvite=MatchInvite(matchType,overs,city,venue,date,time,ballType,squad,team_A_id,team_B_id,team_A_Name,team_B_Name,team_A_Logo,team_B_Logo,requestId,team_A_Captain,captain_B_Id,"","")
 
         Log.d("Team_A_Id ",team_A_id)
         Log.d("team_B_Id ",team_B_id)
@@ -219,11 +219,13 @@ private fun sendRequestForMatch() {
                 Log.d("MatchSaved ",requestId)
                 toast("Request Sent")
                 //progressDialog.dismiss()
-                startActivity<TeamDetailActivity>("teamId" to team_A_id,
-                    "teamLogo" to team_A_Logo,
-                    "teamName" to team_A_Name,
-                    "teamCity" to team_A_City,
-                    "captainId" to team_A_Captain)
+                startActivity<TeamDetailActivity>("team_A_Id" to team_A_id,
+                    "team_A_Logo" to team_A_Logo,
+                    "team_A_Name" to team_A_Name,
+                    "team_A_City" to team_A_City,
+                    "captainId_A" to team_A_Captain,
+                "team_B_Id" to team_B_id
+                )
             }
         }.addOnFailureListener { exception ->
             toast(exception.localizedMessage.toString())
@@ -259,9 +261,9 @@ private fun sendRequestForMatch() {
             when(requestCode)
             {
                 team_B->{
-                    val team2_id = data.getStringExtra("teamId")
-                    val team2_logo = data.getStringExtra("teamLogo")
-                    val team2_Name = data.getStringExtra("teamName")
+                    val team2_id = data.getStringExtra("team_B_Id")
+                    val team2_logo = data.getStringExtra("team_B_Logo")
+                    val team2_Name = data.getStringExtra("team_B_Name")
                     Log.d("MatchDetails_Team_B",team2_id)
                     if (team2_id.isNotEmpty() && team2_logo.isNotEmpty() && team2_Name.isNotEmpty() )
                     {

@@ -97,11 +97,10 @@ class SearchTeamForMatch :AppCompatActivity() {
                                alert("Do you want to select $team_name","Confirmation"){
 
                              yesButton{dialog ->
-
                                  val intent=Intent()
-                                 intent.putExtra("teamName",team_name)
-                                 intent.putExtra("teamLogo",team_logo)
-                                 intent.putExtra("teamId",team_Id)
+                                 intent.putExtra("team_B_Name",team_name)
+                                 intent.putExtra("team_B_Logo",team_logo)
+                                 intent.putExtra("team_B_Id",team_Id)
                                  setResult(Activity.RESULT_OK,intent)
                                  finish()
                              }
@@ -110,8 +109,6 @@ class SearchTeamForMatch :AppCompatActivity() {
                              }
 
                                }.show()
-
-
                             }
 
                 }

@@ -97,7 +97,7 @@ dependencies {
     implementation group: 'com.google.android.gms', name: 'play-services-auth', version: '17.0.0'
 
 
-
+    implementation("com.squareup.okhttp3:okhttp:4.2.0")
 
 
     //google Play Services for Location Detection

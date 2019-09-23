@@ -50,6 +50,7 @@
         <activity android:name="view.fragment.SearchPlayerToAddInTeam" />
         <activity android:name="view.EditProfile"/>
         <activity android:name="view.match.ui.SearchTeamForMatch" />
+        <activity android:name="view.matchscoring.MatchScoringActivity" />
     </application>
 
 </manifest>

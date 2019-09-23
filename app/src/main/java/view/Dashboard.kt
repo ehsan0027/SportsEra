@@ -72,11 +72,11 @@ class Dashboard:AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionLis
 
 
             startActivity<TeamDetailActivity>(
-                "teamId" to team.teamId,
-                "teamLogo" to team.teamLogo,
-                "teamName" to team.teamName,
-                "teamCity" to team.teamCity,
-                "captainId" to team.captainId
+                "team_A_Id" to team.teamId,
+                "team_A_Logo" to team.teamLogo,
+                "team_A_Name" to team.teamName,
+                "team_A_City" to team.teamCity,
+                "captainId_A" to team.captainId
                 )
 
         }

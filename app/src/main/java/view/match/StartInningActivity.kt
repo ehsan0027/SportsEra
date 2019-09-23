@@ -27,8 +27,6 @@ class StartInningActivity : AppCompatActivity() {
     lateinit var striker: String
     lateinit var nonStriker: String
     lateinit var bowler: String
-    val team_A_Squad: ArrayList<String>? = null
-    val team_B_Squad: ArrayList<String>? = null
     private lateinit var battingTeamIdStartInning: String
     private lateinit var bowlingTeamIdStartInning: String
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,42 +105,6 @@ class StartInningActivity : AppCompatActivity() {
     }
 
 
-    fun setTeamASquad(teamA_id: String) {
-        val teamSquadRef = FirebaseDatabase.getInstance().getReference("/Team/$teamA_id/TeamSquad")
-        teamSquadRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {}
-            override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists()) {
-                    p0.children.forEach {
-                        val playerId = it.key.toString()
-                        Log.d("TeamMember_ID", playerId)
-                        team_A_Squad?.add(playerId)
-                    }
-                }
-            }
-        })
-
-    }
-
-
-    fun setTeamBSquad(teamB_id: String) {
-        val teamSquadRef = FirebaseDatabase.getInstance().getReference("/Team/$teamB_id/TeamSquad")
-        teamSquadRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {}
-            override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists()) {
-                    p0.children.forEach {
-                        val playerId = it.key.toString()
-                        Log.d("TeamMember_ID", playerId)
-                        team_B_Squad?.add(playerId)
-                    }
-                }
-            }
-        })
-
-    }
-
-
     override fun onStart() {
         super.onStart()
         supportActionBar?.title = "Start Inning"
@@ -156,9 +118,6 @@ class StartInningActivity : AppCompatActivity() {
             else -> teamA_Id
         }
         setTeamName(battingTeamName, bowlingTeamIdStartInning)
-
-        setTeamASquad(teamA_Id)
-        setTeamBSquad(teamB_Id)
 
     }
 
@@ -282,7 +241,7 @@ class StartInningActivity : AppCompatActivity() {
         squadCount:String,
         receiver:String)
     {
-       /// val match=MatchInvite(mType,overs,mCity,mVenue,date,time,ballType,squadCount,teamA_Id,teamB_Id,)
+       ///       val match=MatchInvite(mType,overs,mCity,mVenue,date,time,ballType,squadCount,teamA_Id,teamB_Id,)
     }
 
 

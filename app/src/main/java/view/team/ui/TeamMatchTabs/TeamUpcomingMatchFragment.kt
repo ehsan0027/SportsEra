@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.pawegio.kandroid.toast
 import com.pawegio.kandroid.visible
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
@@ -117,41 +119,45 @@ class TeamUpcomingMatchFragment(private val teamId: String) : Fragment() {
                                 }
 
                                 override fun onDataChange(p0: DataSnapshot) {
-                                    val match_Id= p0.child("matchInvite").value.toString()
-                                    val match_type = p0.child("matchType").value.toString()
-                                    val match_overs = p0.child("matchOvers").value.toString()
-                                    val match_date = p0.child("matchDate").value.toString()
-                                    val match_time = p0.child("matchTime").value.toString()
-                                    val match_venue = p0.child("matchVenue").value.toString()
-                                    val match_city = p0.child("matchCity").value.toString()
-                                    val team_A_Id = p0.child("team_A_Id").value.toString()
-                                    val team_B_Id = p0.child("team_B_Id").value.toString()
-                                    val team_A_Name = p0.child("team_A_Name").value.toString()
-                                    val team_B_Name = p0.child("team_B_Name").value.toString()
-                                    val team_A_Logo = p0.child("team_A_Logo").value.toString()
-                                    val team_B_Logo = p0.child("team_B_Logo").value.toString()
-                                    val sender = p0.child("sender").value.toString()
+                                    if (p0.exists()) {
+                                        val match_Id = p0.child("matchInvite").value.toString()
+                                        val match_type = p0.child("matchType").value.toString()
+                                        val match_overs = p0.child("matchOvers").value.toString()
+                                        val match_date = p0.child("matchDate").value.toString()
+                                        val match_time = p0.child("matchTime").value.toString()
+                                        val match_venue = p0.child("matchVenue").value.toString()
+                                        val match_city = p0.child("matchCity").value.toString()
+                                        val team_A_Id = p0.child("team_A_Id").value.toString()
+                                        val team_B_Id = p0.child("team_B_Id").value.toString()
+                                        val team_A_Name = p0.child("team_A_Name").value.toString()
+                                        val team_B_Name = p0.child("team_B_Name").value.toString()
+                                        val team_A_Logo = p0.child("team_A_Logo").value.toString()
+                                        val team_B_Logo = p0.child("team_B_Logo").value.toString()
+                                        val sender = p0.child("sender").value.toString()
 
 
-                                    upcomingMatchAdapter.add(
-                                        UpcomingMatchViewHolder(
-                                            match_Id,
-                                            match_type,
-                                            match_overs,
-                                            match_date,
-                                            match_time,
-                                            match_venue,
-                                            match_city,
-                                            team_A_Id,
-                                            team_B_Id,
-                                            team_A_Name,
-                                            team_B_Name,
-                                            team_A_Logo,
-                                            team_B_Logo,
-                                            sender,
-                                            this@TeamUpcomingMatchFragment
+                                        upcomingMatchAdapter.add(
+                                            UpcomingMatchViewHolder(
+                                                match_Id,
+                                                match_type,
+                                                match_overs,
+                                                match_date,
+                                                match_time,
+                                                match_venue,
+                                                match_city,
+                                                team_A_Id,
+                                                team_B_Id,
+                                                team_A_Name,
+                                                team_B_Name,
+                                                team_A_Logo,
+                                                team_B_Logo,
+                                                sender,
+                                                this@TeamUpcomingMatchFragment
+                                            )
                                         )
-                                    )
+                                    }else{
+                                        Log.d("Upcoming Match","No upcoming Matches Available")
+                                    }
                                 }
                             })
 
