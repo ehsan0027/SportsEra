@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SportsPlayer</string>
+    <string name="app_name">Revive Sports</string>
     <string name="status_verification_failed">something went wrong verification failed</string>
     <string name="status_verification_succeeded">Verification Succeeded</string>
     <string name="instant_validation">instant validation</string>

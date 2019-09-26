@@ -12,7 +12,6 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.FragmentTransaction
-import com.example.sportsplayer.MainActivity
 import com.example.sportsplayer.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -110,9 +109,10 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
 
         teamAdapter.clear()
         upcomingMatchAdapter.clear()
+        dashboard_team_recyclerView?.removeAllViewsInLayout()
+        upcoming_match_card_recycler_view_dashboard?.removeAllViewsInLayout()
         //retrieve team data from the database
         fetchTeamFromDatabase(currentPlayer)
-
         //retrieve team data from the database
         fetchUpcomingMatchDetails(currentPlayer)
 
@@ -299,7 +299,7 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
     private fun signOutUser() {
         val m = FirebaseAuth.getInstance()
         m.signOut()
-        startActivity<MainActivity>()
+       // startActivity<MainActivity>()
     }
 
     //Team Card Started

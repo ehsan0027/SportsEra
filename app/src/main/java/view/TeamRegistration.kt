@@ -52,11 +52,16 @@ class TeamRegistration:AppCompatActivity(),View.OnClickListener
         //assign click listener
         save_team_button.setOnClickListener(this)
 
+        team_cicular_logo.setOnClickListener{
+            selectTeamLogo(it)
+        }
+
         // Get radio group selected item using on checked change listener
         team_lavel_radio_group.setOnCheckedChangeListener { _, checkedId ->
             val radio: RadioButton = find(checkedId)
             level=radio.text.toString()
             toast("Team Level: $level")
+
 
         }
 
@@ -141,7 +146,6 @@ class TeamRegistration:AppCompatActivity(),View.OnClickListener
         var imageLink:String
         var uId=UUID.randomUUID().toString()
         val imageName = "TeamLogo/$uId.jpg"
-
         val path =Uri.parse("android.resource://" + this.packageName + "/"+"${R.drawable.teamlogo1}")
 
         Log.d("DefaultUri","$path")

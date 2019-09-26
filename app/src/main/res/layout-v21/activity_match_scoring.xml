@@ -8,23 +8,18 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         >
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        android:layout_height="wrap_content">
         <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
+            app:cardCornerRadius="0dp"
                 android:backgroundTint="@color/DarkSlateGray"
                 android:id="@+id/background_dark_color"
-
                 >
 
 
@@ -102,24 +97,50 @@
                         android:layout_toRightOf="@+id/bracket_open_overs">
 
                 </androidx.appcompat.widget.AppCompatTextView>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/overs_point"
+                    android:layout_toEndOf="@+id/team_current_overs_played"
+                    android:hint="."
+                    android:layout_centerInParent="true"
+                    android:textSize="20sp"
+                    android:textColor="@color/lightGray"
+                    android:textColorHint="@color/lightGray"
+                    android:layout_toRightOf="@+id/team_current_overs_played">
+
+                </androidx.appcompat.widget.AppCompatTextView><androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/team_current_over_balls_played"
+                android:layout_toEndOf="@+id/overs_point"
+                android:hint="0"
+                android:layout_centerInParent="true"
+                android:textSize="20sp"
+                android:textColor="@color/lightGray"
+                android:textColorHint="@color/lightGray"
+                android:layout_toRightOf="@+id/overs_point">
+
+            </androidx.appcompat.widget.AppCompatTextView>
                 <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/overs_separator"
-                        android:layout_toEndOf="@+id/team_current_overs_played"
+                        android:layout_toEndOf="@+id/team_current_over_balls_played"
                         android:hint="/"
                         android:layout_centerInParent="true"
                         android:textSize="20sp"
                         android:textColor="@color/lightGray"
                         android:textColorHint="@color/lightGray"
-                        android:layout_toRightOf="@+id/team_current_overs_played">
+                        android:layout_toRightOf="@+id/team_current_over_balls_played">
 
                 </androidx.appcompat.widget.AppCompatTextView>
 
                 <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/team_total_overs"
+                        android:id="@+id/match_total_overs"
                         android:layout_toEndOf="@+id/overs_separator"
                         android:layout_centerInParent="true"
                         android:hint="20"
@@ -134,13 +155,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/bracket_close_overs"
-                        android:layout_toEndOf="@+id/team_total_overs"
+                        android:layout_toEndOf="@+id/match_total_overs"
                         android:layout_centerInParent="true"
                         android:hint=")"
                         android:textSize="20sp"
                         android:textColor="@color/lightGray"
                         android:textColorHint="@color/lightGray"
-                        android:layout_toRightOf="@+id/team_total_overs">
+                        android:layout_toRightOf="@+id/match_total_overs">
 
                 </androidx.appcompat.widget.AppCompatTextView>
 
@@ -150,18 +171,54 @@
             <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
-                    android:layout_gravity="center">
+                    android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                >
 
-                <androidx.appcompat.widget.AppCompatImageButton
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    >
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/current_run_rate_text_match_scoring"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CRR: "
+                    android:textColor="@color/lightGray"
+                    android:textSize="15sp">
+                </androidx.appcompat.widget.AppCompatTextView>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/current_run_rate_match_scoring"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="350dp"
-                        android:layout_marginTop="20dp"
-                        android:src="@drawable/ic_share_black_24dp"
-                        android:layout_marginLeft="350dp"
-                        tools:ignore="RtlCompat">
+                        android:text="0.0"
+                        android:textColor="@color/lightGray"
+                        android:textSize="15sp">
+                    </androidx.appcompat.widget.AppCompatTextView>
 
-                </androidx.appcompat.widget.AppCompatImageButton>
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/required_run_rate_text_match_scoring"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:text="RRR: "
+                        android:textColor="@color/lightGray"
+                        android:textSize="15sp">
+                    </androidx.appcompat.widget.AppCompatTextView>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/required_run_rate_match_scoring"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0.0"
+                        android:textColor="@color/lightGray"
+                        android:textSize="15sp">
+                    </androidx.appcompat.widget.AppCompatTextView>
+                </LinearLayout>
 
                 <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/score_detail_textView"
@@ -261,17 +318,28 @@
             </RelativeLayout>
 
         </com.google.android.material.card.MaterialCardView>
-        <RelativeLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
             <com.google.android.material.card.MaterialCardView
-                    android:layout_width="210dp"
+                    android:layout_width="match_parent"
                     android:layout_height="50dp"
+                android:layout_weight="1"
                     android:backgroundTint="@color/DarkGoldenrod"
                     android:id="@+id/batsman_1_card"
+                app:cardCornerRadius="0dp"
+                android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
+                app:checkedIcon="@drawable/team_ready_check"
                     >
                 <RelativeLayout
                         android:layout_width="match_parent"
@@ -346,11 +414,17 @@
 
 
             <com.google.android.material.card.MaterialCardView
-                    android:layout_width="210dp"
+                    android:layout_width="match_parent"
+                android:layout_weight="1"
                     android:layout_height="50dp"
                     android:layout_toEndOf="@+id/batsman_1_card"
                     android:backgroundTint="@color/DarkGoldenrod"
                     android:id="@+id/batsman_2_card"
+                app:cardCornerRadius="0dp"
+                android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
+                app:checkedIcon="@drawable/team_ready_check"
                     android:layout_toRightOf="@+id/batsman_1_card">
 
                 <RelativeLayout
@@ -423,19 +497,25 @@
                 </RelativeLayout>
 
             </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
 
 
 
             <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
-                    android:layout_height="90dp"
+                    android:layout_height="30dp"
+                app:cardCornerRadius="0dp"
                     android:layout_below="@+id/batsman_1_card"
                     android:backgroundTint="@color/DimGray"
                     android:id="@+id/background_bowling_bar"
                     >
-                <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    >
                     <androidx.appcompat.widget.AppCompatTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -447,42 +527,62 @@
 
                     </androidx.appcompat.widget.AppCompatTextView>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="25dp"
+                        android:gravity="end"
+                        >
+
                     <androidx.appcompat.widget.AppCompatTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/no_overs_bowled"
-                            android:layout_toEndOf="@+id/bowler_name"
-                            android:layout_marginStart="150dp"
                             android:hint="0"
                             android:textSize="15sp"
                             android:textColor="@color/lightGray"
                             android:textColorHint="@color/lightGray"
-                            android:layout_toRightOf="@+id/bowler_name"
-                            android:layout_marginLeft="150dp">
+                            >
+
+                    </androidx.appcompat.widget.AppCompatTextView>
+                    <TextView
+                        style="@style/point"
+                        android:textColor="@color/lightGray"
+                        >
+
+                    </TextView>
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/no_balls_bowled"
+                        android:hint="0"
+                        android:textSize="15sp"
+                        android:textColor="@color/lightGray"
+                        android:textColorHint="@color/lightGray">
 
                     </androidx.appcompat.widget.AppCompatTextView>
                     <androidx.appcompat.widget.AppCompatTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/dash_separator_1"
-                            android:layout_toEndOf="@+id/no_overs_bowled"
                             android:hint="-"
                             android:textSize="15sp"
                             android:textColor="@color/lightGray"
                             android:textColorHint="@color/lightGray"
-                            android:layout_toRightOf="@+id/no_overs_bowled">
+                            >
 
                     </androidx.appcompat.widget.AppCompatTextView>
                     <androidx.appcompat.widget.AppCompatTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/maiden_overs"
-                            android:layout_toEndOf="@+id/dash_separator_1"
                             android:hint="0"
                             android:textSize="15sp"
                             android:textColor="@color/lightGray"
                             android:textColorHint="@color/lightGray"
-                            android:layout_toRightOf="@+id/dash_separator_1">
+                            >
 
                     </androidx.appcompat.widget.AppCompatTextView>
 
@@ -490,94 +590,113 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/dash_separator_2"
-                            android:layout_toEndOf="@+id/maiden_overs"
                             android:hint="-"
                             android:textSize="15sp"
                             android:textColor="@color/lightGray"
                             android:textColorHint="@color/lightGray"
-                            android:layout_toRightOf="@+id/maiden_overs">
+                            >
                     </androidx.appcompat.widget.AppCompatTextView>
 
                     <androidx.appcompat.widget.AppCompatTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/runs_concede"
-                            android:layout_toEndOf="@+id/dash_separator_2"
                             android:hint="0"
                             android:textSize="15sp"
                             android:textColor="@color/lightGray"
                             android:textColorHint="@color/lightGray"
-                            android:layout_toRightOf="@+id/dash_separator_2">
+                        >
                     </androidx.appcompat.widget.AppCompatTextView>
 
                     <androidx.appcompat.widget.AppCompatTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/dash_separator_3"
-                            android:layout_toEndOf="@+id/runs_concede"
                             android:hint="-"
                             android:textSize="15sp"
                             android:textColor="@color/lightGray"
                             android:textColorHint="@color/lightGray"
-                            android:layout_toRightOf="@+id/runs_concede">
+                            >
                     </androidx.appcompat.widget.AppCompatTextView>
 
                     <androidx.appcompat.widget.AppCompatTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/bowler_wickets"
-                            android:layout_toEndOf="@+id/dash_separator_3"
                             android:hint="0"
                             android:textSize="15sp"
                             android:textColor="@color/lightGray"
                             android:textColorHint="@color/lightGray"
-                            android:layout_toRightOf="@+id/dash_separator_3">
+                            >
                     </androidx.appcompat.widget.AppCompatTextView>
-
-                    <androidx.cardview.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:cardCornerRadius="5dp"
-                            android:elevation="10dp"
-                            android:layout_margin="2dp"
-                            app:cardElevation="10dp"
-                            android:layout_below="@id/bowler_name"
-                            app:cardBackgroundColor="@color/cardView"
-                            tools:targetApi="o"
-                            app:cardMaxElevation="10dp">
+                    </LinearLayout>
 
 
-                        <androidx.recyclerview.widget.RecyclerView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                                android:orientation="horizontal"
-                                android:layout_marginTop="2dp"
-                                android:id="@+id/ball_by_ball_score_recyclerView"
-                                android:layout_marginStart="2dp"
-                                android:layout_marginLeft="2dp">
 
-                        </androidx.recyclerview.widget.RecyclerView>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                app:cardCornerRadius="0dp"
+                android:backgroundTint="@color/DimGray"
+                android:id="@+id/this_over_bar"
+                >
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="5dp"
+                    android:elevation="10dp"
+                    android:layout_margin="2dp"
+                    app:cardElevation="10dp"
+                    android:layout_below="@id/bowler_name"
+                    app:cardBackgroundColor="@color/cardView"
+                    tools:targetApi="o"
+                    app:cardMaxElevation="10dp">
 
 
-                    </androidx.cardview.widget.CardView>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="2dp"
+                        android:id="@+id/ball_by_ball_score_recyclerView"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginLeft="2dp">
 
-                </RelativeLayout>
+                    </androidx.recyclerview.widget.RecyclerView>
+
+
+                </androidx.cardview.widget.CardView>
+
             </com.google.android.material.card.MaterialCardView>
 
-        </RelativeLayout>
 
-        <RelativeLayout
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+            android:orientation="horizontal"
+                >
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="1"
                 >
             <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_height="match_parent"
                     android:elevation="10dp"
                     android:backgroundTint="@color/LightSlateGray"
                     android:text="3"
+                android:layout_weight="1"
                     android:textColor="@color/White"
                     android:textAlignment="center"
                     android:textSize="20sp"
@@ -586,7 +705,42 @@
 
             </androidx.appcompat.widget.AppCompatButton>
 
-            <androidx.appcompat.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="@color/LightSlateGray"
+                    android:text="0"
+                    android:layout_weight="1"
+                    android:textColor="@color/White"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    android:id="@+id/ZeroRun"
+                    >
+
+                </androidx.appcompat.widget.AppCompatButton>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="100dp"
+                    android:layout_height="80dp"
+                    android:backgroundTint="@color/Silver"
+                    android:text="WD"
+                    android:textColor="@color/DimGray"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    android:id="@+id/wideBall"
+
+                    >
+
+                </androidx.appcompat.widget.AppCompatButton>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                >
+                <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:text="4
@@ -595,11 +749,46 @@
                     android:backgroundTint="@color/LightSlateGray"
                     android:textAlignment="center"
                     android:textSize="20sp"
-                    android:layout_toEndOf="@id/threeRuns"
                     android:id="@+id/fourRuns"
-                    android:layout_toRightOf="@id/threeRuns">
+                    >
 
             </androidx.appcompat.widget.AppCompatButton>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:backgroundTint="@color/LightSlateGray"
+                    android:text="1"
+                    android:textColor="@color/White"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    android:id="@+id/oneRun"
+                    >
+
+                </androidx.appcompat.widget.AppCompatButton>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="100dp"
+                    android:layout_height="80dp"
+                    android:backgroundTint="@color/Silver"
+                    android:text="NB"
+                    android:textColor="@color/DimGray"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    android:id="@+id/noBall"
+                    >
+
+                </androidx.appcompat.widget.AppCompatButton>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                >
             <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="100dp"
                     android:layout_height="100dp"
@@ -609,41 +798,11 @@
                     android:textAlignment="center"
                     android:backgroundTint="@color/LightSlateGray"
                     android:textSize="20sp"
-                    android:layout_toEndOf="@+id/fourRuns"
                     android:id="@+id/sixRuns"
-                    android:layout_toRightOf="@+id/fourRuns">
-
-            </androidx.appcompat.widget.AppCompatButton>
-
-            <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:backgroundTint="@color/LightSlateGray"
-                    android:text="0"
-                    android:textColor="@color/White"
-                    android:textAlignment="center"
-                    android:textSize="20sp"
-                    android:id="@+id/ZeroRun"
-                    android:layout_below="@+id/threeRuns"
                     >
 
             </androidx.appcompat.widget.AppCompatButton>
 
-
-            <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:backgroundTint="@color/LightSlateGray"
-                    android:text="1"
-                    android:textColor="@color/White"
-                    android:textAlignment="center"
-                    android:textSize="20sp"
-                    android:id="@+id/oneRun"
-                    android:layout_below="@+id/fourRuns"
-                    android:layout_toEndOf="@+id/ZeroRun"
-                    android:layout_toRightOf="@+id/ZeroRun">
-
-            </androidx.appcompat.widget.AppCompatButton>
             <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="100dp"
                     android:layout_height="100dp"
@@ -653,42 +812,10 @@
                     android:textAlignment="center"
                     android:textSize="20sp"
                     android:id="@+id/twoRuns"
-                    android:layout_below="@+id/sixRuns"
-                    android:layout_toEndOf="@+id/oneRun"
-                    android:layout_toRightOf="@+id/oneRun">
-
-            </androidx.appcompat.widget.AppCompatButton>
-
-
-            <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="100dp"
-                    android:layout_height="80dp"
-                    android:backgroundTint="@color/Silver"
-                    android:text="WD"
-                    android:textColor="@color/DimGray"
-                    android:textAlignment="center"
-                    android:textSize="20sp"
-                    android:id="@+id/wideBall"
-                    android:layout_below="@+id/ZeroRun"
                     >
 
             </androidx.appcompat.widget.AppCompatButton>
 
-
-            <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="100dp"
-                    android:layout_height="80dp"
-                    android:backgroundTint="@color/Silver"
-                    android:text="NB"
-                    android:textColor="@color/DimGray"
-                    android:textAlignment="center"
-                    android:textSize="20sp"
-                    android:id="@+id/noBall"
-                    android:layout_below="@+id/oneRun"
-                    android:layout_toEndOf="@+id/wideBall"
-                    android:layout_toRightOf="@+id/wideBall">
-
-            </androidx.appcompat.widget.AppCompatButton>
             <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="100dp"
                     android:layout_height="80dp"
@@ -698,14 +825,20 @@
                     android:textAlignment="center"
                     android:textSize="20sp"
                     android:id="@+id/byeRuns"
-                    android:layout_below="@+id/twoRuns"
-                    android:layout_toEndOf="@+id/noBall"
-                    android:layout_toRightOf="@+id/noBall">
+                    >
 
             </androidx.appcompat.widget.AppCompatButton>
 
+            </LinearLayout>
 
 
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                >
             <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
@@ -715,8 +848,7 @@
                     android:textAlignment="center"
                     android:textSize="20sp"
                     android:id="@+id/undo"
-                    android:layout_toEndOf="@+id/sixRuns"
-                    android:layout_toRightOf="@+id/sixRuns">
+                    >
 
             </androidx.appcompat.widget.AppCompatButton>
 
@@ -730,9 +862,7 @@
                     android:textAlignment="center"
                     android:textSize="20sp"
                     android:id="@+id/fiveOrSevenRuns"
-                    android:layout_below="@+id/undo"
-                    android:layout_toEndOf="@+id/twoRuns"
-                    android:layout_toRightOf="@+id/twoRuns">
+                    >
 
             </androidx.appcompat.widget.AppCompatButton>
             <androidx.appcompat.widget.AppCompatButton
@@ -743,10 +873,8 @@
                     android:textColor="#732732"
                     android:textAlignment="center"
                     android:textSize="20sp"
-                    android:id="@+id/out"
-                    android:layout_below="@+id/fiveOrSevenRuns"
-                    android:layout_toEndOf="@+id/twoRuns"
-                    android:layout_toRightOf="@+id/twoRuns">
+                    android:id="@+id/out_button_MatchScoringActivity"
+                    >
 
             </androidx.appcompat.widget.AppCompatButton>
 
@@ -759,15 +887,13 @@
                     android:textAlignment="center"
                     android:textSize="20sp"
                     android:id="@+id/legByes"
-                    android:layout_below="@+id/out"
-                    android:layout_toEndOf="@+id/byeRuns"
-                    android:layout_toRightOf="@+id/byeRuns">
+                    >
 
             </androidx.appcompat.widget.AppCompatButton>
+            </LinearLayout>
 
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </LinearLayout>
-</LinearLayout>
 </ScrollView>

@@ -3,6 +3,7 @@ package model.player
 class BowlingStats(
 
     //Bowling Stats
+    var balls_bowled:Int=0,
     var overs_bowled:Int=0,
     var maiden:Int=0,
     var wicket:Int=0,
@@ -17,5 +18,5 @@ class BowlingStats(
     var fours_conceded:Int=0,
     var sixes_conceded:Int=0)
 {
-    constructor():this(0,0,0,0,0,0)
+    constructor():this(0,0,0,0,0,0,0,0,0,0,0,0,0,0)
 }

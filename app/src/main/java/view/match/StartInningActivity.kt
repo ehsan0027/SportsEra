@@ -14,10 +14,9 @@ import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_start_inning.*
 import model.player.PlayerPlayingMatch
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.okButton
-import org.jetbrains.anko.startActivityForResult
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.*
+import view.GlobalVariable
+import view.matchscoring.MatchScoringActivity
 import view.team.TeamsPlayerReadyToPlayMatch
 
 @Suppress("DEPRECATION")
@@ -146,6 +145,7 @@ class StartInningActivity : AppCompatActivity() {
             && striker.isNotEmpty() && nonStriker.isNotEmpty()
             && bowler.isNotEmpty()
         ) {
+            GlobalVariable.MATCH_ID= newMatchId
             val progressDialog: ProgressDialog =
                 ProgressDialog.show(this, "Starting Match", "setting up match innings...")
             progressDialog.show()
@@ -211,11 +211,7 @@ class StartInningActivity : AppCompatActivity() {
                     }
                     )
 
-
-
-
-
-
+                    startActivity<MatchScoringActivity>()
                     progressDialog.dismiss()
                     finish()
                 }
@@ -255,6 +251,8 @@ class StartInningActivity : AppCompatActivity() {
                     val name = data.getStringExtra("name")
                     val player_img = data.getStringExtra("player_img")
                     striker = data.getStringExtra("playerId")
+                    GlobalVariable.STRIKER_NAME=name
+                    GlobalVariable.STRIKER_ID=striker
                     Picasso.get().load(player_img).into(striker_imageButton_StartInning)
                     playerReSelection(name, STRIKER_RC)
                     striker_Name_StartInning.text = name
@@ -264,6 +262,8 @@ class StartInningActivity : AppCompatActivity() {
                     val name = data.getStringExtra("name")
                     val player_img = data.getStringExtra("player_img")
                     nonStriker = data.getStringExtra("playerId")
+                    GlobalVariable.NON_STRIKER_ID=nonStriker
+                    GlobalVariable.NON_STRIKER_NAME=name
                     Picasso.get().load(player_img).into(non_Striker_imageButton_StartInning)
                     playerReSelection(name, NON_STRIKER_RC)
                     non_striker_Name_StartInning.text = name
@@ -273,6 +273,9 @@ class StartInningActivity : AppCompatActivity() {
                     val name = data.getStringExtra("name")
                     val player_img = data.getStringExtra("player_img")
                     bowler = data.getStringExtra("playerId")
+                    GlobalVariable.BOWLER_ID=bowler
+                    Log.d("BOWLER_ID_1","$bowler")
+                    GlobalVariable.BOWLER_NAME=name
                     bowler_Name_StartInning.text = name
                     Picasso.get().load(player_img).into(bowler_imageButton_StartInning)
                     toast(name)

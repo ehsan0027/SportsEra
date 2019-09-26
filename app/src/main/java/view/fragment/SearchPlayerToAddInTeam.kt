@@ -101,7 +101,7 @@ class SearchPlayerToAddInTeam : AppCompatActivity() {
                                 newRef?.updateChildren(updateTeamMember)
                                     ?.addOnCompleteListener { task ->
                                         if (task.isSuccessful) {
-                                            toast("PlayerBasicProfile Added")
+                                            toast("Player is Added")
                                             val intent = Intent()
                                             setResult(Activity.RESULT_OK, intent)
                                             finish()

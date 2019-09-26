@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.activity_toss.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.okButton
 import org.jetbrains.anko.startActivity
+import view.GlobalVariable
 
 class TossActivity : AppCompatActivity() {
 
@@ -88,14 +89,22 @@ class TossActivity : AppCompatActivity() {
             teamA_Card_TossActivity.isChecked-> {
                 battingTeamId=teamA_Id
                 battingTeamName=teamA_Name
+                GlobalVariable.BATTING_TEAM_ID=battingTeamId
+                GlobalVariable.BATTING_TEAM_NAME=teamA_Name
+                GlobalVariable.BOWLING_TEAM_NAME=teamB_Name
+                GlobalVariable.BOWLING_TEAM_ID=teamB_Id
                 Log.d("TOSSACTIVITY","teamA_selected")
-
+                Log.d("MatchOvers1",GlobalVariable.MATCH_OVERS.toString())
                 startInning(battingTeamId)
 
             }
             teamB_Card_TossActivity.isChecked->{
                 battingTeamId=teamB_Id
                 battingTeamName=teamB_Name
+                GlobalVariable.BATTING_TEAM_ID=battingTeamId
+                GlobalVariable.BATTING_TEAM_NAME=teamB_Name
+                GlobalVariable.BOWLING_TEAM_NAME=teamA_Name
+                GlobalVariable.BOWLING_TEAM_ID=teamA_Id
                 Log.d("TOSSACTIVITY","teamB_selected")
 
                 startInning(battingTeamId)

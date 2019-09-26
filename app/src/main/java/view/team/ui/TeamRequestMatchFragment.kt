@@ -32,6 +32,7 @@ import kotlinx.android.synthetic.main.fragment_notifications_layout.*
 import kotlinx.android.synthetic.main.notifications_card_match_request.view.*
 import model.MatchInvite
 import org.jetbrains.anko.find
+import view.GlobalVariable
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -103,6 +104,7 @@ class TeamRequestMatchFragment(
     override fun onResume() {
         super.onResume()
         matchInviteAdapter.clear()
+        notifications_recycler_view?.removeAllViewsInLayout()
         fetchNotificationsFromDatabase()
 
     }
@@ -145,6 +147,7 @@ class TeamRequestMatchFragment(
                         val playerId = it.key.toString()
                         team_B_Squad.add(playerId)
                     }
+
                 }
             }
         })
@@ -266,6 +269,7 @@ class TeamRequestMatchFragment(
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         toast("Invite is updated")
+                        GlobalVariable.MATCH_OVERS=newOvers.toInt()
                         Log.d("Updated", "Invitation is Updated")
                         changeDetailPopUpDialog.cancel()
                     }
@@ -363,6 +367,10 @@ class TeamRequestMatchFragment(
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     toast("Match is Scheduled")
+                                    GlobalVariable.MATCH_OVERS=matchOvers.toInt()
+                                    Log.d("MatchOvers",GlobalVariable.MATCH_OVERS.toString())
+                                    notifications_recycler_view?.removeAllViewsInLayout()
+
                                     val teamUpcomingMatchRef =
                                         FirebaseDatabase.getInstance().reference
                                     val teamUpcomingMatch = "TeamUpcomingMatch"
@@ -573,6 +581,7 @@ class TeamRequestMatchFragment(
                                                             val match_overs =
                                                                 p0.child("matchOvers")
                                                                     .value.toString()
+                                                            GlobalVariable.MATCH_OVERS=match_overs.toInt()
                                                             val match_time =
                                                                 p0.child("matchTime")
                                                                     .value.toString()

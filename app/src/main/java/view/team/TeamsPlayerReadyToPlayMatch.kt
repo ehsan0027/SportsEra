@@ -20,12 +20,14 @@ import kotlinx.android.synthetic.main.player_in_selected_team_to_start_inning.vi
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.okButton
 import org.jetbrains.anko.toast
+import view.GlobalVariable
 
 class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
 
     val groupAdapter= GroupAdapter<ViewHolder>().apply { spanCount=3 }
     lateinit var teamId:String
     lateinit var newMatchId:String
+    lateinit var bowler:String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_teams_player_ready_to_play_match)
@@ -45,7 +47,11 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
             val player_img =team_player.player_img
             Log.d("GroupAdapter","Clicked")
             toast("Clicked")
-   isPlayerAlreadySelected(playerId,name,player_img)
+            if(GlobalVariable.BOWLING_TEAM_ID==teamId)
+            {
+                setPlayer(playerId,name,player_img)
+            }
+             isPlayerAlreadySelected(playerId,name,player_img)
           }
     }
 

@@ -116,7 +116,7 @@
                 <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/team_total_overs"
+                        android:id="@+id/match_total_overs"
                         android:layout_toEndOf="@+id/overs_separator"
                         android:layout_centerInParent="true"
                         android:hint="20"
@@ -131,13 +131,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/bracket_close_overs"
-                        android:layout_toEndOf="@+id/team_total_overs"
+                        android:layout_toEndOf="@+id/match_total_overs"
                         android:layout_centerInParent="true"
                         android:hint=")"
                         android:textSize="20sp"
                         android:textColor="@color/lightGray"
                         android:textColorHint="@color/lightGray"
-                        android:layout_toRightOf="@+id/team_total_overs">
+                        android:layout_toRightOf="@+id/match_total_overs">
 
                 </androidx.appcompat.widget.AppCompatTextView>
 

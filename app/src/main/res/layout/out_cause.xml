@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.github.florent37.shapeofview.shapes.BubbleView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="278dp"
+    android:layout_height="200dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center"
+    app:shape_bubble_arrowHeight="10dp"
+    app:shape_bubble_arrowWidth="10dp"
+    app:shape_bubble_arrowPosition="bottom"
+    app:shape_bubble_borderRadius="20dp"
+    >
+
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@color/lightGray">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/player_Name_outCause_Popup"
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold"
+            android:layout_marginTop="15dp"
+            android:text="Name"
+            android:textSize="20sp"
+            >
+
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="5dp"
+            android:id="@+id/label_RemovePlayerPopUp"
+            android:layout_below="@id/player_Name_outCause_Popup">
+
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="Run "
+                android:textSize="25sp"
+                android:layout_gravity="end"
+                android:textStyle="italic"
+                android:gravity="end">
+            </TextView>
+
+            <TextView
+                android:textStyle="italic"
+                android:layout_width="150dp"
+                android:textSize="25sp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:gravity="end"
+                android:text="Ball :">
+            </TextView>
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@id/label_RemovePlayerPopUp"
+            android:layout_below="@id/player_Name_outCause_Popup"
+            android:layout_alignParentRight="true"
+            android:layout_toEndOf="@id/label_RemovePlayerPopUp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="78"
+                android:textSize="25sp"
+                android:layout_gravity="end"
+                android:textStyle="italic|bold"
+                android:gravity="start"
+                android:id="@+id/runs_TextView_OutCause_PopUp">
+            </TextView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:textStyle="italic|bold"
+                android:gravity="start"
+                android:textSize="25sp"
+                android:text="27"
+                android:id="@+id/balls_TextView_OutCause_PopUp">
+            </TextView>
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:text="Out"
+            android:id="@+id/out_button_OutCause_PopUp"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_margin="15dp"
+            android:textAllCaps="false"
+            android:textColor="@color/cardview_dark_background"
+            >
+        </com.google.android.material.button.MaterialButton>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="cancel"
+            android:id="@+id/cancelButton_OutCausePopUp"
+            android:layout_alignParentEnd="true"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_margin="15dp"
+            android:textAllCaps="false"
+            android:textColor="@color/cardview_dark_background"
+            android:layout_alignParentRight="false">
+        </com.google.android.material.button.MaterialButton>
+
+
+
+    </RelativeLayout>
+</com.github.florent37.shapeofview.shapes.BubbleView>
