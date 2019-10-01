@@ -13,12 +13,13 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_start_inning.*
-import model.player.PlayerPlayingMatch
+import model.Batsman
+import model.Bowler
+import model.Inning
 import org.jetbrains.anko.*
 import view.GlobalVariable
 import view.matchscoring.MatchScoringActivity
 import view.team.TeamsPlayerReadyToPlayMatch
-
 @Suppress("DEPRECATION")
 class StartInningActivity : AppCompatActivity() {
     lateinit var newMatchId: String
@@ -138,79 +139,54 @@ class StartInningActivity : AppCompatActivity() {
         })
 
     }
-
-
     private fun createInning() {
         if (newMatchId.isNotEmpty() && teamA_Id.isNotEmpty()
             && striker.isNotEmpty() && nonStriker.isNotEmpty()
             && bowler.isNotEmpty()
         ) {
-            GlobalVariable.MATCH_ID= newMatchId
+            GlobalVariable.MATCH_ID = newMatchId
+            val batsman1 = Batsman()
+            val batsman2 = Batsman()
+            val bowler = Bowler()
+            val inning = Inning()
             val progressDialog: ProgressDialog =
-                ProgressDialog.show(this, "Starting Match", "setting up match innings...")
+                ProgressDialog.show(this, "Starting Match", "Setting up match innings...")
             progressDialog.show()
 
-            val databaseRef = FirebaseDatabase.getInstance().reference
-            //create an instance of SelectedPlayerForMatch
-            val player = PlayerPlayingMatch()
+            Log.d("InningA",battingTeamIdStartInning)
+            Log.d("InningB",bowlingTeamIdStartInning)
+            Log.d("InningS",GlobalVariable.STRIKER_ID)
+            Log.d("InningN",GlobalVariable.NON_STRIKER_ID)
+            Log.d("InningBL",GlobalVariable.BOWLER_ID)
 
-            val startMatchInning = HashMap<String, Any>()
+            val updateStatus = FirebaseDatabase.getInstance().reference
+            val setStatusLive = HashMap<String, Any>()
+            setStatusLive["MatchInfo/$newMatchId/matchStatus"] = "Live"
 
-            startMatchInning["/MatchScore/$newMatchId/$battingTeamIdStartInning/$striker"] = player
-            startMatchInning["/MatchScore/$newMatchId/$battingTeamIdStartInning/$nonStriker"] =
-                player
-            startMatchInning["/MatchScore/$newMatchId/$bowlingTeamIdStartInning/$bowler"] = player
-            databaseRef.updateChildren(startMatchInning).addOnCompleteListener { task ->
+            updateStatus.updateChildren(setStatusLive).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    toast("Inning Started")
 
 
-                    val newDatabaseRef =
-                        FirebaseDatabase.getInstance().getReference("/ScheduleMatch/$newMatchId")
-                    newDatabaseRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onCancelled(p0: DatabaseError) {
-                        }
+                    val databaseRef = FirebaseDatabase.getInstance().reference
+                    val startMatchInning = HashMap<String, Any>()
+                    startMatchInning["/MatchScore/$newMatchId/${GlobalVariable.Inning}"] = inning
 
-                        override fun onDataChange(p0: DataSnapshot) {
-                            if (p0.exists()) {
-                                val ballType = p0.child("ballType")
-                                    .value.toString()
-                                val matchCity =
-                                    p0.child("matchCity")
-                                        .value.toString()
-                                val match_date =
-                                    p0.child("matchDate")
-                                        .value.toString()
-                                val match_overs =
-                                    p0.child("matchOvers")
-                                        .value.toString()
-                                val match_time =
-                                    p0.child("matchTime")
-                                        .value.toString()
-                                val matchType =
-                                    p0.child("matchType")
-                                        .value.toString()
-                                val matchVenue =
-                                    p0.child("matchVenue")
-                                        .value.toString()
-                                val sender_Capatain =
-                                    p0.child("sender")
-                                        .value.toString()
+                    databaseRef.updateChildren(startMatchInning).addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            toast("Inning Started")
 
-                                val reciever_Captain =
-                                    p0.child("reciever")
-                                        .value.toString()
-
-                                val squad_count =
-                                    p0.child("squadCount")
-                                        .value.toString()
-
-
+                            val ndR = FirebaseDatabase.getInstance().reference
+                            val setPlayersReady = HashMap<String,Any>()
+                            setPlayersReady["/MatchScore/$newMatchId/${GlobalVariable.Inning}/$battingTeamIdStartInning/${GlobalVariable.STRIKER_ID}"]= batsman1
+                            setPlayersReady["/MatchScore/$newMatchId/${GlobalVariable.Inning}/$battingTeamIdStartInning/${GlobalVariable.NON_STRIKER_ID}"] = batsman2
+                            setPlayersReady["/MatchScore/$newMatchId/${GlobalVariable.Inning}/$bowlingTeamIdStartInning/${GlobalVariable.BOWLER_ID}"] = bowler
+                            ndR.updateChildren(setPlayersReady).addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    toast("Players are Ready")
+                                }
                             }
                         }
                     }
-                    )
-
                     startActivity<MatchScoringActivity>()
                     progressDialog.dismiss()
                     finish()
@@ -220,26 +196,15 @@ class StartInningActivity : AppCompatActivity() {
                 progressDialog.dismiss()
 
             }
+
         } else {
             toast("Something went Wrong")
         }
+
     }
 
 
-    fun setMatchInfo(
-        date: String,
-        time: String,
-        overs: String,
-        mType: String,
-        ballType: String,
-        mVenue: String,
-        mCity: String,
-        sender: String,
-        squadCount: String,
-        receiver: String
-    ) {
-        ///       val match=MatchInvite(mType,overs,mCity,mVenue,date,time,ballType,squadCount,teamA_Id,teamB_Id,)
-    }
+
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -247,7 +212,7 @@ class StartInningActivity : AppCompatActivity() {
         if (data != null && resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 STRIKER_RC -> {
-
+                                Log.d("onActivity_SI","striker selected")
                     val name = data.getStringExtra("name")
                     val player_img = data.getStringExtra("player_img")
                     striker = data.getStringExtra("playerId")

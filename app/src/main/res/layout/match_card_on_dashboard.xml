@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="220dp">
+        android:layout_height="230dp">
 
     <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -161,9 +160,23 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/team_A_current_over_match_card"
-                            android:text="30"
+                            android:text="0"
                             android:textSize="15sp"
                             />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="."
+                        android:textSize="15sp"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/team_A_current_over_balls_match_card"
+                        android:text="0"
+                        android:textSize="15sp"
+                        />
+
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -396,342 +409,16 @@
                 android:layout_marginTop="5dp"
                 android:layout_below="@+id/current_run_rate_required_rate_layout"
                 />
-
-
-            <LinearLayout
+            <com.google.android.material.button.MaterialButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_below="@id/divider"
-                android:layout_marginTop="5dp"
-                android:id="@+id/team_batting_bowling_layout"
+                android:layout_below="@+id/divider"
+                android:layout_margin="10dp"
+                android:text="Resume Scoring"
+                android:id="@+id/resume_scoring"
                 >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Team Name"
-                    android:id="@+id/batting_team_name"
-                    android:layout_marginStart="12dp"
-                    >
 
-                </TextView>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" Batting"
-                    />
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingEnd="10dp"
-                    >
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_alignParentEnd="true"
-                        >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/bowling_team_name"
-                        android:text="Team Name"
-                        android:textSize="15sp"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" Bowling"
-                        android:textSize="15sp"
-                        android:layout_marginEnd="12dp"
-                        />
-                    </LinearLayout>
-                </RelativeLayout>
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/batsman_A_bowler_A_layout"
-                android:layout_below="@id/team_batting_bowling_layout"
-                >
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="7dp"
-                    android:layout_height="7dp"
-                    android:layout_marginStart="7dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/black_image"
-                    >
-
-                </de.hdodenhof.circleimageview.CircleImageView>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Batsman A"
-                    android:id="@+id/batsman_A_on_match_card"
-                    android:layout_marginStart="5dp"
-                    >
-
-                </TextView>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=":"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:layout_marginStart="5dp"
-                    android:id="@+id/batsman_A_score_on_match_card"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="*"
-                    android:id="@+id/batsman_A_not_out_status_on_match_card"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="("
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:id="@+id/batsman_A_balls_played_on_match_card"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=")"
-                    />
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingEnd="10dp"
-                    >
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_alignParentEnd="true"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/bowler_A_Name"
-                            android:text="Bowler A"
-                            android:textSize="15sp"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=":"
-                            android:textSize="15sp"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textSize="15sp"
-                            android:id="@+id/bowler_A_wickets"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="/"
-                            android:textSize="15sp"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textSize="15sp"
-                            android:id="@+id/bowler_A_runs_conceded"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="("
-                            android:textSize="15sp"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textSize="15sp"
-                            android:id="@+id/bowler_A_bowled_overs"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=")"
-                            android:textSize="15sp"
-                            />
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:layout_width="7dp"
-                            android:layout_height="7dp"
-                            android:layout_marginStart="7dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/black_image"
-                            >
-
-                        </de.hdodenhof.circleimageview.CircleImageView>
-                    </LinearLayout>
-
-
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_below="@id/batsman_A_bowler_A_layout"
-                >
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="7dp"
-                    android:layout_height="7dp"
-                    android:layout_marginStart="7dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/black_image"
-                    >
-
-                </de.hdodenhof.circleimageview.CircleImageView>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Batsman B"
-                    android:id="@+id/batsman_B_on_match_card"
-                    android:layout_marginStart="5dp"
-                    >
-
-                </TextView>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=":"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:layout_marginStart="5dp"
-                    android:id="@+id/batsman_B_score_on_match_card"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="*"
-                    android:id="@+id/batsman_B_not_out_status_on_match_card"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="("
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:id="@+id/batsman_B_balls_played_on_match_card"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=")"
-                    />
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingEnd="10dp"
-                    >
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_alignParentEnd="true"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/bowler_B_Name"
-                            android:text="Bowler B"
-                            android:textSize="15sp"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=":"
-                            android:textSize="15sp"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textSize="15sp"
-                            android:id="@+id/bowler_B_wickets"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="/"
-                            android:textSize="15sp"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textSize="15sp"
-                            android:id="@+id/bowler_B_runs_conceded"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="("
-                            android:textSize="15sp"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textSize="15sp"
-                            android:id="@+id/bowler_B_bowled_overs"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=")"
-                            android:textSize="15sp"
-                            />
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:layout_width="7dp"
-                            android:layout_height="7dp"
-                            android:layout_marginStart="7dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/black_image"
-                            >
-
-                        </de.hdodenhof.circleimageview.CircleImageView>
-                    </LinearLayout>
-
-
-                </RelativeLayout>
-
-            </LinearLayout>
+            </com.google.android.material.button.MaterialButton>
 
 
 

@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
@@ -44,6 +45,13 @@ class TeamRegistration:AppCompatActivity(),View.OnClickListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.team_registration)
+
+
+        val autoCompleteTextViewAdapter=
+            ArrayAdapter(this,android.R.layout.select_dialog_item,GlobalVariable.listOfPakistanCities)
+        team_city.threshold=1
+        team_city.setAdapter(autoCompleteTextViewAdapter)
+
 
 
         mAuth = FirebaseAuth.getInstance()

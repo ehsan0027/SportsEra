@@ -52,6 +52,12 @@ class EditProfile:AppCompatActivity(){
         setContentView(R.layout.edit_profile_activity)
         currentPlayer = FirebaseAuth.getInstance().uid.toString()
 
+
+        val autoCompleteTextViewAdapter=ArrayAdapter(this,android.R.layout.select_dialog_item,GlobalVariable.listOfPakistanCities)
+        edit_location_edit_profile.threshold=1
+        edit_location_edit_profile.setAdapter(autoCompleteTextViewAdapter)
+
+
         makeButtonDisableInvisible(update_photo_Button_EditProfileActivity)
         makeButtonEnableVisible(change_photo_Button_EditProfileActivity)
         firebaseDatabase = FirebaseDatabase.getInstance()

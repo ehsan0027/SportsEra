@@ -84,7 +84,7 @@
 
 
 
-            <com.google.android.material.textfield.TextInputLayout
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:hintAnimationEnabled="true"
@@ -92,19 +92,10 @@
                     app:hintEnabled="true"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:hint="Team City"
+                android:ems="10"
+                android:id="@+id/team_city"
+            />
 
-            >
-
-                <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPersonName"
-                        android:ems="10"
-                        android:id="@+id/team_city"
-
-                />
-
-            </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
                 android:text="Select Team Level"

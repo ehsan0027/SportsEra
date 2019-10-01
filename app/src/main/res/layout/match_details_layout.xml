@@ -110,7 +110,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.google.android.material.textfield.TextInputLayout
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -121,16 +121,8 @@
                 app:boxStrokeColor="@android:color/holo_green_dark"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:textSize="18dp"
-                >
-            <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:ems="10"
-                    android:id="@+id/matchCity_Match_Details"
-                    />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            android:id="@+id/matchCity_Match_Details"
+            />
 
 
         <com.google.android.material.textfield.TextInputLayout

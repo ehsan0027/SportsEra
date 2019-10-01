@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sportsplayer.R
@@ -16,12 +17,14 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.match_details_layout.*
-import model.MatchInvite
+import model.MatchInfo
 import org.jetbrains.anko.*
+import view.GlobalVariable
 import view.match.ui.SearchTeamForMatch
 import view.team.TeamDetailActivity
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 class MatchDetails : AppCompatActivity(){
 
@@ -35,6 +38,7 @@ class MatchDetails : AppCompatActivity(){
     lateinit var captain_B_Id:String
     var databaseRef: FirebaseDatabase?=null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.match_details_layout)
@@ -45,7 +49,9 @@ class MatchDetails : AppCompatActivity(){
 
         databaseRef= FirebaseDatabase.getInstance()
 
-
+        val autoCompleteTextViewAdapter=ArrayAdapter(this,android.R.layout.select_dialog_item,GlobalVariable.listOfPakistanCities)
+        matchCity_Match_Details.threshold=1
+        matchCity_Match_Details.setAdapter(autoCompleteTextViewAdapter)
         //Click Listener for Team_A and Team_B
       //  team_A_StartMatchActivity.setOnClickListener { selectTeamA() }
         team_B_Match_Details.setOnClickListener {
@@ -199,24 +205,32 @@ private fun sendRequestForMatch() {
         val newDatabaseReference=databaseRef?.reference
 
         //generate unique id for match
-        val requestId=newDatabaseReference?.push()?.key!!
-        Log.d("requestId ",requestId)
-        newRequestId=requestId
+        val matchId=newDatabaseReference?.push()?.key!!
+        Log.d("requestId ",matchId)
+        newRequestId=matchId
 
-        val newMatchInvite=MatchInvite(matchType,overs,city,venue,date,time,ballType,squad,team_A_id,team_B_id,team_A_Name,team_B_Name,team_A_Logo,team_B_Logo,requestId,team_A_Captain,captain_B_Id,"","")
+        val newMatchInvite=MatchInfo(matchType,overs,city,venue,date,time,ballType,squad,team_A_id,team_B_id,team_A_Name,team_B_Name,team_A_Logo,team_B_Logo,matchId,team_A_Captain,captain_B_Id,"","")
 
         Log.d("Team_A_Id ",team_A_id)
         Log.d("team_B_Id ",team_B_id)
         val addRequest=HashMap<String,Any>()
-        addRequest["/MatchInvite/$requestId"]=newMatchInvite
-        addRequest["/TeamsMatchInvite/$team_A_id/$requestId"]=true
-        addRequest["/TeamsMatchInvite/$team_B_id/$requestId"]=true
-
-
+        addRequest["/MatchInfo/$matchId"]=newMatchInvite
+        addRequest["/TeamsMatchInfo/$team_A_id/$matchId"]=true
+        addRequest["/TeamsMatchInfo/$team_B_id/$matchId"]=true
 
         newDatabaseReference.updateChildren(addRequest).addOnCompleteListener { task->
             if(task.isSuccessful){
-                Log.d("MatchSaved ",requestId)
+                Log.d("MatchSaved ",matchId)
+             val setStatus=FirebaseDatabase.getInstance().reference
+                val m_status=HashMap<String,Any>()
+                m_status["/MatchInfo/$matchId/matchStatus"]="Request"
+
+                setStatus.updateChildren(m_status).addOnCompleteListener {
+                    task -> if(task.isSuccessful)
+                {
+                    toast("Status Changed")
+                }
+                }
                 toast("Request Sent")
                 //progressDialog.dismiss()
                 startActivity<TeamDetailActivity>("team_A_Id" to team_A_id,

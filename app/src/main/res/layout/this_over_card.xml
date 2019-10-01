@@ -10,12 +10,12 @@
     android:layout_centerHorizontal="true">
 
     <Button
-        android:layout_width="40dp"
-        android:layout_height="50dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:text="5"
         android:backgroundTint="@color/Gray"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textStyle="normal"
         android:id="@+id/run_at_a_ball"
         >
 

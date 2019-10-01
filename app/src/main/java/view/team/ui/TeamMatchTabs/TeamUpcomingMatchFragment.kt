@@ -76,7 +76,44 @@ class TeamUpcomingMatchFragment(private val teamId: String) : Fragment() {
     override fun onResume() {
         super.onResume()
         upcomingMatchAdapter.clear()
-        fetchUpcomingMatchDetails(teamId)
+
+        val databaseRef = FirebaseDatabase.getInstance().getReference("/TeamsMatchInfo/$teamId")
+        databaseRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+
+                if (p0.exists()){
+
+                    val matchRef=FirebaseDatabase.getInstance().getReference("MatchInfo")
+
+                    p0.children.forEach {
+                        val match_Id=it.key.toString()
+                        matchRef.child(match_Id).addListenerForSingleValueEvent(object : ValueEventListener{
+                            override fun onCancelled(p0: DatabaseError) {
+                            }
+
+                            override fun onDataChange(p0: DataSnapshot) {
+
+                                if(p0.exists())
+                                {
+                                    val matchStatus=p0.child("matchStatus").value.toString()
+
+                                    if(matchStatus == "Upcoming")
+                                        fetchUpcomingMatchDetails(teamId)
+                                }
+                            }
+
+                        })
+                    }
+                }
+            }
+
+        })
+
+
     }
 
     /**
@@ -98,7 +135,7 @@ class TeamUpcomingMatchFragment(private val teamId: String) : Fragment() {
     private fun fetchUpcomingMatchDetails(teamId: String) {
         val teamUpcomingMatch = "TeamUpcomingMatch"
         val newDatabaseRef =
-            FirebaseDatabase.getInstance().getReference("Team/$teamId/$teamUpcomingMatch")
+            FirebaseDatabase.getInstance().getReference("TeamsMatchInfo/$teamId")
         newDatabaseRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
@@ -107,7 +144,7 @@ class TeamUpcomingMatchFragment(private val teamId: String) : Fragment() {
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()) {
                     val scheduleMatchRef =
-                        FirebaseDatabase.getInstance().getReference("ScheduledMatch")
+                        FirebaseDatabase.getInstance().getReference("MatchInfo")
                     p0.children.forEach {
 
                         val upcomingMatchId = it.key
@@ -119,7 +156,7 @@ class TeamUpcomingMatchFragment(private val teamId: String) : Fragment() {
 
                                 override fun onDataChange(p0: DataSnapshot) {
                                     if (p0.exists()) {
-                                        val match_Id = p0.child("matchInvite").value.toString()
+                                        val match_Id = p0.child("matchId").value.toString()
                                         val match_type = p0.child("matchType").value.toString()
                                         val match_overs = p0.child("matchOvers").value.toString()
                                         val match_date = p0.child("matchDate").value.toString()

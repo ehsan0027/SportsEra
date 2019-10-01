@@ -15,7 +15,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
-import com.pawegio.kandroid.visible
 import kotlinx.android.synthetic.main.activity_phone_auth.*
 import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.toast
@@ -192,10 +191,10 @@ class PhoneAuthActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
     fun makeViewsVisible(vararg view:View)
-    { for(v in view) { v.visible=true } }
+    { for(v in view) { v.visibility=View.VISIBLE} }
 
     fun makeViewsInVisible(vararg view:View)
-    { for(v in view) { v.visible=false } }
+    { for(v in view) { v.visibility=View.GONE } }
 
     override fun onClick(view: View) {
         when (view.id) {

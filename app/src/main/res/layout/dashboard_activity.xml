@@ -334,6 +334,18 @@ android:background="@color/white_layout">
                     >
 
             </androidx.recyclerview.widget.RecyclerView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="horizontal"
+                android:layout_marginTop="2dp"
+                android:id="@+id/live_match_card_recycler_view_dashboard"
+                android:layout_marginStart="2dp"
+
+                >
+
+            </androidx.recyclerview.widget.RecyclerView>
 
         </androidx.cardview.widget.CardView>
 
