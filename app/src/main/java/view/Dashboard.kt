@@ -30,23 +30,17 @@ import view.ProfilePackage.Profile
 import view.fragment.SearchTeamFragment
 import view.match.MatchDetails
 import view.match.TossActivity
-import view.matchscoring.MatchScoringActivity
 import view.team.TeamDetailActivity
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Suppress("DEPRECATION")
-class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionListener,
-    MatchScoringActivity.NotifyDataChange {
+class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionListener {
 
     override fun onFragmentInteraction(uri: Uri) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
-    val CODE_IMAGE_GALLERY = 1
-    val SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage"
-    private var selectedProfileUri: Uri? = null
 
 
     var ndb_Ref:FirebaseDatabase? =null
@@ -57,12 +51,6 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
     private  var currentPlayer: String=""
     private lateinit var searchTeamFragment: SearchTeamFragment
     val teamAdapter = GroupAdapter<ViewHolder>()
-
-    override fun updataData() {
-        fetchLiveMatchDetails(currentPlayer)
-
-
-    }
     val upcomingMatchAdapter = GroupAdapter<ViewHolder>()
 
     val liveMatchAdapter = GroupAdapter<ViewHolder>()
@@ -108,7 +96,6 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
             if (supportFragmentManager.backStackEntryCount == 0) {
                 makeViewsVisible(dashboard_layout)
             }
-
         }
     }
 
@@ -129,53 +116,14 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
 
         teamAdapter.clear()
         upcomingMatchAdapter.clear()
+        liveMatchAdapter.clear()
         dashboard_team_recyclerView?.removeAllViewsInLayout()
         upcoming_match_card_recycler_view_dashboard?.removeAllViewsInLayout()
+        live_match_card_recycler_view_dashboard?.removeAllViewsInLayout()
         //retrieve team data from the database
         fetchTeamFromDatabase(currentPlayer)
         //retrieve team data from the database
-
-        val databaseRef =
-            FirebaseDatabase.getInstance().getReference("/PlayersUpcomingMatch/$currentPlayer")
-        databaseRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-
-                if (p0.exists()) {
-
-                    val matchRef = FirebaseDatabase.getInstance().getReference("MatchInfo")
-
-                    p0.children.forEach {
-                        val match_Id = it.key.toString()
-                        matchRef.child(match_Id)
-                            .addListenerForSingleValueEvent(object : ValueEventListener {
-                                override fun onCancelled(p0: DatabaseError) {
-                                }
-
-                                override fun onDataChange(p0: DataSnapshot) {
-
-                                    if (p0.exists()) {
-                                        val matchStatus = p0.child("matchStatus").value.toString()
-
-                                        if (matchStatus == "Upcoming") {
-                                            fetchUpcomingMatchDetails(currentPlayer)
-                                        } else if (matchStatus == "Live") {
-                                            fetchLiveMatchDetails(currentPlayer)
-                                        }
-
-
-                                    }
-                                }
-
-                            })
-                    }
-                }
-            }
-
-        })
+        fetchLiveMatchDetails(currentPlayer)
 
 
     }
@@ -446,7 +394,7 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
     private fun fetchUpcomingMatchDetails(playerId: String) {
 
         val newDatabaseRef =
-            FirebaseDatabase.getInstance().getReference("PlayersUpcomingMatch/$playerId")
+            FirebaseDatabase.getInstance().getReference("PlayersMatchId/$playerId/Upcoming")
         newDatabaseRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 longToast("Non Empty Card Shown")
@@ -514,7 +462,6 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
                                     }
                                 }
                             })
-
                     }
                     upcoming_match_card_recycler_view_dashboard?.adapter = upcomingMatchAdapter
                 }
@@ -567,8 +514,14 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
         var sender: String,
         val ctx: Dashboard
     ) : Item<ViewHolder>() {
+
         override fun getLayout(): Int {
-            return R.layout.fragment_team_upcoming_match_card
+          return  R.layout.fragment_team_upcoming_match_card
+        }
+
+        override fun createViewHolder(itemView: View): ViewHolder {
+
+            return super.createViewHolder(itemView)
         }
 
         private fun makeViewsInvisible(vararg view: View) {
@@ -579,6 +532,7 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
 
         override fun bind(viewHolder: ViewHolder, position: Int) {
             viewHolder.itemView.upcoming_match_cardView
+
 
             viewHolder.itemView.title_of_match_upcoming.text = match_type
 
@@ -655,7 +609,7 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
     private fun fetchLiveMatchDetails(playerId: String) {
 
         val newDatabaseRef =
-            FirebaseDatabase.getInstance().getReference("PlayersUpcomingMatch/$playerId")
+            FirebaseDatabase.getInstance().getReference("PlayersMatchId/$playerId/Live")
         newDatabaseRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 longToast("Non Empty Card Shown")
@@ -718,16 +672,9 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
                                     }
                                 }
                             })
-
-                    }
-
-                    val ndbRef = FirebaseDatabase.getInstance().getReference("MatchScore")
-                    p0.children.forEach {
-
-                        val liveMatchId = it.key
-                        ndbRef.child("$liveMatchId/FirstInning")
                     }
                 }
+                else{ fetchUpcomingMatchDetails(currentPlayer) }
             }
 
         })
@@ -801,6 +748,8 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
                 viewHolder.itemView.team_A_wickets_match_card.text = liveWickets.toString()
                 viewHolder.itemView.team_A_current_over_match_card.text = liveOvers.toString()
                 viewHolder.itemView.team_A_current_over_balls_match_card.text = liveOverBalls.toString()
+                viewHolder.itemView.team_A_total_overs_match_card.text = match_overs
+                viewHolder.itemView.title_of_match.text = match_type
                 viewHolder.itemView.team_A_name_match_card.text = team_A_Name
                 viewHolder.itemView.team_B_name_match_card.text = team_B_Name
 

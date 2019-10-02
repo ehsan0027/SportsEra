@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="200dp">
+    android:layout_height="205dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -195,7 +195,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     >
 
                 <TextView
@@ -226,7 +226,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
+                    android:layout_gravity="end"
+                    android:gravity="end"
                     android:orientation="horizontal">
 
                 <TextView
@@ -259,6 +261,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_gravity="end"
+                    android:gravity="end"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="10dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -304,16 +310,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:gravity="top"
                 android:layout_below="@+id/match_detail_notification_card"
                 >
                 <com.google.android.material.button.MaterialButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Accept"
+                    android:textSize="13sp"
                     android:textAllCaps="false"
                     android:id="@+id/accept_match_challenge"
                     android:layout_weight="1"
-                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginStart="10dp"
                     style="@style/Widget.MaterialComponents.Button"
                     />
                 <com.google.android.material.button.MaterialButton
@@ -321,21 +329,24 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/change_details_match_challenge"
                     android:text="Change Details"
+                    android:textSize="13sp"
                     android:layout_weight="1"
                     android:textAllCaps="false"
                     android:backgroundTint="@color/colorAccent"
-                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginStart="10dp"
                     style="@style/Widget.MaterialComponents.Button"
                     />
                 <com.google.android.material.button.MaterialButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Reject"
+                    android:textSize="13sp"
                     android:textAllCaps="false"
                     android:id="@+id/reject_match_challenge"
                     android:layout_weight="1"
                     android:backgroundTint="@color/DarkGoldenrod"
-                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
                     style="@style/Widget.MaterialComponents.Button"
                     />
 

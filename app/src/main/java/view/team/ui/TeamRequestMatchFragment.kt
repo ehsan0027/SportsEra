@@ -103,42 +103,7 @@ class TeamRequestMatchFragment(
         super.onResume()
         matchInviteAdapter.clear()
         notifications_recycler_view?.removeAllViewsInLayout()
-        val databaseRef = FirebaseDatabase.getInstance().getReference("/TeamsMatchInfo/$team_A_Id")
-        databaseRef.addListenerForSingleValueEvent(object : ValueEventListener{
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-
-                if (p0.exists()){
-
-                    val matchRef=FirebaseDatabase.getInstance().getReference("MatchInfo")
-
-                    p0.children.forEach {
-                        val match_Id=it.key.toString()
-                        matchRef.child(match_Id).addListenerForSingleValueEvent(object : ValueEventListener{
-                            override fun onCancelled(p0: DatabaseError) {
-                            }
-
-                            override fun onDataChange(p0: DataSnapshot) {
-
-                                if(p0.exists())
-                                {
-                                    val matchStatus=p0.child("matchStatus").value.toString()
-
-                                    if(matchStatus == "Request")
-                                    fetchNotificationsFromDatabase()
-                                }
-                            }
-
-                        })
-                    }
-                }
-            }
-
-        })
-
+        fetchNotificationsFromDatabase()
 
     }
 
@@ -353,8 +318,12 @@ class TeamRequestMatchFragment(
 
         val newdataBaseRefTeam =
             FirebaseDatabase.getInstance().reference
-        val setStatusUpcoming = HashMap<String,Any>()
+        val setStatusUpcoming = HashMap<String,Any?>()
         setStatusUpcoming["MatchInfo/$matchId/matchStatus"]="Upcoming"
+        setStatusUpcoming["TeamsMatchInfo/$team_A_Id/Upcoming/$matchId"]=true
+        setStatusUpcoming["TeamsMatchInfo/$team_A_Id/Request/$matchId"]=null
+        setStatusUpcoming["TeamsMatchInfo/$team_B_Id/Upcoming/$matchId"]=true
+        setStatusUpcoming["TeamsMatchInfo/$team_B_Id/Request/$matchId"]=null
 
         newdataBaseRefTeam.updateChildren(setStatusUpcoming).addOnCompleteListener {
             task ->  if(task.isSuccessful)
@@ -382,7 +351,7 @@ class TeamRequestMatchFragment(
                                 p0.children.forEach {
                                     val p_id = it.key
 
-                                    setPlayerUpcomingMatch["PlayersUpcomingMatch/$p_id/$matchId"] =
+                                    setPlayerUpcomingMatch["PlayersMatchId/$p_id/Upcoming/$matchId"] =
                                         true
 
                                     playerRef.updateChildren(
@@ -426,7 +395,7 @@ class TeamRequestMatchFragment(
                                     val p_id = it.key
 
 
-                                    setPlayerUpcomingMatch["PlayersUpcomingMatch/$p_id/$matchId"] =
+                                    setPlayerUpcomingMatch["PlayersMatchId/$p_id/Upcoming/$matchId"] =
                                         true
                                     playerRef.updateChildren(
                                         setPlayerUpcomingMatch
@@ -487,8 +456,8 @@ private fun rejectInvite(position: Int) {
 
     val newDatabaseReference = FirebaseDatabase.getInstance().reference
     val removeMatchInvite = HashMap<String, String?>()
-    removeMatchInvite["/TeamsMatchInfo/$team_A_Id/$invitationId"] = null
-    removeMatchInvite["/TeamsMatchInfo/$team_B_Id/$invitationId"] = null
+    removeMatchInvite["/TeamsMatchInfo/$team_A_Id/Request/$invitationId"] = null
+    removeMatchInvite["/TeamsMatchInfo/$team_B_Id/Request/$invitationId"] = null
     removeMatchInvite["/MatchInfo/$invitationId"] = null
     newDatabaseReference.updateChildren(removeMatchInvite as Map<String, Any?>)
         .addOnCompleteListener { task ->
@@ -513,7 +482,7 @@ private fun fetchNotificationsFromDatabase() {
                 Log.d("FetchMatch", "PlayerId Received")
                 p0.children.forEach {
                     val teamId = it.key
-                    teamRef.getReference("/TeamsMatchInfo/$teamId").also { task ->
+                    teamRef.getReference("/TeamsMatchInfo/$teamId/Request").also { task ->
                         task.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onCancelled(p0: DatabaseError) {
                                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

@@ -59,12 +59,37 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
 
     private fun isPlayerAlreadySelected(playerId: String, name: String, player_img: String) {
         val matchRef =
-            FirebaseDatabase.getInstance().getReference("/MatchScore/$newMatchId/$teamId")
+            FirebaseDatabase.getInstance().getReference("/MatchScore/$newMatchId/${GlobalVariable.Inning}/$teamId")
         matchRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
             override fun onDataChange(p0: DataSnapshot) {
 
                 if (p0.exists()) {
+
+                    val newDBRef = FirebaseDatabase.getInstance().getReference("/MatchScore/$newMatchId/${GlobalVariable.Inning}/$teamId/OutSquad")
+                    newDBRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError) {
+                        }
+
+                        override fun onDataChange(p0: DataSnapshot) {
+                        if (p0.exists()){
+                            p0.children.forEach {
+                                val outPId = it.key.toString()
+                                if (outPId==playerId){
+                                    alert {
+                                        title = "Player Reselection"
+                                        message = "$name Recently Out"
+                                        okButton { dialog -> dialog.dismiss() }
+                                    }.show()
+                                }
+                            }
+                        }
+                        }
+
+                    })
+
+
+
                     var found = false
                     for (it in p0.children) {
                         Log.d("PlayersMatch", it.key)
@@ -148,7 +173,8 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
                                             SelectedTeamPlayer(
                                                 playerName,
                                                 playerId,
-                                                profile_img
+                                                profile_img,
+                                                this@TeamsPlayerReadyToPlayMatch
                                             )
                                         )
 
@@ -165,7 +191,7 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
     }
 
 
-    class SelectedTeamPlayer(val name: String, val player_id: String, val player_img: String) :
+    class SelectedTeamPlayer(val name: String, val player_id: String, val player_img: String,val ctx:TeamsPlayerReadyToPlayMatch) :
         Item<ViewHolder>() {
         override fun getLayout(): Int {
             return R.layout.player_in_selected_team_to_start_inning
@@ -174,8 +200,8 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
         override fun bind(viewHolder: ViewHolder, position: Int) {
             if(player_id==GlobalVariable.BOWLER_ID){
              viewHolder.itemView.playerName_PlayerInTeamToStartInning.visibility=View.GONE
-             viewHolder.itemView.player_img_player_selection.visibility=View.GONE
-            }
+                viewHolder.itemView.player_img_player_selection.visibility=View.GONE
+                }
             else {
                 viewHolder.itemView.playerName_PlayerInTeamToStartInning.text = name
                 Picasso.get().load(player_img).into(viewHolder.itemView.player_img_player_selection)
@@ -190,3 +216,4 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
     }
 
 }
+

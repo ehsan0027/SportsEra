@@ -26,6 +26,8 @@
     <string name="U_16">U-16</string>
     <string name="U_19">U-19</string>
     <string name="mature">Mature</string>
+    <string name="limited_overs">Limited Overs</string>
+    <string name="tape_ball">TAPE BALL</string>
 
     //Playing Role Spinner Items
     <string-array name="Playing_Role">

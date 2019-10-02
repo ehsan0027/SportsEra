@@ -80,7 +80,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/status_of_match_upcoming"
                         android:text="Upcoming"
-                        android:textColor="@color/DarkGreen"
+                        android:textColor="@color/Black"
                         android:layout_weight="1"
                         android:textSize="15sp"
                         android:gravity="end"

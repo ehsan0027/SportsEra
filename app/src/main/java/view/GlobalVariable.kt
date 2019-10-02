@@ -53,14 +53,14 @@ class GlobalVariable : Application() {
         var NON_STRIKER_ID: String = ""
         var NON_STRIKER_NAME: String = ""
         var NON_STRIKER_SCORE: Int = 0
-        var NON_STRIKER_BALL: Int =0
+        var NON_STRIKER_BALL: Int = 0
         var NON_STRIKER_SINGLES: Int = 0
-        var non_STRIKER_doubles: Int = 0
-        var non_STRIKER_TRIPLES: Int = 0
+        var NON_STRIKER_doubles: Int = 0
+        var NON_STRIKER_TRIPLES: Int = 0
         var NON_STRIKER_NUM_FOUR: Int = 0
         var NON_STRIKER_NUM_SIX: Int = 0
         var NON_STRIKER_SR: Float = 00f
-        var Non_Striker_DOT_BALLS_Played: Int = 0
+        var NON_Striker_DOT_BALLS_Played: Int = 0
 
 
         //Partnership

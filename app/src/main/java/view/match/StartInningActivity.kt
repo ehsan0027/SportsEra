@@ -160,11 +160,102 @@ class StartInningActivity : AppCompatActivity() {
             Log.d("InningBL",GlobalVariable.BOWLER_ID)
 
             val updateStatus = FirebaseDatabase.getInstance().reference
-            val setStatusLive = HashMap<String, Any>()
-            setStatusLive["MatchInfo/$newMatchId/matchStatus"] = "Live"
+            val setStatusLive = HashMap<String, Any?>()
+            setStatusLive["MatchInfo/$newMatchId/match  Status"] = "Live"
+            setStatusLive["/TeamsMatchInfo/$teamA_Id/Live/$newMatchId"]=true
+            setStatusLive["/TeamsMatchInfo/$teamA_Id/Upcoming/$newMatchId"]=null
+            setStatusLive["/TeamsMatchInfo/$teamB_Id/Live/$newMatchId"]=true
+            setStatusLive["/TeamsMatchInfo/$teamB_Id/Upcoming/$newMatchId"]=null
 
             updateStatus.updateChildren(setStatusLive).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+
+                    val newdataBaseRef =
+                        FirebaseDatabase.getInstance().reference
+                    val newdataBaseRef_B =
+                        FirebaseDatabase.getInstance().reference
+
+                    newdataBaseRef.child("TeamsPlayer").child(teamA_Id)
+                        .addListenerForSingleValueEvent(
+                            object : ValueEventListener {
+                                override fun onCancelled(p0: DatabaseError) {
+                                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                }
+
+                                override fun onDataChange(p0: DataSnapshot) {
+
+                                    if (p0.exists()) {
+                                        val playerRef =
+                                            FirebaseDatabase.getInstance()
+                                                .reference
+                                        val setPlayerUpcomingMatch =
+                                            HashMap<String, Any?>()
+                                        p0.children.forEach {
+                                            val p_id = it.key
+
+                                            setPlayerUpcomingMatch["PlayersMatchId/$p_id/Live/$newMatchId"] = true
+                                            setPlayerUpcomingMatch["PlayersMatchId/$p_id/Upcoming/$newMatchId"] = null
+
+                                            playerRef.updateChildren(
+                                                setPlayerUpcomingMatch
+                                            )
+                                                .addOnCompleteListener { task ->
+                                                    if (task.isSuccessful) {
+                                                        Log.d(
+                                                            "Player",
+                                                            "Team A Upcoming Match is Set in Player"
+                                                        )
+                                                    }
+                                                }
+
+                                        }
+                                    }
+                                }
+
+                            }
+                        )
+
+
+
+                    newdataBaseRef_B.child("TeamsPlayer").child(teamB_Id)
+                        .addListenerForSingleValueEvent(
+                            object : ValueEventListener {
+                                override fun onCancelled(p0: DatabaseError) {
+                                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                }
+
+                                override fun onDataChange(p0: DataSnapshot) {
+
+                                    if (p0.exists()) {
+                                        val playerRef =
+                                            FirebaseDatabase.getInstance()
+                                                .reference
+                                        val setPlayerUpcomingMatch =
+                                            HashMap<String, Any?>()
+                                        p0.children.forEach {
+                                            val p_id = it.key
+
+
+                                            setPlayerUpcomingMatch["PlayersMatchId/$p_id/Live/$newMatchId"] = true
+                                            setPlayerUpcomingMatch["PlayersMatchId/$p_id/Upcoming/$newMatchId"] = null
+                                            playerRef.updateChildren(
+                                                setPlayerUpcomingMatch
+                                            )
+                                                .addOnCompleteListener { task ->
+                                                    if (task.isSuccessful) {
+                                                        Log.d(
+                                                            "Player",
+                                                            "Team B Upcoming Match is Set in Player"
+                                                        )
+                                                    }
+                                                }
+
+                                        }
+                                    }
+                                }
+
+                            }
+                        )
 
 
                     val databaseRef = FirebaseDatabase.getInstance().reference

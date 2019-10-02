@@ -106,6 +106,8 @@ class MatchDetails : AppCompatActivity(){
     override fun onResume() {
         super.onResume()
 
+        ballType=resources.getString(R.string.tape_ball)
+        matchType=resources.getString(R.string.limited_overs)
         val teamData=intent.extras
         if(teamData!==null)
         {
@@ -215,8 +217,8 @@ private fun sendRequestForMatch() {
         Log.d("team_B_Id ",team_B_id)
         val addRequest=HashMap<String,Any>()
         addRequest["/MatchInfo/$matchId"]=newMatchInvite
-        addRequest["/TeamsMatchInfo/$team_A_id/$matchId"]=true
-        addRequest["/TeamsMatchInfo/$team_B_id/$matchId"]=true
+        addRequest["/TeamsMatchInfo/$team_A_id/Request/$matchId"]=true
+        addRequest["/TeamsMatchInfo/$team_B_id/Request/$matchId"]=true
 
         newDatabaseReference.updateChildren(addRequest).addOnCompleteListener { task->
             if(task.isSuccessful){
