@@ -117,11 +117,6 @@ class TossActivity : AppCompatActivity() {
     }
 
 
-    //TO DO, BUILD AND RUN ........SELECT STRIKER/NON STRIKER/BOWLER
-    //I WILL BACK 2:20
-
-
-
 
     private fun startInning(battingTeamId:String) {
         Log.d("TOSSACTIVITY","BT_id $battingTeamId")
@@ -140,7 +135,7 @@ class TossActivity : AppCompatActivity() {
                 "teamB_Id" to teamB_Id,
                 "tossWonTeamElectedTo" to tossWonTeamElectedTo
             )
-        } else {
+                } else {
             alert {
                 title = "No Selection"
                 message = "Please Select Toss Winning Team and Their Choice (batting/bowling)"

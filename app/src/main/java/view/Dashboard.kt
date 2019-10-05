@@ -588,13 +588,13 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()) {
 
-                    GlobalVariable.LiveScore =
-                        p0.child("InningScore").value.toString().toInt()
-                    GlobalVariable.LiveWickets =
+                    GlobalVariable.LiveScoreFirstInning=
+                        p0.child("inningScore").value.toString().toInt()
+                    GlobalVariable.LiveWicketsFirstInning=
                         p0.child("wickets").value.toString().toInt()
-                    GlobalVariable.LiveOvers =
+                    GlobalVariable.LiveOversFirstInning=
                         p0.child("overs").value.toString().toInt()
-                    GlobalVariable.LiveOverBalls =
+                    GlobalVariable.LiveOverBallsFirstInning =
                         p0.child("over_balls").value.toString().toInt()
                 }
             }
@@ -660,10 +660,10 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
                                                 team_A_Logo,
                                                 team_B_Logo,
                                                 sender,
-                                                GlobalVariable.LiveScore,
-                                                GlobalVariable.LiveWickets,
-                                                GlobalVariable.LiveOvers,
-                                                GlobalVariable.LiveOverBalls,
+                                                GlobalVariable.LiveScoreFirstInning,
+                                                GlobalVariable.LiveWicketsFirstInning,
+                                                GlobalVariable.LiveOversFirstInning,
+                                                GlobalVariable.LiveOverBallsFirstInning,
 
                                                 this@Dashboard
                                             )

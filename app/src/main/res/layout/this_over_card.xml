@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:gravity="center_horizontal"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:layout_margin="2dp"
-    android:layout_centerHorizontal="true">
+    android:layout_margin="2dp">
 
-    <Button
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:text="5"
-        android:backgroundTint="@color/Gray"
-        android:textSize="18sp"
-        android:textStyle="normal"
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/run_at_a_ball"
-        >
+        android:layout_width="55dp"
+        android:layout_height="65dp"
+        android:backgroundTint="@color/Gray"
+        android:text="Wd"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:autoSizeMaxTextSize="18sp"
+        android:autoSizeMinTextSize="12sp"
+        android:textDirection="ltr"
+        android:textSize="18sp"
+        android:textColor="@color/White"
+        android:textStyle="normal"
+        app:cornerRadius="60dp">
 
-    </Button>
+    </com.google.android.material.button.MaterialButton>
 
-</RelativeLayout>
+</LinearLayout>

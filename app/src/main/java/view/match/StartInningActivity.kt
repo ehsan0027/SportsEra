@@ -261,7 +261,7 @@ class StartInningActivity : AppCompatActivity() {
                     val databaseRef = FirebaseDatabase.getInstance().reference
                     val startMatchInning = HashMap<String, Any>()
                     startMatchInning["/MatchScore/$newMatchId/${GlobalVariable.Inning}"] = inning
-
+                    startMatchInning["/MatchScore/$newMatchId/CurrentInning"] = GlobalVariable.Inning
                     databaseRef.updateChildren(startMatchInning).addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             toast("Inning Started")

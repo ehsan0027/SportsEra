@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="280dp"
+    android:layout_gravity="center"
+    android:layout_height="wrap_content"
+    >
+<com.github.florent37.shapeofview.shapes.BubbleView
+
+    android:layout_width="280dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    app:shape_bubble_arrowHeight="10dp"
+    app:shape_bubble_arrowWidth="10dp"
+    app:shape_bubble_arrowPosition="bottom"
+    app:shape_bubble_borderRadius="20dp"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/LightGrey"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Over Complete"
+            android:textColor="@color/colorAccent"
+            android:textSize="20sp"
+            android:padding="10dp"
+            >
+
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            >
+
+            <TextView
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lahore Lions"
+                android:textColor="@color/DarkGoldenrod"
+                android:id="@+id/batting_team_name_over_card"
+                >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:text="27"
+                android:id="@+id/total_runs_over_card"
+                android:textColor="@color/Black"
+                android:textStyle="bold">
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="/"
+                android:textColor="@color/Black"
+                android:textStyle="bold"
+                >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:id="@+id/team_wickets_over_card"
+                android:textColor="@color/Black"
+                android:textStyle="bold"
+                >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" ("
+                android:textColor="@color/Black"
+                android:textStyle="bold"
+                >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5"
+                android:textColor="@color/Black"
+                android:textStyle="bold"
+                android:id="@+id/team_overs_over_card"
+                >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=")"
+                android:textColor="@color/Black"
+                android:textStyle="bold"
+                >
+            </TextView>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Muhammad Ehsan ul Haq"
+                android:id="@+id/striker_name_over_card"
+                android:textColor="@color/Black"
+                >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12"
+                android:paddingStart="10dp"
+                android:textStyle="bold"
+                android:id="@+id/striker_runs_over_card"
+                android:textColor="@color/Black"
+                >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="("
+                android:textColor="@color/Black"
+                >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="15"
+                android:textStyle="bold"
+                android:id="@+id/striker_balls_played_over_card"
+                android:textColor="@color/Black"
+                >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=")"
+                android:textColor="@color/Black"
+                >
+            </TextView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="10dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Muhammad Ehsan ul Haq"
+                android:id="@+id/non_striker_name_over_card"
+                android:textColor="@color/Black"
+                >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12"
+                android:paddingStart="10dp"
+                android:textStyle="bold"
+                android:id="@+id/non_striker_runs_over_card"
+                android:textColor="@color/Black"
+                >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="("
+                android:textColor="@color/Black"
+                >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="15"
+                android:textStyle="bold"
+                android:id="@+id/non_striker_balls_played_over_card"
+                android:textColor="@color/Black"
+                >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=")"
+                android:textColor="@color/Black"
+                >
+            </TextView>
+
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="This Over Completed By"
+            android:textColor="@color/Green"
+            android:paddingStart="10dp"
+            android:textStyle="bold"
+            >
+        </TextView>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Muhammad Usama"
+                android:textColor="@color/Black"
+                android:id="@+id/bowler_name_over_card"
+                >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textColor="@color/Black"
+                android:textStyle="bold"
+                android:paddingStart="10dp"
+                android:id="@+id/bowler_overs_over_card"
+                >
+            </TextView>
+            <TextView style="@style/dash"
+                android:layout_marginTop="0dp"
+                android:textColor="@color/Black"
+                android:textStyle="bold">
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/Black"
+                android:textStyle="bold"
+                android:id="@+id/bowler_maiden_overs_over_card"
+                >
+            </TextView>
+
+            <TextView style="@style/dash"
+                android:textColor="@color/Black"
+                android:textStyle="bold"
+                android:layout_marginTop="0dp">
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/Black"
+                android:textStyle="bold"
+                android:id="@+id/bowler_runs_conceded_over_card"
+                >
+
+            </TextView>
+
+            <TextView style="@style/dash"
+                android:textStyle="bold"
+                android:textColor="@color/Black"
+                android:layout_marginTop="0dp">
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/Black"
+                android:textStyle="bold"
+                android:id="@+id/bowler_wickets_over_card"
+                >
+            </TextView>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="15dp"
+                app:cardBackgroundColor="@color/DarkGray"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="6"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:textSize="25sp"
+                        android:textColor="@color/Black"
+                        android:id="@+id/runs_in_over_over_card"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text="Runs"
+                        android:textColor="@color/DarkGreen"
+                        android:textSize="18sp"
+
+                        />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                app:cardCornerRadius="15dp"
+                app:cardBackgroundColor="@color/DarkGray"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    >
+
+                    <TextView
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="0"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:textSize="25sp"
+                        android:textColor="@color/Black"
+                        android:id="@+id/wickets_in_over_over_card"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text="Wickets"
+                        android:textColor="@color/SaddleBrown"
+                        android:textSize="18sp"
+                        />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="15dp"
+                app:cardBackgroundColor="@color/DarkGray"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/extras_in_over_over_card"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="1"
+                        android:textAlignment="center"
+                        android:textColor="@color/Black"
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Extras"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="18sp"
+                        android:layout_marginBottom="10dp"
+
+                        />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
+
+        </LinearLayout>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start Next Over"
+            android:id="@+id/start_next_over_over_card"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/Black"
+            >
+        </com.google.android.material.button.MaterialButton>
+    </LinearLayout>
+</com.github.florent37.shapeofview.shapes.BubbleView>
+</LinearLayout>

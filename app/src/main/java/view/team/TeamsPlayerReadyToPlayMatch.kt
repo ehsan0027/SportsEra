@@ -22,6 +22,7 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.okButton
 import org.jetbrains.anko.toast
 import view.GlobalVariable
+import view.GlobalVariable.Companion.found
 
 class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
 
@@ -47,12 +48,14 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
             val playerId = team_player.player_id
             val player_img = team_player.player_img
             Log.d("GroupAdapter", "Clicked")
+            Log.d("GroupAdapter", teamId)
+            Log.d("GroupAdapter", GlobalVariable.BOWLING_TEAM_ID)
             toast("Clicked")
             if (GlobalVariable.BOWLING_TEAM_ID == teamId) {
 
                 setPlayer(playerId, name, player_img)
             }
-            isPlayerAlreadySelected(playerId, name, player_img)
+            else{ isPlayerAlreadySelected(playerId, name, player_img)}
         }
     }
 
@@ -89,16 +92,18 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
                     })
 
 
-
-                    var found = false
-                    for (it in p0.children) {
-                        Log.d("PlayersMatch", it.key)
-                        if (playerId == it.key) {
+                    for (p in p0.children) {
+                        Log.d("PlayersMatch", p.key)
+                        Log.d("NewBowler",teamId)
+                        if (playerId == p.key) {
                             found = true
+                            Log.d("FoundPlayer","$found")
                             break
                         }
                     }
+                    Log.d("Found","$found")
                     if (found) {
+                        found=false
                         Log.d("Reselection", "found")
                         alert {
                             title = "Player Reselection"
@@ -173,8 +178,7 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
                                             SelectedTeamPlayer(
                                                 playerName,
                                                 playerId,
-                                                profile_img,
-                                                this@TeamsPlayerReadyToPlayMatch
+                                                profile_img
                                             )
                                         )
 
@@ -191,7 +195,7 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
     }
 
 
-    class SelectedTeamPlayer(val name: String, val player_id: String, val player_img: String,val ctx:TeamsPlayerReadyToPlayMatch) :
+    class SelectedTeamPlayer(val name: String, val player_id: String, val player_img: String) :
         Item<ViewHolder>() {
         override fun getLayout(): Int {
             return R.layout.player_in_selected_team_to_start_inning

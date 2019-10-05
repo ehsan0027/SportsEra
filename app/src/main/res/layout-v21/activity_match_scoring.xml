@@ -16,7 +16,7 @@
         android:layout_height="wrap_content">
         <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="230dp"
             app:cardCornerRadius="0dp"
                 android:backgroundTint="@color/DarkSlateGray"
                 android:id="@+id/background_dark_color"
@@ -637,8 +637,10 @@
             </com.google.android.material.card.MaterialCardView>
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="80dp"
                 app:cardCornerRadius="0dp"
+                android:layout_gravity="center"
+                android:foregroundGravity="center"
                 android:backgroundTint="@color/DimGray"
                 android:id="@+id/this_over_bar"
                 >
@@ -647,6 +649,8 @@
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="5dp"
                     android:elevation="10dp"
+                    android:foregroundGravity="center"
+                    android:layout_gravity="center"
                     android:layout_margin="2dp"
                     app:cardElevation="10dp"
                     android:layout_below="@id/bowler_name"
@@ -660,10 +664,13 @@
                         android:layout_height="wrap_content"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         android:orientation="horizontal"
-                        android:layout_marginTop="2dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="2dp"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:foregroundGravity="center"
                         android:id="@+id/ball_by_ball_score_recyclerView"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginLeft="2dp">
+                        >
 
                     </androidx.recyclerview.widget.RecyclerView>
 

@@ -9,6 +9,7 @@ class GlobalVariable : Application() {
 
         //Match
         var Inning: String = "FirstInning"
+        var TeamSquad:String = "team_A_Squad"
         var BATTING_TEAM_ID: String = ""
         var BATTING_TEAM_NAME: String = ""
         var BATTING_TEAM_Squad_Count: Int = 0
@@ -85,13 +86,19 @@ class GlobalVariable : Application() {
         var BOWLER_RUNS_CONCEDED: Int = 0
         var DOT_BALLS_BOWLED: Int = 0
 
-        var BOWLING_TEAM_SQUAD = ArrayList<String>()
-        var BATTING_TEAM_SQUAD = ArrayList<String>()
 
-        var LiveScore: Int = 0
-        var LiveWickets: Int = 0
-        var LiveOvers: Int = 0
-        var LiveOverBalls: Int = 0
+        var LiveScoreFirstInning: Int = 0
+        var LiveScoreSecondInning: Int = 0
+        var LiveWicketsFirstInning: Int = 0
+        var LiveWicketsSecondInning: Int = 0
+        var LiveOversFirstInning: Int = 0
+        var LiveOversSecondInning: Int = 0
+        var LiveOverBallsFirstInning: Int = 0
+        var LiveOverBallsSecondInning: Int = 0
+
+        var this_Over_runs: Int = 0
+        var this_Over_wickets: Int = 0
+        var this_Over_extras: Int = 0
 
 
         var found: Boolean = false
@@ -100,7 +107,7 @@ class GlobalVariable : Application() {
         val listOfPakistanCities = listOf(
             "Karachi",
             "Lahore",
-            "Lahore",
+            "Layyah",
             "Faisalabad",
             "Rawalpindi",
             "Multan",
