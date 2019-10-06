@@ -110,6 +110,27 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="."
+                android:textSize="16sp"
+                android:textColor="@color/Black"
+                android:textStyle="bold"
+                >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="16sp"
+                android:textColor="@color/Black"
+                android:textStyle="bold"
+                android:id="@+id/team_A_over_balls_match_complete_pop_up"
+                >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text=")"
                 android:textSize="16sp"
                 android:textColor="@color/Black"
@@ -196,6 +217,27 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="."
+                android:textSize="16sp"
+                android:textColor="@color/Black"
+                android:textStyle="bold"
+                >
+            </TextView>
+
+            <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="16sp"
+            android:textColor="@color/Black"
+            android:textStyle="bold"
+            android:id="@+id/team_B_over_Balls_match_complete_pop_up"
+            >
+        </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text=")"
                 android:textSize="16sp"
                 android:textColor="@color/Black"
@@ -219,7 +261,7 @@
                 android:paddingStart="10dp"
                 android:text="Lahore Lions"
                 android:textSize="16sp"
-                android:textColor="@color/Black"
+                android:textColor="@color/DarkGreen"
                 android:textStyle="bold">
 
             </TextView>
@@ -268,7 +310,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Save Game"
-            android:id="@+id/start_next_over_over_card"
+            android:id="@+id/save_game_complete_match_pop_up"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp"

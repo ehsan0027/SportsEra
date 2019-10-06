@@ -17,6 +17,8 @@ class TossActivity : AppCompatActivity() {
     lateinit var teamB_Id: String
     lateinit var teamA_Name:String
     lateinit var teamB_Name:String
+    lateinit var teamA_Logo:String
+    lateinit var teamB_Logo:String
 
     lateinit var tossWonTeamElectedTo: String
     lateinit var battingTeamName: String
@@ -59,6 +61,7 @@ class TossActivity : AppCompatActivity() {
                 batting_Card_TossActivity.isChecked = !batting_Card_TossActivity.isChecked
                 if (batting_Card_TossActivity.isChecked) {
                     tossWonTeamElectedTo = "Batting"
+                    GlobalVariable.TossWonTeamDecidedTo = tossWonTeamElectedTo
                     bowling_Card_TossActivity.isChecked = false
                     Log.d("TOSSACTIVITY","batting")
                 }
@@ -71,6 +74,7 @@ class TossActivity : AppCompatActivity() {
                 bowling_Card_TossActivity.isChecked = !bowling_Card_TossActivity.isChecked
                 if (bowling_Card_TossActivity.isChecked) {
                     tossWonTeamElectedTo = "Bowling"
+                    GlobalVariable.TossWonTeamDecidedTo = tossWonTeamElectedTo
                     batting_Card_TossActivity.isChecked = false
                     Log.d("TOSSACTIVITY","bowling")
 
@@ -93,6 +97,7 @@ class TossActivity : AppCompatActivity() {
                 GlobalVariable.BATTING_TEAM_NAME=teamA_Name
                 GlobalVariable.BOWLING_TEAM_NAME=teamB_Name
                 GlobalVariable.BOWLING_TEAM_ID=teamB_Id
+                GlobalVariable.BATTING_TEAM_LOGO=teamA_Logo
                 Log.d("TOSSACTIVITY","teamA_selected")
                 Log.d("MatchOvers1",GlobalVariable.MATCH_OVERS.toString())
                 startInning(battingTeamId)
@@ -103,6 +108,7 @@ class TossActivity : AppCompatActivity() {
                 battingTeamName=teamB_Name
                 GlobalVariable.BATTING_TEAM_ID=battingTeamId
                 GlobalVariable.BATTING_TEAM_NAME=teamB_Name
+                GlobalVariable.BATTING_TEAM_LOGO=teamB_Logo
                 GlobalVariable.BOWLING_TEAM_NAME=teamA_Name
                 GlobalVariable.BOWLING_TEAM_ID=teamA_Id
                 Log.d("TOSSACTIVITY","teamB_selected")
@@ -161,8 +167,8 @@ class TossActivity : AppCompatActivity() {
         teamB_Name = intent.getStringExtra("team_B_Name")
         newMatchId = intent.getStringExtra("match_Id")
 
-        val teamA_Logo = intent.getStringExtra("team_A_Logo")
-        val teamB_Logo = intent.getStringExtra("team_B_Logo")
+        teamA_Logo = intent.getStringExtra("team_A_Logo")
+        teamB_Logo = intent.getStringExtra("team_B_Logo")
 
         Picasso.get().load(teamA_Logo).into(teamA_Logo_TossActivity)
         Picasso.get().load(teamB_Logo).into(teamB_Logo_TossActivity)

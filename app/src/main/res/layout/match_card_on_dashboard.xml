@@ -9,7 +9,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:cardCornerRadius="10dp"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             app:cardBackgroundColor="@color/teamCardView"
             android:id="@+id/match_cardView"
             android:layout_centerHorizontal="true"
@@ -37,13 +37,13 @@
             <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingEnd="10dp"
                     >
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/status_of_match"
                     android:text="Live"
+                android:paddingEnd="10dp"
                     android:textSize="15sp"
                 android:textColor="@color/Green"
                     android:layout_alignParentEnd="true"
@@ -56,7 +56,7 @@
 
 
             <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/score_bar_of_match_card"
                     android:layout_below="@+id/title_bar_of_match_card"
@@ -71,6 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+            android:layout_weight="1"
                 >
             <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_width="50dp"
@@ -79,12 +80,9 @@
                     android:src="@mipmap/ic_launcher"
                     android:layout_marginTop="5dp"
                     android:layout_gravity="center"
-                    android:paddingStart="10dp"
-
-
                     />
             <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="90dp"
                     android:layout_height="wrap_content"
                     android:text="Team Name"
                     android:id="@+id/team_A_name_match_card"
@@ -92,11 +90,8 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textSize="13sp"
-                    android:paddingStart="10dp"
                     android:textAllCaps="true"
                     android:textColor="@color/Black"
-
-
                     />
 
         </LinearLayout>
@@ -106,6 +101,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:padding="10dp"
+                    android:layout_weight="1"
                         android:layout_gravity="center"
                         >
 
@@ -120,7 +116,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/team_A_score_match_card"
-                            android:text="100"
+                            android:text="0"
                             android:textSize="20sp"
                             />
 
@@ -136,7 +132,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/team_A_wickets_match_card"
-                            android:text="3"
+                            android:text="0"
                             android:textSize="20sp"
                             />
 
@@ -189,7 +185,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/team_A_total_overs_match_card"
-                            android:text="50"
+                            android:text="0"
                             android:textSize="15sp"
                             />
                     <TextView
@@ -207,7 +203,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="VS"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         android:textColor="@color/DimGray"
                         android:layout_gravity="center"
                         />
@@ -216,6 +212,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_gravity="center"
+                    android:layout_weight="1"
                         android:padding="10dp"
                         >
 
@@ -230,7 +227,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/team_B_score_match_card"
-                                android:text="100"
+                                android:text="0"
                                 android:textSize="20sp"
                                 />
 
@@ -246,7 +243,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/team_B_wickets_match_card"
-                                android:text="3"
+                                android:text="0"
                                 android:textSize="20sp"
                                 />
 
@@ -271,9 +268,22 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/team_B_current_over_match_card"
-                                android:text="30"
+                                android:text="0"
                                 android:textSize="15sp"
                                 />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="."
+                            android:textSize="15sp"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/team_B_current_over_balls_match_card"
+                            android:text="0"
+                            android:textSize="15sp"
+                            />
                         <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -285,7 +295,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/team_B_total_overs_match_card"
-                                android:text="50"
+                                android:text="0"
                                 android:textSize="15sp"
                                 />
                         <TextView
@@ -304,7 +314,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:paddingEnd="10dp"
+                    android:layout_weight="1"
                         >
                     <de.hdodenhof.circleimageview.CircleImageView
                             android:layout_width="50dp"
@@ -313,10 +323,9 @@
                             android:src="@mipmap/ic_launcher"
                             android:layout_marginTop="5dp"
                             android:layout_gravity="center"
-                            android:paddingStart="10dp"
                             />
                     <TextView
-                            android:layout_width="100dp"
+                            android:layout_width="90dp"
                             android:layout_height="wrap_content"
                             android:text="Team Name"
                             android:id="@+id/team_B_name_match_card"
@@ -324,7 +333,6 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:textSize="13sp"
-                            android:paddingStart="10dp"
                             android:textAllCaps="true"
                             android:textColor="@color/Black"
 
@@ -347,7 +355,7 @@
                 <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="Lahore won the toss and elected to bowl first"
+                        android:text="Match Updates"
                         android:id="@+id/match_detail_text_view_match_card"
                         android:textAlignment="center"
                         android:layout_gravity="center"

@@ -8,6 +8,7 @@ class Batsman (
     val doubles:Int = 0,
     val triples:Int = 0,
     val no_of_fours:Int = 0,
-    val no_of_six:Int = 0
+    val no_of_six:Int = 0,
+    val battingPosition:Int = 0
     ){
-constructor():this(0,0,0,0,0,0,0,0)}
+constructor():this(0,0,0,0,0,0,0,0,0)}

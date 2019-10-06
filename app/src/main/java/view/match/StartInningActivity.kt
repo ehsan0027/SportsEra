@@ -145,9 +145,10 @@ class StartInningActivity : AppCompatActivity() {
             && bowler.isNotEmpty()
         ) {
             GlobalVariable.MATCH_ID = newMatchId
-            val batsman1 = Batsman()
-            val batsman2 = Batsman()
-            val bowler = Bowler()
+            val batsman1 = Batsman(0,0,0,0,0,0,0,0,GlobalVariable.BattingPosition)
+            GlobalVariable.BattingPosition = 1 + GlobalVariable.BattingPosition
+            val batsman2 = Batsman(0,0,0,0,0,0,0,0,GlobalVariable.BattingPosition)
+            val bowler = Bowler(0,0,0,0,0,0,0,0,0f,0,GlobalVariable.BowlerPosition)
             val inning = Inning()
             val progressDialog: ProgressDialog =
                 ProgressDialog.show(this, "Starting Match", "Setting up match innings...")

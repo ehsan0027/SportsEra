@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.sportsplayer.R
@@ -26,7 +25,7 @@ import view.GlobalVariable.Companion.found
 
 class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
 
-    val groupAdapter = GroupAdapter<ViewHolder>().apply { spanCount = 3 }
+    var groupAdapter = GroupAdapter<ViewHolder>().apply { spanCount = 3 }
     lateinit var teamId: String
     lateinit var newMatchId: String
     lateinit var bowler: String
@@ -54,39 +53,42 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
             if (GlobalVariable.BOWLING_TEAM_ID == teamId) {
 
                 setPlayer(playerId, name, player_img)
+            } else {
+                isPlayerAlreadySelected(playerId, name, player_img)
             }
-            else{ isPlayerAlreadySelected(playerId, name, player_img)}
         }
     }
 
 
     private fun isPlayerAlreadySelected(playerId: String, name: String, player_img: String) {
         val matchRef =
-            FirebaseDatabase.getInstance().getReference("/MatchScore/$newMatchId/${GlobalVariable.Inning}/$teamId")
+            FirebaseDatabase.getInstance()
+                .getReference("/MatchScore/$newMatchId/${GlobalVariable.Inning}/$teamId")
         matchRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
             override fun onDataChange(p0: DataSnapshot) {
 
                 if (p0.exists()) {
 
-                    val newDBRef = FirebaseDatabase.getInstance().getReference("/MatchScore/$newMatchId/${GlobalVariable.Inning}/$teamId/OutSquad")
+                    val newDBRef = FirebaseDatabase.getInstance()
+                        .getReference("/MatchScore/$newMatchId/${GlobalVariable.Inning}/$teamId/OutSquad")
                     newDBRef.addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onCancelled(p0: DatabaseError) {
                         }
 
                         override fun onDataChange(p0: DataSnapshot) {
-                        if (p0.exists()){
-                            p0.children.forEach {
-                                val outPId = it.key.toString()
-                                if (outPId==playerId){
-                                    alert {
-                                        title = "Player Reselection"
-                                        message = "$name Recently Out"
-                                        okButton { dialog -> dialog.dismiss() }
-                                    }.show()
+                            if (p0.exists()) {
+                                p0.children.forEach {
+                                    val outPId = it.key.toString()
+                                    if (outPId == playerId) {
+                                        alert {
+                                            title = "Player Reselection"
+                                            message = "$name Recently Out"
+                                            okButton { dialog -> dialog.dismiss() }
+                                        }.show()
+                                    }
                                 }
                             }
-                        }
                         }
 
                     })
@@ -94,16 +96,16 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
 
                     for (p in p0.children) {
                         Log.d("PlayersMatch", p.key)
-                        Log.d("NewBowler",teamId)
+                        Log.d("NewBowler", teamId)
                         if (playerId == p.key) {
                             found = true
-                            Log.d("FoundPlayer","$found")
+                            Log.d("FoundPlayer", "$found")
                             break
                         }
                     }
-                    Log.d("Found","$found")
+                    Log.d("Found", "$found")
                     if (found) {
-                        found=false
+                        found = false
                         Log.d("Reselection", "found")
                         alert {
                             title = "Player Reselection"
@@ -143,7 +145,11 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
         getTeamSquad(teamId)
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+    groupAdapter.clear()
+    recyclerView_TeamsPlayerReadyToPlayMatch.removeAllViewsInLayout()
+    }
     private fun getTeamSquad(teamId: String) {
         Log.d("FetchTeam_ID", teamId)
         val playerRef = FirebaseDatabase.getInstance()
@@ -173,15 +179,15 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
                                         val playerId = p0.child("playerId").value.toString()
                                         val playerName = p0.child("name").value.toString()
                                         val profile_img = p0.child("profile_img").value.toString()
-
-                                        groupAdapter.add(
-                                            SelectedTeamPlayer(
-                                                playerName,
-                                                playerId,
-                                                profile_img
+                                        if (playerId != GlobalVariable.BOWLER_ID) {
+                                            groupAdapter.add(
+                                                SelectedTeamPlayer(
+                                                    playerName,
+                                                    playerId,
+                                                    profile_img
+                                                )
                                             )
-                                        )
-
+                                        }
                                     }
                                 }
 
@@ -202,14 +208,8 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
         }
 
         override fun bind(viewHolder: ViewHolder, position: Int) {
-            if(player_id==GlobalVariable.BOWLER_ID){
-             viewHolder.itemView.playerName_PlayerInTeamToStartInning.visibility=View.GONE
-                viewHolder.itemView.player_img_player_selection.visibility=View.GONE
-                }
-            else {
                 viewHolder.itemView.playerName_PlayerInTeamToStartInning.text = name
                 Picasso.get().load(player_img).into(viewHolder.itemView.player_img_player_selection)
-            }
 
         }
 

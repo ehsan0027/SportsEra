@@ -10,8 +10,11 @@ class GlobalVariable : Application() {
         //Match
         var Inning: String = "FirstInning"
         var TeamSquad:String = "team_A_Squad"
+        var TossWonTeamDecidedTo: String = ""
+        var MatchCurrentDetails:String = ""
         var BATTING_TEAM_ID: String = ""
         var BATTING_TEAM_NAME: String = ""
+        var BATTING_TEAM_LOGO: String = ""
         var BATTING_TEAM_Squad_Count: Int = 0
         var MATCH_ID: String = ""
         var BOWLING_TEAM_ID: String = ""
@@ -21,6 +24,12 @@ class GlobalVariable : Application() {
         var NoBalls: Int = 0
         var Byes: Int = 0
         var LegByes: Int = 0
+        var FirstInningScore: Int = 0
+        var FirstInningWickets: Int = 0
+        var FirstInningOversPlayed: Int = 0
+        var FirstInningOverBallsPlayed: Int = 0
+        var BattingPosition: Int = 1
+        var BowlerPosition: Int = 1
 
 
         //Team
@@ -79,7 +88,7 @@ class GlobalVariable : Application() {
         var BOWLER_WICKET: Int = 0
         var BOWLER_Wide_ball: Int = 0
         var BOWLER_No_ball: Int = 0
-        var BOWLER_ECONEMY: Float = 00f
+        var BOWLER_ECONOMY: Float = 00f
         var num_sixes_conceded: Int = 0
         var num_fours_conceded: Int = 0
         var BOWLER_BALLS_BOWLED: Int = 0
@@ -95,6 +104,9 @@ class GlobalVariable : Application() {
         var LiveOversSecondInning: Int = 0
         var LiveOverBallsFirstInning: Int = 0
         var LiveOverBallsSecondInning: Int = 0
+        var LiveMatchCurrentDetails: String = ""
+        var LiveCRR: Float = 00f
+        var LiveRRR: Float = 00f
 
         var this_Over_runs: Int = 0
         var this_Over_wickets: Int = 0

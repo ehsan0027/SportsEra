@@ -10,19 +10,13 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/run_at_a_ball"
-        android:layout_width="55dp"
-        android:layout_height="65dp"
-        android:backgroundTint="@color/Gray"
+        android:layout_width="60dp"
+        android:layout_height="70dp"
         android:text="Wd"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:autoSizeMaxTextSize="18sp"
-        android:autoSizeMinTextSize="12sp"
-        android:textDirection="ltr"
         android:textSize="18sp"
         android:textColor="@color/White"
         android:textStyle="normal"
-        app:cornerRadius="60dp">
+        app:cornerRadius="70dp">
 
     </com.google.android.material.button.MaterialButton>
 

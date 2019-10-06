@@ -128,7 +128,7 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
 
     }
 
-    fun getUserInfo() {
+    private fun getUserInfo() {
 
         val playerRef =
             FirebaseDatabase.getInstance().getReference("/PlayerBasicProfile/$currentPlayer")
@@ -577,7 +577,9 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
 
     fun gettingLiveScores(matchId:String){
         ndb_Ref=FirebaseDatabase.getInstance()
-            db_Ref= ndb_Ref!!.getReference("/MatchScore/$matchId/${GlobalVariable.Inning}")
+
+        //FirstInning
+        db_Ref= ndb_Ref!!.getReference("/MatchScore/$matchId/FirstInning")
 
 
         db_Ref!!.addValueEventListener(object : ValueEventListener {
@@ -596,6 +598,40 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
                         p0.child("overs").value.toString().toInt()
                     GlobalVariable.LiveOverBallsFirstInning =
                         p0.child("over_balls").value.toString().toInt()
+                    GlobalVariable.LiveMatchCurrentDetails =
+                        p0.child("MatchCurrentDetail").value.toString()
+                    GlobalVariable.LiveCRR =
+                        p0.child("CRR").value.toString().toFloat()
+                    GlobalVariable.LiveRRR = 0f
+                }
+            }
+        })
+//SecondInning
+        db_Ref= ndb_Ref!!.getReference("/MatchScore/$matchId/SecondInning")
+
+
+        db_Ref!!.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.exists()) {
+
+                    GlobalVariable.LiveScoreSecondInning=
+                        p0.child("inningScore").value.toString().toInt()
+                    GlobalVariable.LiveWicketsSecondInning=
+                        p0.child("wickets").value.toString().toInt()
+                    GlobalVariable.LiveOversSecondInning=
+                        p0.child("overs").value.toString().toInt()
+                    GlobalVariable.LiveOverBallsSecondInning =
+                        p0.child("over_balls").value.toString().toInt()
+                    GlobalVariable.LiveMatchCurrentDetails =
+                        p0.child("MatchCurrentDetail").value.toString()
+                    GlobalVariable.LiveCRR =
+                        p0.child("CRR").value.toString().toFloat()
+                    GlobalVariable.LiveRRR =
+                        p0.child("RRR").value.toString().toFloat()
                 }
             }
         })
@@ -664,6 +700,13 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
                                                 GlobalVariable.LiveWicketsFirstInning,
                                                 GlobalVariable.LiveOversFirstInning,
                                                 GlobalVariable.LiveOverBallsFirstInning,
+                                                GlobalVariable.LiveScoreSecondInning,
+                                                GlobalVariable.LiveWicketsSecondInning,
+                                                GlobalVariable.LiveOversSecondInning,
+                                                GlobalVariable.LiveOverBallsSecondInning,
+                                                GlobalVariable.LiveMatchCurrentDetails,
+                                                GlobalVariable.LiveCRR,
+                                                GlobalVariable.LiveRRR,
 
                                                 this@Dashboard
                                             )
@@ -715,10 +758,17 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
             var team_A_Logo: String,
             var team_B_Logo: String,
             var sender: String,
-            var liveScore:Int,
-            var liveWickets:Int,
-            var liveOvers:Int,
-            var liveOverBalls:Int,
+            var liveScoreFirstInning:Int,
+            var liveWicketsFirstInning:Int,
+            var liveOversFirstInning:Int,
+            var liveOverBallsFirstInning:Int,
+            var liveScoreSecondInning:Int,
+            var liveWicketsSecondInning:Int,
+            var liveOversSecondInning:Int,
+            var liveOverBallsSecondInning:Int,
+            var liveCurrentMatchDetails:String,
+            var liveCurrentCRR:Float,
+            var liveCurrentRRR:Float,
             val ctx: Dashboard
         ) : Item<ViewHolder>() {
             override fun getLayout(): Int {
@@ -744,11 +794,22 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
                         ctx.startTossActivity(position)
                     }
                 }
-                viewHolder.itemView.team_A_score_match_card.text = liveScore.toString()
-                viewHolder.itemView.team_A_wickets_match_card.text = liveWickets.toString()
-                viewHolder.itemView.team_A_current_over_match_card.text = liveOvers.toString()
-                viewHolder.itemView.team_A_current_over_balls_match_card.text = liveOverBalls.toString()
+                viewHolder.itemView.team_A_score_match_card.text = liveScoreFirstInning.toString()
+                viewHolder.itemView.team_A_wickets_match_card.text = liveWicketsFirstInning.toString()
+                viewHolder.itemView.team_A_current_over_match_card.text = liveOversFirstInning.toString()
+                viewHolder.itemView.team_A_current_over_balls_match_card.text = liveOverBallsFirstInning.toString()
                 viewHolder.itemView.team_A_total_overs_match_card.text = match_overs
+
+                viewHolder.itemView.team_B_score_match_card.text = liveScoreSecondInning.toString()
+                viewHolder.itemView.team_B_wickets_match_card.text = liveWicketsSecondInning.toString()
+                viewHolder.itemView.team_B_current_over_match_card.text = liveOversSecondInning.toString()
+                viewHolder.itemView.team_B_current_over_balls_match_card.text = liveOverBallsSecondInning.toString()
+                viewHolder.itemView.team_B_total_overs_match_card.text = match_overs
+
+
+                viewHolder.itemView.match_detail_text_view_match_card.text = liveCurrentMatchDetails
+                viewHolder.itemView.current_run_rate_on_match_card.text = liveCurrentCRR.toString()
+                viewHolder.itemView.required_run_rate_on_match_card.text = liveCurrentRRR.toString()
                 viewHolder.itemView.title_of_match.text = match_type
                 viewHolder.itemView.team_A_name_match_card.text = team_A_Name
                 viewHolder.itemView.team_B_name_match_card.text = team_B_Name
