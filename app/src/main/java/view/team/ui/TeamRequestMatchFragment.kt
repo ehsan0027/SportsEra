@@ -157,7 +157,7 @@ class TeamRequestMatchFragment(
         movers: String,
         mInviteId: String,
         mSender: String,
-        mReciever: String
+        mReceiver: String
     ) {
 
         changeDetailPopUpDialog.setCancelable(true)
@@ -243,7 +243,7 @@ class TeamRequestMatchFragment(
             val newOvers = overs?.text.toString().trim()
 
             Log.d("Sender", mSender)
-            Log.d("Sender", mReciever)
+            Log.d("Sender", mReceiver)
             Log.d("Sender", mInviteId)
 
 
@@ -254,9 +254,9 @@ class TeamRequestMatchFragment(
             updateMatchInvite["/MatchInfo/$mInviteId/matchVenue"] = newVenue
             updateMatchInvite["/MatchInfo/$mInviteId/squadCount"] = newSquad
             updateMatchInvite["/MatchInfo/$mInviteId/matchOvers"] = newOvers
-            if (mReciever == currentPlayer) {
-                updateMatchInvite["/MatchInfo/$mInviteId/sender"] = mReciever
-                updateMatchInvite["/MatchInfo/$mInviteId/reciever"] = mSender
+            if (mReceiver == currentPlayer) {
+                updateMatchInvite["/MatchInfo/$mInviteId/sender"] = mReceiver
+                updateMatchInvite["/MatchInfo/$mInviteId/receiver"] = mSender
             }
 
             newDatabaseReference.updateChildren(updateMatchInvite)
@@ -312,14 +312,12 @@ class TeamRequestMatchFragment(
         Log.d("TeamB", team_B_Id)
 
         GlobalVariable.MATCH_OVERS = matchOvers.toInt()
-        Log.d("MatchOvers", GlobalVariable.MATCH_OVERS.toString())
         notifications_recycler_view?.removeAllViewsInLayout()
 
 
         val newdataBaseRefTeam =
             FirebaseDatabase.getInstance().reference
         val setStatusUpcoming = HashMap<String,Any?>()
-        setStatusUpcoming["MatchInfo/$matchId/matchStatus"]="Upcoming"
         setStatusUpcoming["TeamsMatchInfo/$team_A_Id/Upcoming/$matchId"]=true
         setStatusUpcoming["TeamsMatchInfo/$team_A_Id/Request/$matchId"]=null
         setStatusUpcoming["TeamsMatchInfo/$team_B_Id/Upcoming/$matchId"]=true
@@ -553,8 +551,8 @@ private fun fetchNotificationsFromDatabase() {
                                                         val sender_Capatain =
                                                             p0.child("sender")
                                                                 .value.toString()
-                                                        val reciever_Captain =
-                                                            p0.child("reciever")
+                                                        val receiver_Captain =
+                                                            p0.child("receiver")
                                                                 .value.toString()
                                                         Log.d("Update2", match_Invite_Id)
 
@@ -577,7 +575,7 @@ private fun fetchNotificationsFromDatabase() {
                                                                 team_B_Logo,
                                                                 match_Invite_Id,
                                                                 sender_Capatain,
-                                                                reciever_Captain,
+                                                                receiver_Captain,
                                                                 this@TeamRequestMatchFragment
                                                             )
                                                         )
@@ -662,6 +660,16 @@ class MyTeamsNotifications(
         viewHolder.itemView.venue_notification_card.text = matchVenue
         viewHolder.itemView.city_notification_card.text = matchCity
 
+        viewHolder.itemView.team_A_name_notification_card.text = team_A_Name
+        val logo_team_A =
+            viewHolder.itemView.findViewById<ImageView>(R.id.team_A_logo_notification_card)
+        Picasso.get().load(team_A_Logo).into(logo_team_A)
+
+        viewHolder.itemView.team_B_name_notification_card.text = team_B_Name
+        val logo_team_B =
+            viewHolder.itemView.findViewById<ImageView>(R.id.team_B_logo_notification_card)
+        Picasso.get().load(team_B_Logo).into(logo_team_B)
+
         viewHolder.itemView.accept_match_challenge.setOnClickListener {
             ctx.scheduleMatch(position)
         }
@@ -674,50 +682,6 @@ class MyTeamsNotifications(
         viewHolder.itemView.reject_match_challenge.setOnClickListener {
             ctx.rejectInvite(position)
         }
-
-
-        val teamARef = FirebaseDatabase.getInstance().getReference("/Team/$team_A_Id")
-        teamARef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-
-                val nameTeamA = p0.child("teamName").value.toString()
-                val logoTeamA = p0.child("teamLogo").value.toString()
-                Log.d("FetchMatch", nameTeamA)
-
-                viewHolder.itemView.team_A_name_notification_card.text = nameTeamA
-                val logo_team_A =
-                    viewHolder.itemView.findViewById<ImageView>(R.id.team_A_logo_notification_card)
-                Picasso.get().load(logoTeamA).into(logo_team_A)
-
-            }
-        })
-
-
-        val teamBRef = FirebaseDatabase.getInstance().getReference("/Team/$team_B_Id")
-        teamBRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-
-                val nameTeamB = p0.child("teamName").value.toString()
-                val logoTeamB = p0.child("teamLogo").value.toString()
-
-
-                Log.d("FetchMatch", nameTeamB)
-
-                viewHolder.itemView.team_B_name_notification_card.text = nameTeamB
-                val logo_team_B =
-                    viewHolder.itemView.findViewById<ImageView>(R.id.team_B_logo_notification_card)
-                Picasso.get().load(logoTeamB).into(logo_team_B)
-
-            }
-        })
 
     }
 }

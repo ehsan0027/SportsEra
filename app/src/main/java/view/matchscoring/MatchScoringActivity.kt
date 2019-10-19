@@ -29,10 +29,10 @@ import model.Bowler
 import org.jetbrains.anko.find
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
+import view.Dashboard
 import view.GlobalVariable
 import view.match.StartInningActivity
 import view.team.TeamsPlayerReadyToPlayMatch
-import java.math.RoundingMode
 
 
 @Suppress("DEPRECATION", "PLUGIN_WARNING")
@@ -69,17 +69,19 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
 //[End]
 
         //ball recyclerView
-        ball_by_ball_score_recyclerView.adapter = ballAdapter
+        ball_by_ball_score_recyclerView?.adapter = ballAdapter
 
         //Card1
         batsman_1_card.setOnClickListener {
             batsman_1_card.isChecked = !batsman_1_card.isChecked
             if (batsman_1_card.isChecked) {
                 batsman_2_card.isChecked = false
+                GlobalVariable.StrikerId = GlobalVariable.Batsman_1_ID
                 batsman_2_card.strokeColor = resources.getColor(R.color.DarkRed)
                 batsman_1_card.strokeColor = resources.getColor(R.color.BlueViolet)
             } else {
                 batsman_2_card.isChecked = true
+                GlobalVariable.StrikerId=GlobalVariable.Batsman_2_ID
             }
         }
         //Card2
@@ -88,10 +90,12 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
 
             if (batsman_2_card.isChecked) {
                 batsman_1_card.isChecked = false
+                GlobalVariable.StrikerId=GlobalVariable.Batsman_2_ID
                 batsman_1_card.strokeColor = resources.getColor(R.color.DarkRed)
                 batsman_2_card.strokeColor = resources.getColor(R.color.BlueViolet)
             } else {
                 batsman_1_card.isChecked = true
+                GlobalVariable.StrikerId=GlobalVariable.Batsman_1_ID
             }
 
         }
@@ -100,6 +104,7 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
             run {
                 if (isChecked) {
                     batsman_2_card.isChecked = false
+                    GlobalVariable.StrikerId=GlobalVariable.Batsman_1_ID
                 }
             }
         }
@@ -107,6 +112,7 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
             run {
                 if (isChecked) {
                     batsman_1_card.isChecked = false
+                    GlobalVariable.StrikerId=GlobalVariable.Batsman_2_ID
                 }
             }
         }
@@ -125,14 +131,21 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        batsman_1_name.text = GlobalVariable.STRIKER_NAME
-        batsman_2_name.text = GlobalVariable.NON_STRIKER_NAME
+        batsman_1_name.text = GlobalVariable.Batsman_1_NAME
+        batsman_2_name.text = GlobalVariable.Batsman_2_NAME
         bowler_name.text = GlobalVariable.BOWLER_NAME
+        showScreenContent()
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        ballAdapter.clear()
+        databaseReference = null
+        ball_by_ball_score_recyclerView.removeAllViewsInLayout()
+    }
 
-    private fun showRemovePopUpDialog(p_id: String, pName: String, bId: Int) {
+    private fun showRemovePopUpDialog(p_id: String, pName: String, bId: Int)    {
         val outPopUpDialog = Dialog(this)
         outPopUpDialog.setCancelable(true)
         val view = layoutInflater.inflate(R.layout.out_cause, null)
@@ -145,12 +158,12 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
         name?.text = pName
         when (bId) {
             R.id.batsman_1_card -> {
-                runs?.text = GlobalVariable.STRIKER_SCORE.toString()
-                balls?.text = GlobalVariable.STRIKER_BALL.toString()
+                runs?.text = GlobalVariable.Batsman_1_SCORE.toString()
+                balls?.text = GlobalVariable.Batsman_1_BALL.toString()
             }
             R.id.batsman_2_card -> {
-                runs?.text = GlobalVariable.NON_STRIKER_SCORE.toString()
-                balls?.text = GlobalVariable.NON_STRIKER_BALL.toString()
+                runs?.text = GlobalVariable.Batsman_2_SCORE.toString()
+                balls?.text = GlobalVariable.Batsman_2_BALL.toString()
             }
         }
 
@@ -171,13 +184,14 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                 GlobalVariable.TEAM_WICKET
             newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/wickets"] =
                 GlobalVariable.BOWLER_WICKET
-            newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/CRR"] =
+            newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/crr"] =
                 GlobalVariable.TEAM_CRR
             newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/MatchCurrentDetail"] =
                 GlobalVariable.MatchCurrentDetails
-            if (GlobalVariable.Inning=="SecondInning"){
-                newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/RRR"] =
-                    GlobalVariable.TEAM_RRR}
+            if (GlobalVariable.Inning == "SecondInning") {
+                newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/rrr"] =
+                    GlobalVariable.TEAM_RRR
+            }
             db_Ref.updateChildren(newData).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
 
@@ -203,7 +217,6 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
         outPopUpDialog.show()
     }
 
-
     private fun outPlayer(p_id: String) {
         val newDatabase = FirebaseDatabase.getInstance()
             .getReference("/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/$p_id")
@@ -214,29 +227,31 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                 if (p0.exists()) {
                     var outSquadRef = FirebaseDatabase.getInstance().reference
                     val setOutSquad = HashMap<String, Any?>()
-                    setOutSquad["MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/OutSquad/$p_id"] =
+                    setOutSquad["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/OutSquad/$p_id"] =
                         p0.value
                     outSquadRef.updateChildren(setOutSquad).addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             outSquadRef = FirebaseDatabase.getInstance().reference
                             val removeOutPlayer = HashMap<String, Any?>()
-                            removeOutPlayer["MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/$p_id"] =
+                            removeOutPlayer["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/$p_id"] =
                                 null
                             outSquadRef.updateChildren(removeOutPlayer)
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
                                         if (GlobalVariable.TEAM_WICKET == GlobalVariable.BATTING_TEAM_Squad_Count - 1) {
                                             toast("Inning Completed")
-                                            if (GlobalVariable.Inning=="FirstInning")
-                                            {showInningCompletePopUp()}
-                                            else{showCompleteMatchPopUp()}
-                                        }else{
-                                        //START ACTIVITY TO SELECT NEW BATSMAN
-                                        startActivityForResult<TeamsPlayerReadyToPlayMatch>(
-                                            newplayer_RC,
-                                            "teamId" to GlobalVariable.BATTING_TEAM_ID,
-                                            "newMatchId" to GlobalVariable.MATCH_ID
-                                        )
+                                            if (GlobalVariable.Inning == "FirstInning") {
+                                                showInningCompletePopUp()
+                                            } else {
+                                                showCompleteMatchPopUp()
+                                            }
+                                        } else {
+                                            //START ACTIVITY TO SELECT NEW BATSMAN
+                                            startActivityForResult<TeamsPlayerReadyToPlayMatch>(
+                                                newplayer_RC,
+                                                "teamId" to GlobalVariable.BATTING_TEAM_ID,
+                                                "newMatchId" to GlobalVariable.MATCH_ID
+                                            )
                                         }
                                     }
                                 }.addOnFailureListener { e: Exception -> toast(e.localizedMessage) }
@@ -258,39 +273,42 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                 newplayer_RC -> {
                     val playerId = data.getStringExtra("playerId")
                     val name = data.getStringExtra("name")
+                    val player_img = data.getStringExtra("player_img")
                     if (playerId.isNotEmpty()) {
                         if (batsman_1_card.isChecked) {
-                            GlobalVariable.STRIKER_ID = playerId
-                            GlobalVariable.STRIKER_NAME = name
-                            GlobalVariable.STRIKER_SCORE = 0
-                            GlobalVariable.STRIKER_BALL = 0
-                            GlobalVariable.STRIKER_SINGLES = 0
-                            GlobalVariable.STRIKER_doubles = 0
-                            GlobalVariable.STRIKER_TRIPLES = 0
-                            GlobalVariable.STRIKER_NUM_FOUR = 0
-                            GlobalVariable.STRIKER_NUM_SIX = 0
-                            GlobalVariable.STRIKER_SR = 00f
-                            GlobalVariable.Striker_DOT_BALLS_Played = 0
-                            batsman_1_name.text = GlobalVariable.STRIKER_NAME
-                            batsman_1_score.text = GlobalVariable.STRIKER_SCORE.toString()
+                            GlobalVariable.Batsman_1_ID = playerId
+                            GlobalVariable.Batsman_1_NAME = name
+                            GlobalVariable.Batsman_1_Img=player_img
+                            GlobalVariable.Batsman_1_SCORE = 0
+                            GlobalVariable.Batsman_1_BALL = 0
+                            GlobalVariable.Batsman_1_SINGLES = 0
+                            GlobalVariable.Batsman_1_doubles = 0
+                            GlobalVariable.Batsman_1_TRIPLES = 0
+                            GlobalVariable.Batsman_1_NUM_FOUR = 0
+                            GlobalVariable.Batsman_1_NUM_SIX = 0
+                            GlobalVariable.Batsman_1_SR = 00f
+                            GlobalVariable.Batsman_1_DOT_BALLS_Played = 0
+                            batsman_1_name.text = GlobalVariable.Batsman_1_NAME
+                            batsman_1_score.text = GlobalVariable.Batsman_1_SCORE.toString()
                             showScreenContent()
-                            addNewBatsman(playerId)
+                            addNewBatsman(playerId,name,player_img)
                         } else {
-                            GlobalVariable.NON_STRIKER_ID = playerId
-                            GlobalVariable.NON_STRIKER_NAME = name
-                            GlobalVariable.STRIKER_SCORE = 0
-                            GlobalVariable.NON_STRIKER_BALL = 0
-                            GlobalVariable.NON_STRIKER_SINGLES = 0
-                            GlobalVariable.NON_STRIKER_doubles = 0
-                            GlobalVariable.NON_STRIKER_TRIPLES = 0
-                            GlobalVariable.NON_STRIKER_NUM_FOUR = 0
-                            GlobalVariable.NON_STRIKER_NUM_SIX = 0
-                            GlobalVariable.NON_STRIKER_SR = 00f
-                            GlobalVariable.NON_Striker_DOT_BALLS_Played = 0
-                            batsman_2_name.text = GlobalVariable.NON_STRIKER_NAME
-                            batsman_2_score.text = GlobalVariable.NON_STRIKER_SCORE.toString()
+                            GlobalVariable.Batsman_2_ID = playerId
+                            GlobalVariable.Batsman_2_NAME = name
+                            GlobalVariable.Batsman_2_Img=player_img
+                            GlobalVariable.Batsman_1_SCORE = 0
+                            GlobalVariable.Batsman_2_BALL = 0
+                            GlobalVariable.Batsman_2_SINGLES = 0
+                            GlobalVariable.Batsman_2_doubles = 0
+                            GlobalVariable.Batsman_2_TRIPLES = 0
+                            GlobalVariable.Batsman_2_NUM_FOUR = 0
+                            GlobalVariable.Batsman_2_NUM_SIX = 0
+                            GlobalVariable.Batsman_2_SR = 00f
+                            GlobalVariable.Batsman_2_DOT_BALLS_Played = 0
+                            batsman_2_name.text = GlobalVariable.Batsman_2_NAME
+                            batsman_2_score.text = GlobalVariable.Batsman_2_SCORE.toString()
                             showScreenContent()
-                            addNewBatsman(playerId)
+                            addNewBatsman(playerId,name,player_img)
                         }
                     }
                 }
@@ -298,11 +316,24 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                 newBowler_RC -> {
                     val playerId = data.getStringExtra("playerId")
                     val name = data.getStringExtra("name")
-
+                    val player_img = data.getStringExtra("player_img")
                     GlobalVariable.BOWLER_NAME = name
                     GlobalVariable.BOWLER_ID = playerId
+                    GlobalVariable.BOWLER_Img=player_img
+                    GlobalVariable.CurrentBowler = playerId
                     if (bowlersList.contains(playerId)) {
                         Log.d("NewOver", "Contains")
+
+                        val db_Ref = FirebaseDatabase.getInstance().reference
+                        val setBowler = HashMap<String, Any>()
+
+                        setBowler["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/CurrentBowler"] =
+                            GlobalVariable.CurrentBowler
+                        db_Ref.updateChildren(setBowler).addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                toast("Current Bowler is Ready")
+                            }
+                        }
 
 
                         val ndb_Ref = FirebaseDatabase.getInstance()
@@ -332,11 +363,14 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
 
                     } else {
                         GlobalVariable.BowlerPosition = 1 + GlobalVariable.BowlerPosition
-                        val newBowler = Bowler(0,0,0,0,0,0,0,0,0f,0,GlobalVariable.BowlerPosition)
+                        val newBowler =
+                            Bowler(GlobalVariable.BOWLER_NAME,0, 0, 0, 0, 0, 0, 0, 0, 0f, 0, GlobalVariable.BowlerPosition,GlobalVariable.BOWLER_Img)
                         val db_Ref = FirebaseDatabase.getInstance().reference
                         val setBowler = HashMap<String, Any>()
                         setBowler["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/$playerId"] =
                             newBowler
+                        setBowler["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/CurrentBowler"] =
+                            GlobalVariable.CurrentBowler
                         db_Ref.updateChildren(setBowler).addOnCompleteListener { task ->
                             if (task.isSuccessful) {
                                 bowlersList.add(playerId)
@@ -366,11 +400,11 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun addNewBatsman(playerId: String?) {
+    private fun addNewBatsman(playerId: String?,pName: String,playerImage:String) {
         GlobalVariable.BattingPosition = 1 + GlobalVariable.BattingPosition
         val batRef = FirebaseDatabase.getInstance().reference
         val bat = HashMap<String, Any>()
-        val newP = Batsman(0,0,0,0,0,0,0,0,GlobalVariable.BattingPosition)
+        val newP = Batsman(pName,0, 0, 0, 0, 0, 0, 0, 0,0f, GlobalVariable.BattingPosition,playerImage)
         bat["MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/$playerId"] =
             newP
         batRef.updateChildren(bat).addOnCompleteListener { task ->
@@ -379,7 +413,6 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
-
 
     private fun setBallScore(runs: Int, extra: String) {
 
@@ -420,13 +453,14 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
         val newData = HashMap<String, Any>()
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.Current_Over}/${GlobalVariable.CURRENT_BALL}/$extra"] =
             score
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/CRR"] =
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/crr"] =
             GlobalVariable.TEAM_CRR
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/MatchCurrentDetail"] =
             GlobalVariable.MatchCurrentDetails
-        if (GlobalVariable.Inning=="SecondInning"){
-            newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/RRR"] =
-                GlobalVariable.TEAM_RRR}
+        if (GlobalVariable.Inning == "SecondInning") {
+            newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/rrr"] =
+                GlobalVariable.TEAM_RRR
+        }
         db_Ref.updateChildren(newData).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 toast("synced")
@@ -437,21 +471,27 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
     private fun updateStrikerDotBall() {
         val db_Ref = FirebaseDatabase.getInstance().reference
         val newData = HashMap<String, Any>()
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.STRIKER_ID}/dots"] =
-            GlobalVariable.Striker_DOT_BALLS_Played
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.STRIKER_ID}/balls_played"] =
-            GlobalVariable.STRIKER_BALL
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_1_ID}/dots"] =
+            GlobalVariable.Batsman_1_DOT_BALLS_Played
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_1_ID}/balls_played"] =
+            GlobalVariable.Batsman_1_BALL
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_1_ID}/strikeRate"] =
+            GlobalVariable.Batsman_1_SR
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/balls_bowled"] =
             GlobalVariable.BOWLER_BALLS_BOWLED
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/economy"] =
+            GlobalVariable.BOWLER_ECONOMY
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/over_balls"] =
             GlobalVariable.CURRENT_BALL
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/CRR"] =
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/crr"] =
             GlobalVariable.TEAM_CRR
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/MatchCurrentDetail"] =
             GlobalVariable.MatchCurrentDetails
-        if (GlobalVariable.Inning=="SecondInning"){
-            newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/RRR"] =
-                GlobalVariable.TEAM_RRR}
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/StrikerId"] = GlobalVariable.StrikerId
+        if (GlobalVariable.Inning == "SecondInning") {
+            newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/rrr"] =
+                GlobalVariable.TEAM_RRR
+        }
         db_Ref.updateChildren(newData).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 toast("synced")
@@ -459,26 +499,31 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
         }
 
     }
-
 
     private fun updateNonStrikerDotBall() {
         val db_Ref = FirebaseDatabase.getInstance().reference
         val newData = HashMap<String, Any>()
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.NON_STRIKER_ID}/dots"] =
-            GlobalVariable.Striker_DOT_BALLS_Played
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.NON_STRIKER_ID}/balls_played"] =
-            GlobalVariable.NON_STRIKER_BALL
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_2_ID}/dots"] =
+            GlobalVariable.Batsman_2_DOT_BALLS_Played
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_2_ID}/balls_played"] =
+            GlobalVariable.Batsman_2_BALL
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_2_ID}/strikeRate"] =
+            GlobalVariable.Batsman_2_SR
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/balls_bowled"] =
             GlobalVariable.BOWLER_BALLS_BOWLED
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/economy"] =
+            GlobalVariable.BOWLER_ECONOMY
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/over_balls"] =
             GlobalVariable.CURRENT_BALL
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/CRR"] =
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/crr"] =
             GlobalVariable.TEAM_CRR
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/MatchCurrentDetail"] =
             GlobalVariable.MatchCurrentDetails
-        if (GlobalVariable.Inning=="SecondInning"){
-            newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/RRR"] =
-                GlobalVariable.TEAM_RRR}
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/StrikerId"] = GlobalVariable.StrikerId
+        if (GlobalVariable.Inning == "SecondInning") {
+            newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/rrr"] =
+                GlobalVariable.TEAM_RRR
+        }
         db_Ref.updateChildren(newData).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 toast("synced")
@@ -486,32 +531,37 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
         }
 
     }
-
 
     private fun updateStrikerScore() {
         val db_Ref = FirebaseDatabase.getInstance().reference
         val newData = HashMap<String, Any>()
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.STRIKER_ID}/runs"] =
-            GlobalVariable.STRIKER_SCORE
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.STRIKER_ID}/balls_played"] =
-            GlobalVariable.STRIKER_BALL
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.STRIKER_ID}/singles"] =
-            GlobalVariable.STRIKER_SINGLES
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.STRIKER_ID}/doubles"] =
-            GlobalVariable.STRIKER_doubles
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.STRIKER_ID}/triples"] =
-            GlobalVariable.STRIKER_TRIPLES
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_1_ID}/runs"] =
+            GlobalVariable.Batsman_1_SCORE
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_1_ID}/balls_played"] =
+            GlobalVariable.Batsman_1_BALL
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_1_ID}/strikeRate"] =
+            GlobalVariable.Batsman_1_SR
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_1_ID}/singles"] =
+            GlobalVariable.Batsman_1_SINGLES
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_1_ID}/doubles"] =
+            GlobalVariable.Batsman_1_doubles
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_1_ID}/triples"] =
+            GlobalVariable.Batsman_1_TRIPLES
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/inningScore"] =
             GlobalVariable.CURRENT_TEAM_SCORE
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/CRR"] =
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/crr"] =
             GlobalVariable.TEAM_CRR
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/MatchCurrentDetail"] =
             GlobalVariable.MatchCurrentDetails
-        if (GlobalVariable.Inning=="SecondInning"){
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/RRR"] =
-            GlobalVariable.TEAM_RRR}
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/StrikerId"] = GlobalVariable.StrikerId
+        if (GlobalVariable.Inning == "SecondInning") {
+            newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/rrr"] =
+                GlobalVariable.TEAM_RRR
+        }
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/balls_bowled"] =
             GlobalVariable.BOWLER_BALLS_BOWLED
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/economy"] =
+            GlobalVariable.BOWLER_ECONOMY
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/over_balls"] =
             GlobalVariable.CURRENT_BALL
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/runs_conceded"] =
@@ -522,32 +572,37 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
-
 
     private fun updateNonStrikerScore() {
         val db_Ref = FirebaseDatabase.getInstance().reference
         val newData = HashMap<String, Any>()
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.NON_STRIKER_ID}/runs"] =
-            GlobalVariable.NON_STRIKER_SCORE
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.NON_STRIKER_ID}/balls_played"] =
-            GlobalVariable.NON_STRIKER_BALL
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.NON_STRIKER_ID}/singles"] =
-            GlobalVariable.NON_STRIKER_SINGLES
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.NON_STRIKER_ID}/doubles"] =
-            GlobalVariable.NON_STRIKER_doubles
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.NON_STRIKER_ID}/triples"] =
-            GlobalVariable.NON_STRIKER_TRIPLES
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_2_ID}/runs"] =
+            GlobalVariable.Batsman_2_SCORE
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_2_ID}/balls_played"] =
+            GlobalVariable.Batsman_2_BALL
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_2_ID}/strikeRate"] =
+            GlobalVariable.Batsman_2_SR
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_2_ID}/singles"] =
+            GlobalVariable.Batsman_2_SINGLES
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_2_ID}/doubles"] =
+            GlobalVariable.Batsman_2_doubles
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_2_ID}/triples"] =
+            GlobalVariable.Batsman_2_TRIPLES
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/inningScore"] =
             GlobalVariable.CURRENT_TEAM_SCORE
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/CRR"] =
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/crr"] =
             GlobalVariable.TEAM_CRR
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/MatchCurrentDetail"] =
             GlobalVariable.MatchCurrentDetails
-        if (GlobalVariable.Inning=="SecondInning"){
-            newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/RRR"] =
-                GlobalVariable.TEAM_RRR}
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/StrikerId"] = GlobalVariable.StrikerId
+        if (GlobalVariable.Inning == "SecondInning") {
+            newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/rrr"] =
+                GlobalVariable.TEAM_RRR
+        }
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/balls_bowled"] =
             GlobalVariable.BOWLER_BALLS_BOWLED
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/economy"] =
+            GlobalVariable.BOWLER_ECONOMY
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/over_balls"] =
             GlobalVariable.CURRENT_BALL
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/runs_conceded"] =
@@ -560,12 +615,11 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-
     private fun updateStrikerFourCount() {
         val db_Ref = FirebaseDatabase.getInstance().reference
         val newData = HashMap<String, Any>()
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.STRIKER_ID}/no_of_fours"] =
-            GlobalVariable.STRIKER_NUM_FOUR
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_1_ID}/no_of_fours"] =
+            GlobalVariable.Batsman_1_NUM_FOUR
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/num_fours_conceded"] =
             GlobalVariable.num_fours_conceded
         db_Ref.updateChildren(newData).addOnCompleteListener { task ->
@@ -581,8 +635,8 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
     private fun updateNonStrikerFourCount() {
         val db_Ref = FirebaseDatabase.getInstance().reference
         val newData = HashMap<String, Any>()
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.NON_STRIKER_ID}/no_of_fours"] =
-            GlobalVariable.NON_STRIKER_NUM_FOUR
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_2_ID}/no_of_fours"] =
+            GlobalVariable.Batsman_2_NUM_FOUR
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/num_fours_conceded"] =
             GlobalVariable.num_fours_conceded
         db_Ref.updateChildren(newData).addOnCompleteListener { task ->
@@ -597,8 +651,8 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
     private fun updateStrikerSixCount() {
         val db_Ref = FirebaseDatabase.getInstance().reference
         val newData = HashMap<String, Any>()
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.STRIKER_ID}/no_of_six"] =
-            GlobalVariable.STRIKER_NUM_SIX
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_1_ID}/no_of_six"] =
+            GlobalVariable.Batsman_1_NUM_SIX
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/num_sixes_conceded"] =
             GlobalVariable.num_sixes_conceded
 
@@ -612,12 +666,11 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
         updateStrikerScore()
     }
 
-
     private fun updateNonStrikerSixCount() {
         val db_Ref = FirebaseDatabase.getInstance().reference
         val newData = HashMap<String, Any>()
-        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.NON_STRIKER_ID}/no_of_six"] =
-            GlobalVariable.NON_STRIKER_NUM_SIX
+        newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/${GlobalVariable.Batsman_2_ID}/no_of_six"] =
+            GlobalVariable.Batsman_2_NUM_SIX
         newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/num_sixes_conceded"] =
             GlobalVariable.num_sixes_conceded
         db_Ref.updateChildren(newData).addOnCompleteListener { task ->
@@ -629,7 +682,6 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
         updateNonStrikerScore()
 
     }
-
 
     private fun showScreenContent() {
         //Team
@@ -645,14 +697,14 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
         partnership_balls_played.text = GlobalVariable.CURRENT_PARTNERSHIP_BALLS.toString()
 
         //Batsman 1
-        batsman_1_name.text = GlobalVariable.STRIKER_NAME
-        batsman_1_score.text = GlobalVariable.STRIKER_SCORE.toString()
-        batsman_1_balls_played.text = GlobalVariable.STRIKER_BALL.toString()
+        batsman_1_name.text = GlobalVariable.Batsman_1_NAME
+        batsman_1_score.text = GlobalVariable.Batsman_1_SCORE.toString()
+        batsman_1_balls_played.text = GlobalVariable.Batsman_1_BALL.toString()
 
         //Batsman 2
-        batsman_2_name.text = GlobalVariable.NON_STRIKER_NAME
-        batsman_2_score.text = GlobalVariable.NON_STRIKER_SCORE.toString()
-        batsman_2_balls_played.text = GlobalVariable.NON_STRIKER_BALL.toString()
+        batsman_2_name.text = GlobalVariable.Batsman_2_NAME
+        batsman_2_score.text = GlobalVariable.Batsman_2_SCORE.toString()
+        batsman_2_balls_played.text = GlobalVariable.Batsman_2_BALL.toString()
 
         //Bowler
         bowler_name.text = GlobalVariable.BOWLER_NAME
@@ -662,23 +714,30 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
         runs_concede.text = GlobalVariable.BOWLER_RUNS_CONCEDED.toString()
         bowler_wickets.text = GlobalVariable.BOWLER_WICKET.toString()
 
-        if (GlobalVariable.Inning=="FirstInning"){
+        if (GlobalVariable.Inning == "FirstInning") {
             required_run_rate_match_scoring.text = GlobalVariable.TEAM_RRR.toString()
-            GlobalVariable.MatchCurrentDetails = "Toss Won By ${GlobalVariable.BATTING_TEAM_NAME} and Elected to do ${GlobalVariable.TossWonTeamDecidedTo} first"
+            GlobalVariable.MatchCurrentDetails =
+                "${GlobalVariable.TossWonTeamName} won toss and elected to ${GlobalVariable.TossWonTeamDecidedTo} first"
             score_detail_textView.text = GlobalVariable.MatchCurrentDetails
-        }
-        else {
-            val requiredRuns = ((GlobalVariable.FirstInningScore+1)-GlobalVariable.CURRENT_TEAM_SCORE)
-            val remainingBalls = ((GlobalVariable.MATCH_OVERS*6)-((GlobalVariable.Current_Over*6)+GlobalVariable.CURRENT_BALL))
-            GlobalVariable.TEAM_RRR = ((requiredRuns*6).toFloat()/(remainingBalls).toFloat()).toBigDecimal().setScale(2, RoundingMode.UP).toFloat()
-            GlobalVariable.MatchCurrentDetails = "${GlobalVariable.BATTING_TEAM_NAME} Needs ${requiredRuns} runs from ${remainingBalls}"
+        } else {
+            val requiredRuns =
+                ((GlobalVariable.FirstInningScore + 1) - GlobalVariable.CURRENT_TEAM_SCORE)
+            val remainingBalls =
+                ((GlobalVariable.MATCH_OVERS * 6) - ((GlobalVariable.Current_Over * 6) + GlobalVariable.CURRENT_BALL))
+            if (remainingBalls != 0) {
+                val value = ((requiredRuns * 6).toFloat() / (remainingBalls).toFloat())
+                val numberDigits2 = String.format("%.2f", value).toFloat()
+                GlobalVariable.TEAM_RRR = numberDigits2
+            } else {
+                GlobalVariable.TEAM_RRR = 0f
+            }
+            GlobalVariable.MatchCurrentDetails =
+                "${GlobalVariable.BATTING_TEAM_NAME} Needs ${requiredRuns} runs from ${remainingBalls}"
             score_detail_textView.text = GlobalVariable.MatchCurrentDetails
             required_run_rate_match_scoring.text = GlobalVariable.TEAM_RRR.toString()
         }
-
 
     }
-
 
     private fun getTeamSquadCount() {
         val squadRef = FirebaseDatabase.getInstance()
@@ -696,7 +755,6 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
         })
     }
 
-
     override fun onClick(view: View?) {
 
         when (view?.id) {
@@ -710,9 +768,13 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                         1 + GlobalVariable.CURRENT_PARTNERSHIP_BALLS
 
                     //Batsman
-                    GlobalVariable.STRIKER_BALL = 1 + GlobalVariable.STRIKER_BALL
-                    GlobalVariable.Striker_DOT_BALLS_Played =
-                        1 + GlobalVariable.Striker_DOT_BALLS_Played
+                    GlobalVariable.Batsman_1_BALL = 1 + GlobalVariable.Batsman_1_BALL
+                    val strikeRate = (((GlobalVariable.Batsman_1_SCORE).toFloat()/(GlobalVariable.Batsman_1_BALL))*100)
+                    val sR2digits = String.format("%.2f", strikeRate).toFloat()
+                    GlobalVariable.Batsman_1_SR = sR2digits
+
+                    GlobalVariable.Batsman_1_DOT_BALLS_Played =
+                        1 + GlobalVariable.Batsman_1_DOT_BALLS_Played
 
                     //Bowler
                     GlobalVariable.DOT_BALLS_BOWLED = 1 + GlobalVariable.DOT_BALLS_BOWLED
@@ -732,9 +794,12 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                         1 + GlobalVariable.CURRENT_PARTNERSHIP_BALLS
 
                     //Batsman
-                    GlobalVariable.NON_STRIKER_BALL = 1 + GlobalVariable.NON_STRIKER_BALL
-                    GlobalVariable.NON_Striker_DOT_BALLS_Played =
-                        1 + GlobalVariable.NON_Striker_DOT_BALLS_Played
+                    GlobalVariable.Batsman_2_BALL = 1 + GlobalVariable.Batsman_2_BALL
+                    val strikeRate = (((GlobalVariable.Batsman_2_SCORE).toFloat()/(GlobalVariable.Batsman_2_BALL))*100)
+                    val sR2digits = String.format("%.2f", strikeRate).toFloat()
+                    GlobalVariable.Batsman_2_SR = sR2digits
+                    GlobalVariable.Batsman_2_DOT_BALLS_Played =
+                        1 + GlobalVariable.Batsman_2_DOT_BALLS_Played
                     //Bowler
                     GlobalVariable.DOT_BALLS_BOWLED = 1 + GlobalVariable.DOT_BALLS_BOWLED
 
@@ -762,10 +827,12 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                         1 + GlobalVariable.CURRENT_PARTNERSHIP_BALLS
 
                     //Batsman
-                    GlobalVariable.STRIKER_SCORE = 1 + GlobalVariable.STRIKER_SCORE
-                    GlobalVariable.STRIKER_SINGLES = 1 + GlobalVariable.STRIKER_SINGLES
-                    GlobalVariable.STRIKER_BALL = 1 + GlobalVariable.STRIKER_BALL
-
+                    GlobalVariable.Batsman_1_SCORE = 1 + GlobalVariable.Batsman_1_SCORE
+                    GlobalVariable.Batsman_1_SINGLES = 1 + GlobalVariable.Batsman_1_SINGLES
+                    GlobalVariable.Batsman_1_BALL = 1 + GlobalVariable.Batsman_1_BALL
+                    val strikeRate = (((GlobalVariable.Batsman_1_SCORE).toFloat()/(GlobalVariable.Batsman_1_BALL))*100)
+                    val sR2digits = String.format("%.2f", strikeRate).toFloat()
+                    GlobalVariable.Batsman_1_SR = sR2digits
                     //Bowler
                     GlobalVariable.BOWLER_RUNS_CONCEDED = 1 + GlobalVariable.BOWLER_RUNS_CONCEDED
 
@@ -788,10 +855,12 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                         1 + GlobalVariable.CURRENT_PARTNERSHIP_BALLS
 
                     //Batsman
-                    GlobalVariable.NON_STRIKER_SCORE = 1 + GlobalVariable.NON_STRIKER_SCORE
-                    GlobalVariable.NON_STRIKER_SINGLES = 1 + GlobalVariable.NON_STRIKER_SINGLES
-                    GlobalVariable.NON_STRIKER_BALL = 1 + GlobalVariable.NON_STRIKER_BALL
-
+                    GlobalVariable.Batsman_2_SCORE = 1 + GlobalVariable.Batsman_2_SCORE
+                    GlobalVariable.Batsman_2_SINGLES = 1 + GlobalVariable.Batsman_2_SINGLES
+                    GlobalVariable.Batsman_2_BALL = 1 + GlobalVariable.Batsman_2_BALL
+                    val strikeRate = (((GlobalVariable.Batsman_2_SCORE).toFloat()/(GlobalVariable.Batsman_2_BALL))*100)
+                    val sR2digits = String.format("%.2f", strikeRate).toFloat()
+                    GlobalVariable.Batsman_2_SR = sR2digits
                     //Bowler
                     GlobalVariable.BOWLER_RUNS_CONCEDED = 1 + GlobalVariable.BOWLER_RUNS_CONCEDED
 
@@ -816,10 +885,12 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                     GlobalVariable.CURRENT_TEAM_SCORE = 2 + GlobalVariable.CURRENT_TEAM_SCORE
                     GlobalVariable.this_Over_runs = 2 + GlobalVariable.this_Over_runs
                     //Batsman
-                    GlobalVariable.STRIKER_SCORE = 2 + GlobalVariable.STRIKER_SCORE
-                    GlobalVariable.STRIKER_BALL = 1 + GlobalVariable.STRIKER_BALL
-                    GlobalVariable.STRIKER_doubles = 1 + GlobalVariable.STRIKER_doubles
-
+                    GlobalVariable.Batsman_1_SCORE = 2 + GlobalVariable.Batsman_1_SCORE
+                    GlobalVariable.Batsman_1_BALL = 1 + GlobalVariable.Batsman_1_BALL
+                    GlobalVariable.Batsman_1_doubles = 1 + GlobalVariable.Batsman_1_doubles
+                    val strikeRate = (((GlobalVariable.Batsman_1_SCORE).toFloat()/(GlobalVariable.Batsman_1_BALL))*100)
+                    val sR2digits = String.format("%.2f", strikeRate).toFloat()
+                    GlobalVariable.Batsman_1_SR = sR2digits
                     //Bowler
                     GlobalVariable.BOWLER_RUNS_CONCEDED = 2 + GlobalVariable.BOWLER_RUNS_CONCEDED
 
@@ -835,11 +906,14 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                     GlobalVariable.CURRENT_PARTNERSHIP_BALLS =
                         1 + GlobalVariable.CURRENT_PARTNERSHIP_BALLS
 
-                    GlobalVariable.NON_STRIKER_SCORE = 2 + GlobalVariable.NON_STRIKER_SCORE
-                    GlobalVariable.NON_STRIKER_BALL = 1 + GlobalVariable.NON_STRIKER_BALL
+                    GlobalVariable.Batsman_2_SCORE = 2 + GlobalVariable.Batsman_2_SCORE
+                    GlobalVariable.Batsman_2_BALL = 1 + GlobalVariable.Batsman_2_BALL
+                    GlobalVariable.Batsman_2_doubles = 1 + GlobalVariable.Batsman_2_doubles
+                    val strikeRate = (((GlobalVariable.Batsman_2_SCORE).toFloat()/(GlobalVariable.Batsman_2_BALL))*100)
+                    val sR2digits = String.format("%.2f", strikeRate).toFloat()
+                    GlobalVariable.Batsman_2_SR = sR2digits
                     GlobalVariable.CURRENT_TEAM_SCORE = 2 + GlobalVariable.CURRENT_TEAM_SCORE
                     GlobalVariable.this_Over_runs = 2 + GlobalVariable.this_Over_runs
-                    GlobalVariable.NON_STRIKER_doubles = 1 + GlobalVariable.NON_STRIKER_doubles
 
                     GlobalVariable.BOWLER_RUNS_CONCEDED = 2 + GlobalVariable.BOWLER_RUNS_CONCEDED
 
@@ -859,9 +933,12 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                     GlobalVariable.CURRENT_PARTNERSHIP_BALLS =
                         1 + GlobalVariable.CURRENT_PARTNERSHIP_BALLS
 
-                    GlobalVariable.STRIKER_SCORE = 3 + GlobalVariable.STRIKER_SCORE
-                    GlobalVariable.STRIKER_BALL = 1 + GlobalVariable.STRIKER_BALL
-                    GlobalVariable.STRIKER_TRIPLES = 1 + GlobalVariable.STRIKER_TRIPLES
+                    GlobalVariable.Batsman_1_SCORE = 3 + GlobalVariable.Batsman_1_SCORE
+                    GlobalVariable.Batsman_1_BALL = 1 + GlobalVariable.Batsman_1_BALL
+                    GlobalVariable.Batsman_1_TRIPLES = 1 + GlobalVariable.Batsman_1_TRIPLES
+                    val strikeRate = (((GlobalVariable.Batsman_1_SCORE).toFloat()/(GlobalVariable.Batsman_1_BALL))*100)
+                    val sR2digits = String.format("%.2f", strikeRate).toFloat()
+                    GlobalVariable.Batsman_1_SR = sR2digits
                     GlobalVariable.CURRENT_TEAM_SCORE = 3 + GlobalVariable.CURRENT_TEAM_SCORE
                     GlobalVariable.this_Over_runs = 3 + GlobalVariable.this_Over_runs
                     GlobalVariable.BOWLER_RUNS_CONCEDED = 3 + GlobalVariable.BOWLER_RUNS_CONCEDED
@@ -879,9 +956,12 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                     GlobalVariable.CURRENT_PARTNERSHIP_BALLS =
                         1 + GlobalVariable.CURRENT_PARTNERSHIP_BALLS
 
-                    GlobalVariable.NON_STRIKER_TRIPLES = 1 + GlobalVariable.NON_STRIKER_TRIPLES
-                    GlobalVariable.NON_STRIKER_SCORE = 3 + GlobalVariable.NON_STRIKER_SCORE
-                    GlobalVariable.NON_STRIKER_BALL = 1 + GlobalVariable.NON_STRIKER_BALL
+                    GlobalVariable.Batsman_2_TRIPLES = 1 + GlobalVariable.Batsman_2_TRIPLES
+                    GlobalVariable.Batsman_2_SCORE = 3 + GlobalVariable.Batsman_2_SCORE
+                    GlobalVariable.Batsman_2_BALL = 1 + GlobalVariable.Batsman_2_BALL
+                    val strikeRate = (((GlobalVariable.Batsman_2_SCORE).toFloat()/(GlobalVariable.Batsman_2_BALL))*100)
+                    val sR2digits = String.format("%.2f", strikeRate).toFloat()
+                    GlobalVariable.Batsman_2_SR = sR2digits
                     GlobalVariable.CURRENT_TEAM_SCORE = 3 + GlobalVariable.CURRENT_TEAM_SCORE
                     GlobalVariable.this_Over_runs = 3 + GlobalVariable.this_Over_runs
                     GlobalVariable.BOWLER_RUNS_CONCEDED = 3 + GlobalVariable.BOWLER_RUNS_CONCEDED
@@ -904,9 +984,12 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                     GlobalVariable.CURRENT_PARTNERSHIP_BALLS =
                         1 + GlobalVariable.CURRENT_PARTNERSHIP_BALLS
 
-                    GlobalVariable.STRIKER_SCORE = 4 + GlobalVariable.STRIKER_SCORE
-                    GlobalVariable.STRIKER_BALL = 1 + GlobalVariable.STRIKER_BALL
-                    GlobalVariable.STRIKER_NUM_FOUR = 1 + GlobalVariable.STRIKER_NUM_FOUR
+                    GlobalVariable.Batsman_1_SCORE = 4 + GlobalVariable.Batsman_1_SCORE
+                    GlobalVariable.Batsman_1_BALL = 1 + GlobalVariable.Batsman_1_BALL
+                    val strikeRate = (((GlobalVariable.Batsman_1_SCORE).toFloat()/(GlobalVariable.Batsman_1_BALL))*100)
+                    val sR2digits = String.format("%.2f", strikeRate).toFloat()
+                    GlobalVariable.Batsman_1_SR = sR2digits
+                    GlobalVariable.Batsman_1_NUM_FOUR = 1 + GlobalVariable.Batsman_1_NUM_FOUR
                     GlobalVariable.CURRENT_TEAM_SCORE = 4 + GlobalVariable.CURRENT_TEAM_SCORE
                     GlobalVariable.this_Over_runs = 4 + GlobalVariable.this_Over_runs
 
@@ -925,15 +1008,16 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                     GlobalVariable.CURRENT_PARTNERSHIP_BALLS =
                         1 + GlobalVariable.CURRENT_PARTNERSHIP_BALLS
 
-                    GlobalVariable.NON_STRIKER_SCORE = 4 + GlobalVariable.NON_STRIKER_SCORE
-                    GlobalVariable.NON_STRIKER_BALL = 1 + GlobalVariable.NON_STRIKER_BALL
-                    GlobalVariable.NON_STRIKER_NUM_FOUR = 1 + GlobalVariable.NON_STRIKER_NUM_FOUR
+                    GlobalVariable.Batsman_2_SCORE = 4 + GlobalVariable.Batsman_2_SCORE
+                    GlobalVariable.Batsman_2_BALL = 1 + GlobalVariable.Batsman_2_BALL
+                    val strikeRate = (((GlobalVariable.Batsman_2_SCORE).toFloat()/(GlobalVariable.Batsman_2_BALL))*100)
+                    val sR2digits = String.format("%.2f", strikeRate).toFloat()
+                    GlobalVariable.Batsman_2_SR = sR2digits
+                    GlobalVariable.Batsman_2_NUM_FOUR = 1 + GlobalVariable.Batsman_2_NUM_FOUR
                     GlobalVariable.CURRENT_TEAM_SCORE = 4 + GlobalVariable.CURRENT_TEAM_SCORE
                     GlobalVariable.this_Over_runs = 4 + GlobalVariable.this_Over_runs
-
                     GlobalVariable.BOWLER_RUNS_CONCEDED = 4 + GlobalVariable.BOWLER_RUNS_CONCEDED
                     GlobalVariable.num_fours_conceded = 1 + GlobalVariable.num_fours_conceded
-
 
 
                     showBall("4")
@@ -951,9 +1035,12 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                     GlobalVariable.CURRENT_PARTNERSHIP_BALLS =
                         1 + GlobalVariable.CURRENT_PARTNERSHIP_BALLS
 
-                    GlobalVariable.STRIKER_SCORE = 6 + GlobalVariable.STRIKER_SCORE
-                    GlobalVariable.STRIKER_BALL = 1 + GlobalVariable.STRIKER_BALL
-                    GlobalVariable.STRIKER_NUM_SIX = 1 + GlobalVariable.STRIKER_NUM_SIX
+                    GlobalVariable.Batsman_1_SCORE = 6 + GlobalVariable.Batsman_1_SCORE
+                    GlobalVariable.Batsman_1_BALL = 1 + GlobalVariable.Batsman_1_BALL
+                    val strikeRate = (((GlobalVariable.Batsman_1_SCORE).toFloat()/(GlobalVariable.Batsman_1_BALL))*100)
+                    val sR2digits = String.format("%.2f", strikeRate).toFloat()
+                    GlobalVariable.Batsman_1_SR = sR2digits
+                    GlobalVariable.Batsman_1_NUM_SIX = 1 + GlobalVariable.Batsman_1_NUM_SIX
                     GlobalVariable.CURRENT_TEAM_SCORE = 6 + GlobalVariable.CURRENT_TEAM_SCORE
                     GlobalVariable.this_Over_runs = 6 + GlobalVariable.this_Over_runs
 
@@ -974,9 +1061,12 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                     GlobalVariable.CURRENT_PARTNERSHIP_BALLS =
                         1 + GlobalVariable.CURRENT_PARTNERSHIP_BALLS
 
-                    GlobalVariable.NON_STRIKER_SCORE = 6 + GlobalVariable.NON_STRIKER_SCORE
-                    GlobalVariable.NON_STRIKER_BALL = 1 + GlobalVariable.NON_STRIKER_BALL
-                    GlobalVariable.NON_STRIKER_NUM_SIX = 1 + GlobalVariable.NON_STRIKER_NUM_SIX
+                    GlobalVariable.Batsman_2_SCORE = 6 + GlobalVariable.Batsman_2_SCORE
+                    GlobalVariable.Batsman_2_BALL = 1 + GlobalVariable.Batsman_2_BALL
+                    val strikeRate = (((GlobalVariable.Batsman_2_SCORE).toFloat()/(GlobalVariable.Batsman_2_BALL))*100)
+                    val sR2digits = String.format("%.2f", strikeRate).toFloat()
+                    GlobalVariable.Batsman_2_SR = sR2digits
+                    GlobalVariable.Batsman_2_NUM_SIX = 1 + GlobalVariable.Batsman_2_NUM_SIX
                     GlobalVariable.CURRENT_TEAM_SCORE = 6 + GlobalVariable.CURRENT_TEAM_SCORE
                     GlobalVariable.this_Over_runs = 6 + GlobalVariable.this_Over_runs
                     GlobalVariable.BOWLER_RUNS_CONCEDED = 6 + GlobalVariable.BOWLER_RUNS_CONCEDED
@@ -1007,8 +1097,10 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
 
                 val db_Ref = FirebaseDatabase.getInstance().reference
                 val newData = HashMap<String, Any>()
-                newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/extras/Wides"] =
+                newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/Wides"] =
                     GlobalVariable.Wides
+                newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/extras"] =
+                    GlobalVariable.TEAM_Extras
                 newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/no_of_wide_balls_by_bowler"] =
                     GlobalVariable.BOWLER_Wide_ball
                 newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/runs_conceded"] =
@@ -1029,7 +1121,8 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                 //Partnership
                 GlobalVariable.CURRENT_PARTNERSHIP_RUNS =
                     1 + GlobalVariable.CURRENT_PARTNERSHIP_RUNS
-                GlobalVariable.CURRENT_PARTNERSHIP_BALLS = 1 + GlobalVariable.CURRENT_PARTNERSHIP_BALLS
+                GlobalVariable.CURRENT_PARTNERSHIP_BALLS =
+                    1 + GlobalVariable.CURRENT_PARTNERSHIP_BALLS
 
                 GlobalVariable.NoBalls = 1 + GlobalVariable.NoBalls
                 GlobalVariable.TEAM_Extras = 1 + GlobalVariable.TEAM_Extras
@@ -1040,15 +1133,18 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                 GlobalVariable.BOWLER_RUNS_CONCEDED = 1 + GlobalVariable.BOWLER_RUNS_CONCEDED
 
                 if (batsman_1_card.isChecked) {
-                    GlobalVariable.STRIKER_BALL = 1 + GlobalVariable.STRIKER_BALL
+                    GlobalVariable.Batsman_1_BALL = 1 + GlobalVariable.Batsman_1_BALL
                 } else {
-                    GlobalVariable.NON_STRIKER_BALL = 1 + GlobalVariable.NON_STRIKER_BALL
+                    GlobalVariable.Batsman_2_BALL = 1 + GlobalVariable.Batsman_2_BALL
                 }
+
                 showBall("N")
                 val db_Ref = FirebaseDatabase.getInstance().reference
                 val newData = HashMap<String, Any>()
-                newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/extras/NoBalls"] =
+                newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/NoBalls"] =
                     GlobalVariable.NoBalls
+                newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/extras"] =
+                    GlobalVariable.TEAM_Extras
                 newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/no_of_no_balls_by_bowler"] =
                     GlobalVariable.BOWLER_No_ball
                 newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/runs_conceded"] =
@@ -1072,25 +1168,24 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
 
                 GlobalVariable.Byes = 1 + GlobalVariable.Byes
                 GlobalVariable.TEAM_Extras = 1 + GlobalVariable.TEAM_Extras
-                GlobalVariable.BOWLER_RUNS_CONCEDED = 1 + GlobalVariable.BOWLER_RUNS_CONCEDED
                 GlobalVariable.CURRENT_TEAM_SCORE = 1 + GlobalVariable.CURRENT_TEAM_SCORE
                 GlobalVariable.this_Over_runs = 1 + GlobalVariable.this_Over_runs
                 GlobalVariable.this_Over_extras = 1 + GlobalVariable.this_Over_extras
 
                 if (batsman_1_card.isChecked) {
-                    GlobalVariable.STRIKER_BALL = 1 + GlobalVariable.STRIKER_BALL
+                    GlobalVariable.Batsman_1_BALL = 1 + GlobalVariable.Batsman_1_BALL
                 } else {
-                    GlobalVariable.NON_STRIKER_BALL = 1 + GlobalVariable.NON_STRIKER_BALL
+                    GlobalVariable.Batsman_2_BALL = 1 + GlobalVariable.Batsman_2_BALL
                 }
 
 
                 showBall("B")
                 val db_Ref = FirebaseDatabase.getInstance().reference
                 val newData = HashMap<String, Any>()
-                newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/extras/Byes"] =
+                newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/Byes"] =
                     GlobalVariable.Byes
-                newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/runs_conceded"] =
-                    GlobalVariable.BOWLER_RUNS_CONCEDED
+                newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/extras"] =
+                    GlobalVariable.TEAM_Extras
                 db_Ref.updateChildren(newData).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         toast("synced")
@@ -1111,15 +1206,14 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
 
                 GlobalVariable.LegByes = 1 + GlobalVariable.LegByes
                 GlobalVariable.TEAM_Extras = 1 + GlobalVariable.TEAM_Extras
-                GlobalVariable.BOWLER_RUNS_CONCEDED = 1 + GlobalVariable.BOWLER_RUNS_CONCEDED
                 GlobalVariable.CURRENT_TEAM_SCORE = 1 + GlobalVariable.CURRENT_TEAM_SCORE
                 GlobalVariable.this_Over_runs = 1 + GlobalVariable.this_Over_runs
                 GlobalVariable.this_Over_extras = 1 + GlobalVariable.this_Over_extras
 
                 if (batsman_1_card.isChecked) {
-                    GlobalVariable.STRIKER_BALL = 1 + GlobalVariable.STRIKER_BALL
+                    GlobalVariable.Batsman_1_BALL = 1 + GlobalVariable.Batsman_1_BALL
                 } else {
-                    GlobalVariable.NON_STRIKER_BALL = 1 + GlobalVariable.NON_STRIKER_BALL
+                    GlobalVariable.Batsman_2_BALL = 1 + GlobalVariable.Batsman_2_BALL
                 }
 
 
@@ -1127,10 +1221,10 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
 
                 val db_Ref = FirebaseDatabase.getInstance().reference
                 val newData = HashMap<String, Any>()
-                newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/extras/LegByes"] =
+                newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/LegByes"] =
                     GlobalVariable.LegByes
-                newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/runs_conceded"] =
-                    GlobalVariable.BOWLER_RUNS_CONCEDED
+                newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/extras"] =
+                    GlobalVariable.TEAM_Extras
                 db_Ref.updateChildren(newData).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         toast("synced")
@@ -1145,16 +1239,16 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                 showScreenContent()
                 if (batsman_1_card.isChecked) {
                     showRemovePopUpDialog(
-                        GlobalVariable.STRIKER_ID,
-                        GlobalVariable.STRIKER_NAME,
+                        GlobalVariable.Batsman_1_ID,
+                        GlobalVariable.Batsman_1_NAME,
                         R.id.batsman_1_card
                     )
 
 
                 } else {
                     showRemovePopUpDialog(
-                        GlobalVariable.NON_STRIKER_ID,
-                        GlobalVariable.NON_STRIKER_NAME,
+                        GlobalVariable.Batsman_2_ID,
+                        GlobalVariable.Batsman_2_NAME,
                         R.id.batsman_2_card
                     )
 
@@ -1170,32 +1264,35 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
         if (batsman_1_card.isChecked) {
             batsman_1_card.isChecked = false
             batsman_2_card.isChecked = true
+GlobalVariable.StrikerId=GlobalVariable.Batsman_2_ID
         } else {
             batsman_1_card.isChecked = true
             batsman_2_card.isChecked = false
-
+            GlobalVariable.StrikerId=GlobalVariable.Batsman_1_ID
         }
     }
 
-    private fun showCompleteMatchPopUp(){
+    private fun showCompleteMatchPopUp() {
         val completeMatchPopUp = Dialog(this)
         completeMatchPopUp.setCancelable(false)
         completeMatchPopUp.setCanceledOnTouchOutside(false)
 
-        val view = layoutInflater.inflate(R.layout.complete_match_pop_up_dialouge,null)
+        val view = layoutInflater.inflate(R.layout.complete_match_pop_up_dialouge, null)
         completeMatchPopUp.setContentView(view)
 
         val firstInningTeamName = view.find<TextView>(R.id.team_A_Name_match_complete_pop_up)
         val firstInningTeamScore = view.find<TextView>(R.id.team_A_Runs_match_complete_pop_up)
-        val firstInningTeamWickets= view.find<TextView>(R.id.team_A_wickets_match_complete_pop_up)
+        val firstInningTeamWickets = view.find<TextView>(R.id.team_A_wickets_match_complete_pop_up)
         val firstInningTeamOvers = view.find<TextView>(R.id.team_A_overs_match_complete_pop_up)
-        val firstInningTeamOverBalls= view.find<TextView>(R.id.team_A_over_balls_match_complete_pop_up)
+        val firstInningTeamOverBalls =
+            view.find<TextView>(R.id.team_A_over_balls_match_complete_pop_up)
 
         val secondInningTeamName = view.find<TextView>(R.id.team_B_Name_match_complete_pop_up)
         val secondInningTeamScore = view.find<TextView>(R.id.team_B_Runs_match_complete_pop_up)
-        val secondInningTeamWickets= view.find<TextView>(R.id.team_B_wickets_match_complete_pop_up)
+        val secondInningTeamWickets = view.find<TextView>(R.id.team_B_wickets_match_complete_pop_up)
         val secondInningTeamOvers = view.find<TextView>(R.id.team_B_overs_match_complete_pop_up)
-        val secondInningTeamOverBalls= view.find<TextView>(R.id.team_B_over_Balls_match_complete_pop_up)
+        val secondInningTeamOverBalls =
+            view.find<TextView>(R.id.team_B_over_Balls_match_complete_pop_up)
 
         val winningTeamName = view.find<TextView>(R.id.winner_name)
         val winningMargin = view.find<TextView>(R.id.margin_of_victory)
@@ -1215,28 +1312,173 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
         secondInningTeamOverBalls.text = GlobalVariable.CURRENT_BALL.toString()
 
         when {
-            GlobalVariable.FirstInningScore>GlobalVariable.CURRENT_TEAM_SCORE -> {
+            GlobalVariable.FirstInningScore > GlobalVariable.CURRENT_TEAM_SCORE -> {
                 winningTeamName.text = GlobalVariable.BOWLING_TEAM_NAME
-                winningMargin.text = (GlobalVariable.FirstInningScore - GlobalVariable.CURRENT_TEAM_SCORE).toString()
+                winningMargin.text =
+                    (GlobalVariable.FirstInningScore - GlobalVariable.CURRENT_TEAM_SCORE).toString()
                 winningBy.text = "runs"
+                GlobalVariable.MatchCurrentDetails =
+                    "${GlobalVariable.BOWLING_TEAM_NAME} won by ${(GlobalVariable.FirstInningScore - GlobalVariable.CURRENT_TEAM_SCORE)} runs"
+
             }
-            GlobalVariable.FirstInningScore==GlobalVariable.CURRENT_TEAM_SCORE -> {
+            GlobalVariable.FirstInningScore == GlobalVariable.CURRENT_TEAM_SCORE -> {
                 winningTeamName.text = "Match is Tied"
                 winningMargin.visibility = View.GONE
                 winningBy.visibility = View.GONE
+
+                GlobalVariable.MatchCurrentDetails = "Match is Tied"
             }
             else -> {
                 winningTeamName.text = GlobalVariable.BATTING_TEAM_NAME
-                winningMargin.text = ((GlobalVariable.BATTING_TEAM_Squad_Count-1)-GlobalVariable.TEAM_WICKET).toString()
+                winningMargin.text =
+                    ((GlobalVariable.BATTING_TEAM_Squad_Count - 1) - GlobalVariable.TEAM_WICKET).toString()
                 winningBy.text = "wickets"
+
+                GlobalVariable.MatchCurrentDetails =
+                    "${GlobalVariable.BATTING_TEAM_NAME} won by ${((GlobalVariable.BATTING_TEAM_Squad_Count - 1) - GlobalVariable.TEAM_WICKET)} wickets"
+
             }
         }
 
-   //     saveGameButton.setOnClickListener {  }
+        saveGameButton.setOnClickListener {
+            val ndref = FirebaseDatabase.getInstance()
+                .getReference("/MatchScore/${GlobalVariable.MATCH_ID}")
+            ndref.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {}
 
+                override fun onDataChange(p0: DataSnapshot) {
+                    if (p0.exists()) {
+                        val match = p0.value
+                        val databaseRef = FirebaseDatabase.getInstance().reference
+                        val changeStatusMatch = HashMap<String, Any?>()
+                        changeStatusMatch["/CompletedMatch/${GlobalVariable.MATCH_ID}"] = match
+                        databaseRef.updateChildren(changeStatusMatch).addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                val db_ref = FirebaseDatabase.getInstance().reference
+                                val removeMatch = HashMap<String, Any?>()
+                                removeMatch["/MatchScore/${GlobalVariable.MATCH_ID}"] = null
+                                db_ref.updateChildren(removeMatch).addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        toast("Match Saved")
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+            })
+
+            val databaseRef = FirebaseDatabase.getInstance().reference
+            val changeStatusMatch = HashMap<String, Any?>()
+            changeStatusMatch["/TeamsMatchInfo/${GlobalVariable.BATTING_TEAM_ID}/Completed/${GlobalVariable.MATCH_ID}"] =
+                true
+            changeStatusMatch["/TeamsMatchInfo/${GlobalVariable.BATTING_TEAM_ID}/Live/${GlobalVariable.MATCH_ID}"] =
+                null
+            changeStatusMatch["/TeamsMatchInfo/${GlobalVariable.BOWLING_TEAM_ID}/Completed/${GlobalVariable.MATCH_ID}"] =
+                true
+            changeStatusMatch["/TeamsMatchInfo/${GlobalVariable.BOWLING_TEAM_ID}/Live/${GlobalVariable.MATCH_ID}"] =
+                null
+            databaseRef.updateChildren(changeStatusMatch).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+
+
+                    val newdataBaseRef =
+                        FirebaseDatabase.getInstance().reference
+                    val newdataBaseRef_B =
+                        FirebaseDatabase.getInstance().reference
+
+                    newdataBaseRef.child("TeamsPlayer").child(GlobalVariable.BATTING_TEAM_ID)
+                        .addListenerForSingleValueEvent(
+                            object : ValueEventListener {
+                                override fun onCancelled(p0: DatabaseError) {
+                                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                }
+
+                                override fun onDataChange(p0: DataSnapshot) {
+
+                                    if (p0.exists()) {
+                                        val playerRef =
+                                            FirebaseDatabase.getInstance()
+                                                .reference
+                                        val setPlayerCompletedMatch =
+                                            HashMap<String, Any?>()
+                                        p0.children.forEach {
+                                            val p_id = it.key
+
+                                            setPlayerCompletedMatch["PlayersMatchId/$p_id/Completed/${GlobalVariable.MATCH_ID}"] =
+                                                true
+                                            setPlayerCompletedMatch["PlayersMatchId/$p_id/Live/${GlobalVariable.MATCH_ID}"] =
+                                                null
+
+                                            playerRef.updateChildren(
+                                                setPlayerCompletedMatch
+                                            )
+                                                .addOnCompleteListener { task ->
+                                                    if (task.isSuccessful) {
+                                                        Log.d(
+                                                            "Player",
+                                                            "Team A Match Completed"
+                                                        )
+                                                    }
+                                                }
+
+                                        }
+                                    }
+                                }
+
+                            }
+                        )
+
+
+
+                    newdataBaseRef_B.child("TeamsPlayer").child(GlobalVariable.BOWLING_TEAM_ID)
+                        .addListenerForSingleValueEvent(
+                            object : ValueEventListener {
+                                override fun onCancelled(p0: DatabaseError) {
+                                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                }
+
+                                override fun onDataChange(p0: DataSnapshot) {
+
+                                    if (p0.exists()) {
+                                        val playerRef =
+                                            FirebaseDatabase.getInstance()
+                                                .reference
+                                        val setPlayerCompletedMatch =
+                                            HashMap<String, Any?>()
+                                        p0.children.forEach {
+                                            val p_id = it.key
+
+
+                                            setPlayerCompletedMatch["PlayersMatchId/$p_id/Completed/${GlobalVariable.MATCH_ID}"] =
+                                                true
+                                            setPlayerCompletedMatch["PlayersMatchId/$p_id/Live/${GlobalVariable.MATCH_ID}"] =
+                                                null
+                                            playerRef.updateChildren(
+                                                setPlayerCompletedMatch
+                                            )
+                                                .addOnCompleteListener { task ->
+                                                    if (task.isSuccessful) {
+                                                        Log.d(
+                                                            "Player",
+                                                            "Team B Match Completed"
+                                                        )
+                                                    }
+                                                }
+                                        }
+                                    }
+                                }
+                            }
+                        )
+                }
+            }
+            completeMatchPopUp.dismiss()
+            startActivity<Dashboard>()
+            finish()
+        }
         completeMatchPopUp.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         completeMatchPopUp.show()
-
     }
 
     private fun showInningCompletePopUp() {
@@ -1266,7 +1508,7 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
             GlobalVariable.FirstInningScore = GlobalVariable.CURRENT_TEAM_SCORE
             GlobalVariable.FirstInningWickets = GlobalVariable.TEAM_WICKET
             GlobalVariable.FirstInningOversPlayed = GlobalVariable.Current_Over
-            GlobalVariable.FirstInningOverBallsPlayed= GlobalVariable.CURRENT_BALL
+            GlobalVariable.FirstInningOverBallsPlayed = GlobalVariable.CURRENT_BALL
             GlobalVariable.Inning = "SecondInning"
 
             val temp = GlobalVariable.BATTING_TEAM_ID
@@ -1294,34 +1536,37 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
             GlobalVariable.TEAM_CRR = 00f
             GlobalVariable.TEAM_RRR = 00f
 
-            GlobalVariable.STRIKER_ID = ""
-            GlobalVariable.STRIKER_NAME = ""
-            GlobalVariable.STRIKER_SCORE = 0
-            GlobalVariable.STRIKER_BALL = 0
-            GlobalVariable.STRIKER_SINGLES = 0
-            GlobalVariable.STRIKER_doubles = 0
-            GlobalVariable.STRIKER_TRIPLES = 0
-            GlobalVariable.STRIKER_NUM_FOUR = 0
-            GlobalVariable.STRIKER_NUM_SIX = 0
-            GlobalVariable.STRIKER_SR = 00f
-            GlobalVariable.Striker_DOT_BALLS_Played = 0
+            GlobalVariable.StrikerId = ""
 
-            GlobalVariable.NON_STRIKER_ID = ""
-            GlobalVariable.NON_STRIKER_NAME = ""
-            GlobalVariable.NON_STRIKER_SCORE = 0
-            GlobalVariable.NON_STRIKER_BALL = 0
-            GlobalVariable.NON_STRIKER_SINGLES = 0
-            GlobalVariable.NON_STRIKER_doubles = 0
-            GlobalVariable.NON_STRIKER_TRIPLES = 0
-            GlobalVariable.NON_STRIKER_NUM_FOUR = 0
-            GlobalVariable.NON_STRIKER_NUM_SIX = 0
-            GlobalVariable.NON_STRIKER_SR = 00f
-            GlobalVariable.NON_Striker_DOT_BALLS_Played = 0
+            GlobalVariable.Batsman_1_ID = ""
+            GlobalVariable.Batsman_1_NAME = ""
+            GlobalVariable.Batsman_1_SCORE = 0
+            GlobalVariable.Batsman_1_BALL = 0
+            GlobalVariable.Batsman_1_SINGLES = 0
+            GlobalVariable.Batsman_1_doubles = 0
+            GlobalVariable.Batsman_1_TRIPLES = 0
+            GlobalVariable.Batsman_1_NUM_FOUR = 0
+            GlobalVariable.Batsman_1_NUM_SIX = 0
+            GlobalVariable.Batsman_1_SR = 00f
+            GlobalVariable.Batsman_1_DOT_BALLS_Played = 0
+
+            GlobalVariable.Batsman_2_ID = ""
+            GlobalVariable.Batsman_2_NAME = ""
+            GlobalVariable.Batsman_2_SCORE = 0
+            GlobalVariable.Batsman_2_BALL = 0
+            GlobalVariable.Batsman_2_SINGLES = 0
+            GlobalVariable.Batsman_2_doubles = 0
+            GlobalVariable.Batsman_2_TRIPLES = 0
+            GlobalVariable.Batsman_2_NUM_FOUR = 0
+            GlobalVariable.Batsman_2_NUM_SIX = 0
+            GlobalVariable.Batsman_2_SR = 00f
+            GlobalVariable.Batsman_2_DOT_BALLS_Played = 0
 
             GlobalVariable.CURRENT_PARTNERSHIP_BALLS = 0
             GlobalVariable.CURRENT_PARTNERSHIP_RUNS = 0
 
             GlobalVariable.BOWLER_ID = ""
+            GlobalVariable.CurrentBowler = ""
             GlobalVariable.BOWLER_NAME = ""
             GlobalVariable.BOWLER_OVERS = 0
             GlobalVariable.BOWLER_MAIDEN = 0
@@ -1341,10 +1586,13 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
 
             GlobalVariable.found = false
 
-            val requiredRuns = ((GlobalVariable.FirstInningScore+1)-GlobalVariable.CURRENT_TEAM_SCORE)
-            val remainingBalls = ((GlobalVariable.MATCH_OVERS*6)-((GlobalVariable.Current_Over*6)+GlobalVariable.CURRENT_BALL))
-            GlobalVariable.TEAM_RRR = ((requiredRuns*6).toFloat()/(remainingBalls).toFloat())
-            GlobalVariable.MatchCurrentDetails = "${GlobalVariable.BATTING_TEAM_NAME} Needs ${requiredRuns} runs from ${remainingBalls}"
+            val requiredRuns =
+                ((GlobalVariable.FirstInningScore + 1) - GlobalVariable.CURRENT_TEAM_SCORE)
+            val remainingBalls =
+                ((GlobalVariable.MATCH_OVERS * 6) - ((GlobalVariable.Current_Over * 6) + GlobalVariable.CURRENT_BALL))
+            GlobalVariable.TEAM_RRR = ((requiredRuns * 6).toFloat() / (remainingBalls).toFloat())
+            GlobalVariable.MatchCurrentDetails =
+                "${GlobalVariable.BATTING_TEAM_NAME} Needs ${requiredRuns} runs from ${remainingBalls}"
             score_detail_textView.text = GlobalVariable.MatchCurrentDetails
             required_run_rate_match_scoring.text = GlobalVariable.TEAM_RRR.toString()
 
@@ -1398,12 +1646,12 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
         t_runs.text = GlobalVariable.CURRENT_TEAM_SCORE.toString()
         t_wickets.text = GlobalVariable.TEAM_WICKET.toString()
         t_overs.text = GlobalVariable.Current_Over.toString()
-        s_Name.text = GlobalVariable.STRIKER_NAME
-        s_runs.text = GlobalVariable.STRIKER_SCORE.toString()
-        s_balls.text = GlobalVariable.STRIKER_BALL.toString()
-        ns_Name.text = GlobalVariable.NON_STRIKER_NAME
-        ns_runs.text = GlobalVariable.NON_STRIKER_SCORE.toString()
-        ns_balls.text = GlobalVariable.NON_STRIKER_BALL.toString()
+        s_Name.text = GlobalVariable.Batsman_1_NAME
+        s_runs.text = GlobalVariable.Batsman_1_SCORE.toString()
+        s_balls.text = GlobalVariable.Batsman_1_BALL.toString()
+        ns_Name.text = GlobalVariable.Batsman_2_NAME
+        ns_runs.text = GlobalVariable.Batsman_2_SCORE.toString()
+        ns_balls.text = GlobalVariable.Batsman_2_BALL.toString()
 
         bowler_name.text = GlobalVariable.BOWLER_NAME
         bowler_overs.text = GlobalVariable.BOWLER_OVERS.toString()
@@ -1441,17 +1689,16 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                 GlobalVariable.BOWLER_BALLS_BOWLED = 1 + GlobalVariable.BOWLER_BALLS_BOWLED
             }
         }
-           val value = (((GlobalVariable.CURRENT_TEAM_SCORE) * 6).toFloat() / ((GlobalVariable.Current_Over) * 6 + GlobalVariable.CURRENT_BALL).toFloat())
-        //"%.2f".format(value).toDouble()
+        val value =
+            (((GlobalVariable.CURRENT_TEAM_SCORE) * 6).toFloat() / ((GlobalVariable.Current_Over) * 6 + GlobalVariable.CURRENT_BALL).toFloat())
         val number2digits = String.format("%.2f", value).toFloat()
         GlobalVariable.TEAM_CRR = number2digits
+        val b_eco =
+            (((GlobalVariable.BOWLER_RUNS_CONCEDED) * 6).toFloat() / ((GlobalVariable.BOWLER_OVERS) * 6 + GlobalVariable.BOWLER_BALLS_BOWLED).toFloat())
+        val eco2digits = String.format("%.2f", b_eco).toFloat()
+        GlobalVariable.BOWLER_ECONOMY = eco2digits
         showScreenContent()
 
-        Log.d("Overs_teamBalls", GlobalVariable.CURRENT_BALL.toString())
-        Log.d("Overs", GlobalVariable.Current_Over.toString())
-        Log.d("Overs_Score", GlobalVariable.CURRENT_TEAM_SCORE.toString())
-        Log.d("Overs_CRR", GlobalVariable.TEAM_CRR.toString())
-        Log.d("Overs_BowlerBalls", GlobalVariable.BOWLER_BALLS_BOWLED.toString())
 
         if (GlobalVariable.CURRENT_BALL == 6) {
             GlobalVariable.Current_Over = 1 + GlobalVariable.Current_Over
@@ -1478,8 +1725,10 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
             }
             db_Ref.updateChildren(newData).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    if (GlobalVariable.Inning == "SecondInning" && (GlobalVariable.CURRENT_TEAM_SCORE > GlobalVariable.FirstInningScore)){
-                        showCompleteMatchPopUp()
+                    if (GlobalVariable.Current_Over != GlobalVariable.MATCH_OVERS) {
+                        if (GlobalVariable.Inning == "SecondInning" && (GlobalVariable.CURRENT_TEAM_SCORE > GlobalVariable.FirstInningScore)) {
+                            showCompleteMatchPopUp()
+                        }
                     }
                     toast("Over Completed")
                 }
@@ -1488,12 +1737,11 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
             if (GlobalVariable.Current_Over == GlobalVariable.MATCH_OVERS) {
                 toast("Inning Completed")
 
-                if (GlobalVariable.Inning=="FirstInning"){
+                if (GlobalVariable.Inning == "FirstInning") {
                     GlobalVariable.BOWLER_BALLS_BOWLED = 0
                     GlobalVariable.CURRENT_BALL = 0
                     showInningCompletePopUp()
-                }
-                else{
+                } else {
                     showCompleteMatchPopUp()
                 }
 
@@ -1510,7 +1758,7 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
             //showPopUp
         } else {
             ballAdapter.add(ScoreBall(runs, this))
-            if (GlobalVariable.Inning == "SecondInning" && (GlobalVariable.CURRENT_TEAM_SCORE > GlobalVariable.FirstInningScore)){
+            if (GlobalVariable.Inning == "SecondInning" && (GlobalVariable.CURRENT_TEAM_SCORE > GlobalVariable.FirstInningScore)) {
                 showCompleteMatchPopUp()
             }
         }

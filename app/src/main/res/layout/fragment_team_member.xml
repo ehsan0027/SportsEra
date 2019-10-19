@@ -27,10 +27,12 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:id="@+id/removeMe_Button_team_member"
-                android:padding="10dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
                 android:text="Remove Me"
                 android:textColor="@color/DimGray"
                 android:textSize="20sp"
+            android:textAllCaps="false"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 />
 
@@ -41,7 +43,9 @@
                 android:id="@+id/addPlayer_Button_team_member"
                 android:text="Add Player"
                 android:textSize="20sp"
-                android:padding="10dp"
+            android:textAllCaps="false"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
                 style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
 
                 />

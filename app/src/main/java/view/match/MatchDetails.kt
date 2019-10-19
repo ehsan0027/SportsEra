@@ -211,7 +211,8 @@ private fun sendRequestForMatch() {
         Log.d("requestId ",matchId)
         newRequestId=matchId
 
-        val newMatchInvite=MatchInfo(matchType,overs,city,venue,date,time,ballType,squad,team_A_id,team_B_id,team_A_Name,team_B_Name,team_A_Logo,team_B_Logo,matchId,team_A_Captain,captain_B_Id,"","")
+        val newMatchInvite=MatchInfo(matchType,overs,city,venue,date,time,ballType,squad,team_A_id,team_B_id,team_A_Name,team_B_Name,team_A_Logo,team_B_Logo,matchId,team_A_Captain,captain_B_Id,"","",
+            "")
 
         Log.d("Team_A_Id ",team_A_id)
         Log.d("team_B_Id ",team_B_id)
@@ -222,17 +223,6 @@ private fun sendRequestForMatch() {
 
         newDatabaseReference.updateChildren(addRequest).addOnCompleteListener { task->
             if(task.isSuccessful){
-                Log.d("MatchSaved ",matchId)
-             val setStatus=FirebaseDatabase.getInstance().reference
-                val m_status=HashMap<String,Any>()
-                m_status["/MatchInfo/$matchId/matchStatus"]="Request"
-
-                setStatus.updateChildren(m_status).addOnCompleteListener {
-                    task -> if(task.isSuccessful)
-                {
-                    toast("Status Changed")
-                }
-                }
                 toast("Request Sent")
                 //progressDialog.dismiss()
                 startActivity<TeamDetailActivity>("team_A_Id" to team_A_id,

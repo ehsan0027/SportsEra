@@ -16,12 +16,12 @@ class MatchInfo(val matchType:String,
                 val team_B_Logo:String,
                 val matchId:String,
                 val sender:String,
-                val reciever:String,
+                val receiver:String,
                 val tossWonTeamElectedTo:String,
-                val tossWonByTeam:String
-
+                val tossWonByTeam:String,
+                val battingTeamName:String
                   )
 {
-    constructor():this("","","","","","","","","","","","","","","",""," ","","")
+    constructor():this("","","","","","","","","","","","","","","",""," ","","","")
 
 }

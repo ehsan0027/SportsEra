@@ -51,6 +51,7 @@
         <activity android:name="view.EditProfile" />
         <activity android:name="view.match.ui.SearchTeamForMatch" />
         <activity android:name="view.matchscoring.MatchScoringActivity" />
+        <activity android:name="view.match.FullScoreCardActivity" />
     </application>
 
 </manifest>

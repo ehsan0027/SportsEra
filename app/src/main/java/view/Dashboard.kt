@@ -28,6 +28,7 @@ import org.jetbrains.anko.longToast
 import org.jetbrains.anko.startActivity
 import view.ProfilePackage.Profile
 import view.fragment.SearchTeamFragment
+import view.match.FullScoreCardActivity
 import view.match.MatchDetails
 import view.match.TossActivity
 import view.team.TeamDetailActivity
@@ -63,6 +64,17 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
             startActivity<Profile>()
         }
 
+        liveMatchAdapter.setOnItemClickListener { item, view ->
+
+            val match =item as LiveMatchViewHolder
+            val m_Id=match.match_Id
+            val teamA_Id = match.team_A_Id
+            val teamB_Id = match.team_B_Id
+            startActivity<FullScoreCardActivity>("match_Id" to m_Id,
+            "team_A_Id" to teamA_Id,
+            "team_B_Id" to teamB_Id)
+            finish()
+         }
 
 
 
@@ -573,7 +585,7 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
     }
 
     //Upcoming Match Card End
-
+    //Live Scores Starts
 
     fun gettingLiveScores(matchId:String){
         ndb_Ref=FirebaseDatabase.getInstance()
@@ -601,7 +613,7 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
                     GlobalVariable.LiveMatchCurrentDetails =
                         p0.child("MatchCurrentDetail").value.toString()
                     GlobalVariable.LiveCRR =
-                        p0.child("CRR").value.toString().toFloat()
+                        p0.child("crr").value.toString().toFloat()
                     GlobalVariable.LiveRRR = 0f
                 }
             }
@@ -629,9 +641,9 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
                     GlobalVariable.LiveMatchCurrentDetails =
                         p0.child("MatchCurrentDetail").value.toString()
                     GlobalVariable.LiveCRR =
-                        p0.child("CRR").value.toString().toFloat()
+                        p0.child("crr").value.toString().toFloat()
                     GlobalVariable.LiveRRR =
-                        p0.child("RRR").value.toString().toFloat()
+                        p0.child("rrr").value.toString().toFloat()
                 }
             }
         })
@@ -813,7 +825,6 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
                 viewHolder.itemView.title_of_match.text = match_type
                 viewHolder.itemView.team_A_name_match_card.text = team_A_Name
                 viewHolder.itemView.team_B_name_match_card.text = team_B_Name
-
 
                 val logo_team_A =
                     viewHolder.itemView.findViewById<ImageView>(R.id.team_A_logo_match_card)

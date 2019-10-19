@@ -11,6 +11,7 @@ class GlobalVariable : Application() {
         var Inning: String = "FirstInning"
         var TeamSquad:String = "team_A_Squad"
         var TossWonTeamDecidedTo: String = ""
+        var TossWonTeamName: String = ""
         var MatchCurrentDetails:String = ""
         var BATTING_TEAM_ID: String = ""
         var BATTING_TEAM_NAME: String = ""
@@ -44,33 +45,38 @@ class GlobalVariable : Application() {
         var TEAM_RRR: Float = 00F
 
         //Striker
+        var StrikerId:String = ""
+        var CurrentBowler:String = ""
+        //Batsman1
 
-        var STRIKER_ID: String = ""
-        var STRIKER_NAME: String = ""
-        var STRIKER_SCORE: Int = 0
-        var STRIKER_BALL: Int = 0
-        var STRIKER_SINGLES: Int = 0
-        var STRIKER_doubles: Int = 0
-        var STRIKER_TRIPLES: Int = 0
-        var STRIKER_NUM_FOUR: Int = 0
-        var STRIKER_NUM_SIX: Int = 0
-        var STRIKER_SR: Float = 00f
-        var Striker_DOT_BALLS_Played: Int = 0
+        var Batsman_1_ID: String = ""
+        var Batsman_1_NAME: String = ""
+        var Batsman_1_SCORE: Int = 0
+        var Batsman_1_BALL: Int = 0
+        var Batsman_1_SINGLES: Int = 0
+        var Batsman_1_doubles: Int = 0
+        var Batsman_1_TRIPLES: Int = 0
+        var Batsman_1_NUM_FOUR: Int = 0
+        var Batsman_1_NUM_SIX: Int = 0
+        var Batsman_1_SR: Float = 00f
+        var Batsman_1_DOT_BALLS_Played: Int = 0
+        var Batsman_1_Img:String=""
 
 
-        //Non Striker
+        //Batsman2
 
-        var NON_STRIKER_ID: String = ""
-        var NON_STRIKER_NAME: String = ""
-        var NON_STRIKER_SCORE: Int = 0
-        var NON_STRIKER_BALL: Int = 0
-        var NON_STRIKER_SINGLES: Int = 0
-        var NON_STRIKER_doubles: Int = 0
-        var NON_STRIKER_TRIPLES: Int = 0
-        var NON_STRIKER_NUM_FOUR: Int = 0
-        var NON_STRIKER_NUM_SIX: Int = 0
-        var NON_STRIKER_SR: Float = 00f
-        var NON_Striker_DOT_BALLS_Played: Int = 0
+        var Batsman_2_ID: String = ""
+        var Batsman_2_NAME: String = ""
+        var Batsman_2_Img:String=""
+        var Batsman_2_SCORE: Int = 0
+        var Batsman_2_BALL: Int = 0
+        var Batsman_2_SINGLES: Int = 0
+        var Batsman_2_doubles: Int = 0
+        var Batsman_2_TRIPLES: Int = 0
+        var Batsman_2_NUM_FOUR: Int = 0
+        var Batsman_2_NUM_SIX: Int = 0
+        var Batsman_2_SR: Float = 00f
+        var Batsman_2_DOT_BALLS_Played: Int = 0
 
 
         //Partnership
@@ -83,6 +89,7 @@ class GlobalVariable : Application() {
 
         var BOWLER_ID: String = ""
         var BOWLER_NAME: String = ""
+        var BOWLER_Img:String=""
         var BOWLER_OVERS: Int = 0
         var BOWLER_MAIDEN: Int = 0
         var BOWLER_WICKET: Int = 0
@@ -114,6 +121,7 @@ class GlobalVariable : Application() {
 
 
         var found: Boolean = false
+        var num : Int = 0
 
 
         val listOfPakistanCities = listOf(

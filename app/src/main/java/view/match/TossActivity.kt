@@ -20,7 +20,6 @@ class TossActivity : AppCompatActivity() {
     lateinit var teamA_Logo:String
     lateinit var teamB_Logo:String
 
-    lateinit var tossWonTeamElectedTo: String
     lateinit var battingTeamName: String
     lateinit var newMatchId: String //new match id sent from StartMatchActivity
 
@@ -39,7 +38,9 @@ class TossActivity : AppCompatActivity() {
 
                 teamA_Card_TossActivity.isChecked = !teamA_Card_TossActivity.isChecked
                 if (teamA_Card_TossActivity.isChecked)
-                {teamB_Card_TossActivity.isChecked=false}
+                {teamB_Card_TossActivity.isChecked=false
+                GlobalVariable.TossWonTeamName = teamA_Name
+                }
             }
 
         }
@@ -50,7 +51,9 @@ class TossActivity : AppCompatActivity() {
 
                 teamB_Card_TossActivity.isChecked = !teamB_Card_TossActivity.isChecked
                 if (teamB_Card_TossActivity.isChecked)
-                {teamA_Card_TossActivity.isChecked=false}
+                {teamA_Card_TossActivity.isChecked=false
+                GlobalVariable.TossWonTeamName = teamB_Name
+                }
             }
 
         }
@@ -60,8 +63,7 @@ class TossActivity : AppCompatActivity() {
             run {
                 batting_Card_TossActivity.isChecked = !batting_Card_TossActivity.isChecked
                 if (batting_Card_TossActivity.isChecked) {
-                    tossWonTeamElectedTo = "Batting"
-                    GlobalVariable.TossWonTeamDecidedTo = tossWonTeamElectedTo
+                    GlobalVariable.TossWonTeamDecidedTo  = "Bat"
                     bowling_Card_TossActivity.isChecked = false
                     Log.d("TOSSACTIVITY","batting")
                 }
@@ -73,8 +75,7 @@ class TossActivity : AppCompatActivity() {
             run {
                 bowling_Card_TossActivity.isChecked = !bowling_Card_TossActivity.isChecked
                 if (bowling_Card_TossActivity.isChecked) {
-                    tossWonTeamElectedTo = "Bowling"
-                    GlobalVariable.TossWonTeamDecidedTo = tossWonTeamElectedTo
+                    GlobalVariable.TossWonTeamDecidedTo = "Bowl"
                     batting_Card_TossActivity.isChecked = false
                     Log.d("TOSSACTIVITY","bowling")
 
@@ -90,7 +91,8 @@ class TossActivity : AppCompatActivity() {
         val battingTeamId: String
 
         when{
-            teamA_Card_TossActivity.isChecked-> {
+            (teamA_Card_TossActivity.isChecked && batting_Card_TossActivity.isChecked)||
+                    (teamB_Card_TossActivity.isChecked && bowling_Card_TossActivity.isChecked)-> {
                 battingTeamId=teamA_Id
                 battingTeamName=teamA_Name
                 GlobalVariable.BATTING_TEAM_ID=battingTeamId
@@ -103,7 +105,8 @@ class TossActivity : AppCompatActivity() {
                 startInning(battingTeamId)
 
             }
-            teamB_Card_TossActivity.isChecked->{
+            (teamB_Card_TossActivity.isChecked && batting_Card_TossActivity.isChecked)||
+                    (teamA_Card_TossActivity.isChecked && bowling_Card_TossActivity.isChecked)->{
                 battingTeamId=teamB_Id
                 battingTeamName=teamB_Name
                 GlobalVariable.BATTING_TEAM_ID=battingTeamId
@@ -139,7 +142,7 @@ class TossActivity : AppCompatActivity() {
                 "newMatchId" to newMatchId,
                 "teamA_Id" to teamA_Id,
                 "teamB_Id" to teamB_Id,
-                "tossWonTeamElectedTo" to tossWonTeamElectedTo
+                "tossWonTeamElectedTo" to GlobalVariable.TossWonTeamDecidedTo
             )
                 } else {
             alert {

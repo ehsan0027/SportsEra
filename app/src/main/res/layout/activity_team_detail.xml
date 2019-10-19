@@ -43,18 +43,14 @@
                         android:id="@+id/team_logo_TeamDetailActivity"
                         android:src="@mipmap/ic_launcher"
                         android:layout_alignParentStart="true"
-                        android:layout_marginLeft="3dp"
-                        android:layout_marginTop="3dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginStart="3dp"/>
+                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="10dp"/>
 
 <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/label_LinearLayout"
-        android:layout_toRightOf="@id/team_logo_TeamDetailActivity"
-        android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
         android:layout_toEndOf="@id/team_logo_TeamDetailActivity">
@@ -119,7 +115,14 @@
                         android:layout_alignParentBottom="true"
                         android:text="Challenge Opponent"
                         android:textSize="20sp"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:textAllCaps="false"
+                    app:elevation="20dp"
+                    android:elevation="20dp"
+                    android:shadowColor="@color/SteelBlue"
+                    android:backgroundTint="@color/colorAccent"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="25dp"
+                        style="@style/Widget.MaterialComponents.Button"
                         android:id="@+id/challenge_for_match"
                         >
 

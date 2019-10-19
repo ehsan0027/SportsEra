@@ -3,21 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
 
     <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="220dp">
+        android:layout_height="240dp">
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:cardCornerRadius="10dp"
             android:layout_margin="10dp"
             app:cardBackgroundColor="@color/teamCardView"
-            android:id="@+id/match_cardView"
+            android:id="@+id/match_full_score_card_View"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             >
@@ -29,12 +29,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:id="@+id/title_bar_of_match_card"
+                    android:id="@+id/title_bar_of_match_full_score_card"
                     >
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/title_of_match"
+                        android:id="@+id/title_of_match_full_score_card"
                         android:text="Limited Overs "
                         android:textSize="15sp"
                         android:paddingStart="10dp"
@@ -61,10 +61,10 @@
 
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/score_bar_of_match_card"
-                    android:layout_below="@+id/title_bar_of_match_card"
+                    android:id="@+id/score_bar_of_match_full_score_card"
+                    android:layout_below="@+id/title_bar_of_match_full_score_card"
                     android:layout_centerVertical="true"
                     android:orientation="horizontal"
                     >
@@ -76,32 +76,28 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_weight="1"
                         >
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            android:id="@+id/team_A_logo_match_card"
+                            android:id="@+id/team_A_logo_match_full_score_card"
                             android:src="@mipmap/ic_launcher"
                             android:layout_marginTop="5dp"
                             android:layout_gravity="center"
-                            android:paddingStart="10dp"
-
-
                             />
                         <TextView
-                            android:layout_width="100dp"
+                            android:layout_width="90dp"
                             android:layout_height="wrap_content"
                             android:text="Team Name"
-                            android:id="@+id/team_A_name_match_card"
+                            android:id="@+id/team_A_name_match_full_score_card"
                             android:textAlignment="center"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:textSize="15sp"
-                            android:paddingStart="10dp"
+                            android:textSize="11sp"
+                            android:maxLength="18"
                             android:textAllCaps="true"
                             android:textColor="@color/Black"
-
-
                             />
 
                     </LinearLayout>
@@ -112,6 +108,7 @@
                         android:orientation="vertical"
                         android:padding="10dp"
                         android:layout_gravity="center"
+                        android:layout_weight="1"
                         >
 
                         <LinearLayout
@@ -121,13 +118,13 @@
                             android:layout_gravity="center"
                             android:id="@+id/team_A_score_wickets_match_card"
                             >
+
                             <TextView
+                                android:id="@+id/team_A_score_match_full_score_card"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/team_A_score_match_card"
-                                android:text="100"
-                                android:textSize="20sp"
-                                />
+                                android:text="0"
+                                android:textSize="20sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -140,8 +137,8 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/team_A_wickets_match_card"
-                                android:text="3"
+                                android:id="@+id/team_A_wickets_match_full_score_card"
+                                android:text="0"
                                 android:textSize="20sp"
                                 />
 
@@ -165,8 +162,21 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/team_A_current_over_match_card"
-                                android:text="30"
+                                android:id="@+id/team_A_current_over_match_full_score_card"
+                                android:text="0"
+                                android:textSize="15sp"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="."
+                                android:textSize="15sp"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/team_A_current_over_balls_match_full_score_card"
+                                android:text="0"
                                 android:textSize="15sp"
                                 />
                             <TextView
@@ -179,8 +189,8 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/team_A_total_overs_match_card"
-                                android:text="50"
+                                android:id="@+id/team_A_total_overs_match_full_score_card"
+                                android:text="0"
                                 android:textSize="15sp"
                                 />
                             <TextView
@@ -198,48 +208,46 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="VS"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         android:textColor="@color/DimGray"
                         android:layout_gravity="center"
                         />
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_gravity="center"
-                        android:padding="10dp"
-                        >
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="10dp">
 
                         <LinearLayout
+                            android:id="@+id/team_B_score_wickets_match_card"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:orientation="horizontal"
                             android:layout_gravity="center"
-                            android:id="@+id/team_B_score_wickets_match_card"
-                            >
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/team_B_score_match_card"
-                                android:text="100"
-                                android:textSize="20sp"
-                                />
+                            android:orientation="horizontal">
 
                             <TextView
+                                android:id="@+id/team_B_score_match_full_score_card"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textSize="20sp"/>
+
+                            <TextView
                                 android:id="@+id/separator_2_match_card"
-                                android:text="/"
-                                android:textSize="20sp"
-                                />
-
-                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/team_B_wickets_match_card"
-                                android:text="3"
-                                android:textSize="20sp"
-                                />
+                                android:text="/"
+                                android:textSize="20sp" />
+
+                            <TextView
+                                android:id="@+id/team_B_wickets_match_full_score_card"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textSize="20sp" />
 
                         </LinearLayout>
 
@@ -247,45 +255,54 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
                             android:layout_gravity="center"
-                            >
+                            android:orientation="horizontal">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
                                 android:id="@+id/team_B_bracket_open_overs_match_card"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:text="("
-                                android:textSize="15sp"
-                                />
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/team_B_current_over_match_full_score_card"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textSize="15sp" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/team_B_current_over_match_card"
-                                android:text="30"
-                                android:textSize="15sp"
-                                />
+                                android:text="."
+                                android:textSize="15sp" />
                             <TextView
+                                android:id="@+id/team_B_current_over_balls_match_full_score_card"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textSize="15sp" />
+
+                            <TextView
                                 android:id="@+id/team_B_separator_overs_match_card"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:text="/"
-                                android:textSize="15sp"
-                                />
+                                android:textSize="15sp" />
+
                             <TextView
+                                android:id="@+id/team_B_total_overs_match_full_score_card"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/team_B_total_overs_match_card"
-                                android:text="50"
-                                android:textSize="15sp"
-                                />
+                                android:text="0"
+                                android:textSize="15sp" />
+
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
                                 android:id="@+id/team_B_bracket_close_match_card"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:text=")"
-                                android:textSize="15sp"
-                                />
+                                android:textSize="15sp" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -295,31 +312,28 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:paddingEnd="10dp"
+                        android:layout_weight="1"
                         >
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            android:id="@+id/team_B_logo_match_card"
+                            android:id="@+id/team_B_logo_match_full_score_card"
                             android:src="@mipmap/ic_launcher"
                             android:layout_marginTop="5dp"
                             android:layout_gravity="center"
-                            android:paddingStart="10dp"
                             />
                         <TextView
-                            android:layout_width="100dp"
+                            android:layout_width="90dp"
                             android:layout_height="wrap_content"
                             android:text="Team Name"
-                            android:id="@+id/team_B_name_match_card"
+                            android:id="@+id/team_B_name_match_full_score_card"
                             android:textAlignment="center"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:textSize="15sp"
-                            android:paddingStart="10dp"
+                            android:textSize="11sp"
+                            android:maxLength="18"
                             android:textAllCaps="true"
                             android:textColor="@color/Black"
-
-
                             />
 
                     </LinearLayout>
@@ -330,16 +344,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:id="@+id/match_detail_layout_match_card"
-                    android:layout_below="@+id/score_bar_of_match_card"
+                    android:id="@+id/match_detail_layout_match_full_score_card"
+                    android:layout_below="@+id/score_bar_of_match_full_score_card"
                     android:layout_centerInParent="true"
                     >
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="Lahore won the toss and elected to bowl first"
-                        android:id="@+id/match_detail_text_view_match_card"
+                        android:text="Match Updates"
+                        android:id="@+id/match_detail_text_view_match_full_score_card"
                         android:textAlignment="center"
                         android:layout_gravity="center"
                         android:gravity="center"
@@ -355,7 +369,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:id="@+id/current_run_rate_required_rate_layout"
-                    android:layout_below="@+id/match_detail_layout_match_card"
+                    android:layout_below="@+id/match_detail_layout_match_full_score_card"
                     android:layout_centerInParent="true"
                     >
 
@@ -374,7 +388,7 @@
                         android:text="0.00"
                         android:maxLength="4"
                         android:textSize="12sp"
-                        android:id="@+id/current_run_rate_on_match_card"
+                        android:id="@+id/current_run_rate_on_match_full_score_card"
                         />
                     <TextView
                         android:layout_width="wrap_content"
@@ -392,7 +406,7 @@
                         android:text="0.00"
                         android:maxLength="4"
                         android:textSize="12sp"
-                        android:id="@+id/required_run_rate_on_match_card"
+                        android:id="@+id/required_run_rate_on_match_full_score_card"
                         />
                 </LinearLayout>
 
@@ -408,13 +422,13 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_below="@id/divider"
-                    android:layout_marginTop="5dp"
                     android:id="@+id/team_batting_bowling_layout"
                     >
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Team Name"
+                        android:maxLength="12"
                         android:id="@+id/batting_team_name"
                         android:layout_marginStart="12dp"
                         >
@@ -443,6 +457,7 @@
                                 android:layout_height="wrap_content"
                                 android:id="@+id/bowling_team_name"
                                 android:text="Team Name"
+                                android:maxLength="12"
                                 android:textSize="15sp"
                                 />
                             <TextView
@@ -471,6 +486,7 @@
                         android:layout_marginStart="7dp"
                         android:layout_gravity="center"
                         android:src="@drawable/black_image"
+                        android:id="@+id/Batsman1_Bullet"
                         >
 
                     </de.hdodenhof.circleimageview.CircleImageView>
@@ -478,7 +494,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Batsman A"
-                        android:id="@+id/batsman_A_on_match_card"
+                        android:maxLength="12"
+                        android:id="@+id/batsman_A_on_match_full_score_card"
                         android:layout_marginStart="5dp"
                         >
 
@@ -493,7 +510,7 @@
                         android:layout_height="wrap_content"
                         android:text="0"
                         android:layout_marginStart="5dp"
-                        android:id="@+id/batsman_A_score_on_match_card"
+                        android:id="@+id/batsman_A_score_on_match_full_score_card"
                         />
                     <TextView
                         android:layout_width="wrap_content"
@@ -510,7 +527,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
-                        android:id="@+id/batsman_A_balls_played_on_match_card"
+                        android:id="@+id/batsman_A_balls_played_on_match_full_score_card"
                         />
                     <TextView
                         android:layout_width="wrap_content"
@@ -535,6 +552,7 @@
                                 android:layout_height="wrap_content"
                                 android:id="@+id/bowler_A_Name"
                                 android:text="Bowler A"
+                                android:maxLength="12"
                                 android:textSize="15sp"
                                 />
                             <TextView
@@ -579,6 +597,19 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:text="."
+                                android:textSize="15sp"
+                               />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textSize="15sp"
+                                android:id="@+id/bowler_A_bowled_overs_balls"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:text=")"
                                 android:textSize="15sp"
                                 />
@@ -603,21 +634,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:paddingStart="15dp"
                     android:layout_below="@id/batsman_A_bowler_A_layout"
                     >
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:layout_width="7dp"
-                        android:layout_height="7dp"
-                        android:layout_marginStart="7dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/black_image"
-                        >
-
-                    </de.hdodenhof.circleimageview.CircleImageView>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Batsman B"
+                        android:maxLength="12"
                         android:id="@+id/batsman_B_on_match_card"
                         android:layout_marginStart="5dp"
                         >
@@ -658,91 +682,13 @@
                         android:text=")"
                         />
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingEnd="10dp"
-                        >
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_alignParentEnd="true"
-                            >
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/bowler_B_Name"
-                                android:text="Bowler B"
-                                android:textSize="15sp"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=":"
-                                android:textSize="15sp"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0"
-                                android:textSize="15sp"
-                                android:id="@+id/bowler_B_wickets"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="/"
-                                android:textSize="15sp"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0"
-                                android:textSize="15sp"
-                                android:id="@+id/bowler_B_runs_conceded"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="("
-                                android:textSize="15sp"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0"
-                                android:textSize="15sp"
-                                android:id="@+id/bowler_B_bowled_overs"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=")"
-                                android:textSize="15sp"
-                                />
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:layout_width="7dp"
-                                android:layout_height="7dp"
-                                android:layout_marginStart="7dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/black_image"
-                                >
-
-                            </de.hdodenhof.circleimageview.CircleImageView>
-                        </LinearLayout>
-
-
-                    </RelativeLayout>
 
                 </LinearLayout>
 
-
-
             </RelativeLayout>
 
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
     </RelativeLayout>
 
@@ -750,11 +696,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabGravity="fill"
-        app:tabMode="scrollable"
+        app:tabMode="fixed"
         android:id="@+id/tabLayout_match_full_scored"
         style="@style/Widget.MaterialComponents.TabLayout.PrimarySurface"
-        app:tabIndicator="@color/colorAccent"
+        app:tabSelectedTextColor="@color/colorPrimaryDark"
+        app:tabTextColor="@color/Gray"
         android:background="@color/teamCardView"
+        app:tabIndicatorColor="@color/colorPrimaryDark"
 
         />
 
@@ -762,7 +710,7 @@
     <androidx.viewpager.widget.ViewPager
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/viewPager"
+        android:id="@+id/viewPagerFullScoreCard"
         >
     </androidx.viewpager.widget.ViewPager>
 

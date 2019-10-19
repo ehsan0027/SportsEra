@@ -16,7 +16,9 @@
         <SearchView android:layout_width="match_parent"
                     android:layout_height="match_parent" android:queryHint="search team"
                     android:id="@+id/team_search_view" android:clickable="true" android:focusable="auto"
-                    android:scrollbarSize="4dp" android:visibility="visible" tools:visibility="visible"></SearchView>
+                    android:scrollbarSize="4dp" android:visibility="visible" tools:visibility="visible">
+
+        </SearchView>
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
