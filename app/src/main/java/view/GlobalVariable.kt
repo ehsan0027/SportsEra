@@ -112,6 +112,7 @@ class GlobalVariable : Application() {
         var LiveOverBallsFirstInning: Int = 0
         var LiveOverBallsSecondInning: Int = 0
         var LiveMatchCurrentDetails: String = ""
+        var LiveMatchCurrentInning: String = ""
         var LiveCRR: Float = 00f
         var LiveRRR: Float = 00f
 

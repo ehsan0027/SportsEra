@@ -30,6 +30,8 @@ class FirstInningTabFragment : Fragment() {
     private var newDBRefBowler: DatabaseReference? = null
     private var listener: OnFragmentInteractionListener? = null
     var nameFun:SecondInningTabFragment? = null
+    private var lastScore: Int = 0
+    private var lastBall: Int = 0
 
     private val batsmanAdapter = GroupAdapter<ViewHolder>()
     private val bowlerAdapter = GroupAdapter<ViewHolder>()
@@ -101,48 +103,59 @@ class FirstInningTabFragment : Fragment() {
             override fun onDataChange(p0: DataSnapshot) {
             if (p0.exists()){
 
-                val  totalExtras= p0.child("extras").value.toString()
-                var  wides = p0.child("Wides").value.toString()
-                var  noBall = p0.child("NoBalls").value.toString()
-                var  bye = p0.child("Byes").value.toString()
-                var  legBye = p0.child("LegByes").value.toString()
-                val  totalRuns = p0.child("inningScore").value.toString()
-                val  wickets = p0.child("wickets").value.toString()
-                val  overs = p0.child("overs").value.toString()
-                val  over_balls = p0.child("over_balls").value.toString()
-                battingTeamId = p0.child("battingTeamId").value.toString()
-                bowlingTeamId = p0.child("bowlingTeamId").value.toString()
-                getBatsmanData()
-                getOutBatsmansData()
-                getBowlerData()
-                total_extras_first_inning.text = totalExtras
-                if (wides=="null"){
-                    wides = "0"
+                val  totalRuns = p0.child("inningScore").value.toString().toInt()
+                val  over_balls = p0.child("over_balls").value.toString().toInt()
+                if (lastScore != totalRuns || lastBall != over_balls) {
+                    batsmanAdapter.clear()
+                    bowlerAdapter.clear()
+                    batting_recycler_view_first_inning?.removeAllViewsInLayout()
+                    bowling_recycler_view_first_inning?.removeAllViewsInLayout()
+
+                    lastScore = totalRuns
+                    lastBall = over_balls
+
+                    val totalExtras = p0.child("extras").value.toString()
+                    var wides = p0.child("Wides").value.toString()
+                    var noBall = p0.child("NoBalls").value.toString()
+                    var bye = p0.child("Byes").value.toString()
+                    var legBye = p0.child("LegByes").value.toString()
+
+                    val wickets = p0.child("wickets").value.toString()
+                    val overs = p0.child("overs").value.toString()
+
+                    battingTeamId = p0.child("battingTeamId").value.toString()
+                    bowlingTeamId = p0.child("bowlingTeamId").value.toString()
+                    getBatsmanData()
+                    getOutBatsmansData()
+                    getBowlerData()
+                    total_extras_first_inning.text = totalExtras
+                    if (wides == "null") {
+                        wides = "0"
+                    }
+                    if (noBall == "null") {
+                        noBall = "0"
+                    }
+                    if (bye == "null") {
+                        bye = "0"
+                    }
+                    if (legBye == "null") {
+                        legBye = "0"
+                    }
+                    no_ball_score_first_inning.text = noBall
+                    wide_score_first_inning.text = wides
+                    bye_score_first_inning.text = bye
+                    leg_byes_score_first_inning.text = legBye
+                    total_runs_first_inning.text = totalRuns.toString()
+                    wickets_first_inning.text = wickets
+                    overs_bowled_first_inning.text = overs
+                    over_balls_bowled_first_inning.text = over_balls.toString()
                 }
-                if (noBall=="null"){
-                    noBall = "0"
-                }
-                if (bye=="null"){
-                    bye = "0"
-                }
-                if (legBye =="null"){
-                    legBye = "0"
-                }
-                no_ball_score_first_inning.text = noBall
-                wide_score_first_inning.text = wides
-                bye_score_first_inning.text = bye
-                leg_byes_score_first_inning.text = legBye
-                total_runs_first_inning.text = totalRuns
-                wickets_first_inning.text = wickets
-                overs_bowled_first_inning.text = overs
-                over_balls_bowled_first_inning.text = over_balls
             }
             }
         })
     }
 
     private fun getBatsmanData(){
-        batsmanAdapter.clear()
         newDBRefBatsman = FirebaseDatabase.getInstance().getReference("/MatchScore/$matchId/FirstInning/$battingTeamId")
         newDBRefBatsman?.addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {}
@@ -180,7 +193,7 @@ class FirstInningTabFragment : Fragment() {
                         }
 
                     }
-                    batting_recycler_view_first_inning.adapter = batsmanAdapter
+                    batting_recycler_view_first_inning?.adapter = batsmanAdapter
                 }
             }
         })
@@ -188,7 +201,6 @@ class FirstInningTabFragment : Fragment() {
 
 
     private fun getOutBatsmansData(){
-        batsmanAdapter.clear()
         newDBRefBatsman = FirebaseDatabase.getInstance().getReference("/MatchScore/$matchId/FirstInning/$battingTeamId/OutSquad")
         newDBRefBatsman?.addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {}
@@ -224,7 +236,7 @@ class FirstInningTabFragment : Fragment() {
 
 
                     }
-                    batting_recycler_view_first_inning.adapter = batsmanAdapter
+                    batting_recycler_view_first_inning?.adapter = batsmanAdapter
                 }
             }
         })
@@ -260,7 +272,6 @@ class FirstInningTabFragment : Fragment() {
 
 
     private fun getBowlerData(){
-        bowlerAdapter.clear()
         newDBRefBowler = FirebaseDatabase.getInstance().getReference("/MatchScore/$matchId/FirstInning/$bowlingTeamId")
         newDBRefBowler?.addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {}
@@ -301,7 +312,7 @@ class FirstInningTabFragment : Fragment() {
 
                         }
                     }
-                    bowling_recycler_view_first_inning.adapter = bowlerAdapter
+                    bowling_recycler_view_first_inning?.adapter = bowlerAdapter
                 }
             }
         })

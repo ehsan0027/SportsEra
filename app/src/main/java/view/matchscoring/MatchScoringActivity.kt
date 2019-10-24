@@ -135,6 +135,7 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
         batsman_2_name.text = GlobalVariable.Batsman_2_NAME
         bowler_name.text = GlobalVariable.BOWLER_NAME
         showScreenContent()
+        toast("Batting Team Squad Count: ${GlobalVariable.BATTING_TEAM_Squad_Count}")
 
     }
 
@@ -238,6 +239,7 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                             outSquadRef.updateChildren(removeOutPlayer)
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
+                                        toast("Remaining Wickets: ${GlobalVariable.BATTING_TEAM_Squad_Count - 1}")
                                         if (GlobalVariable.TEAM_WICKET == GlobalVariable.BATTING_TEAM_Squad_Count - 1) {
                                             toast("Inning Completed")
                                             if (GlobalVariable.Inning == "FirstInning") {

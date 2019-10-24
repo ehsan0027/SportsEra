@@ -3,6 +3,7 @@ package view.match.inningsTabs
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +30,8 @@ class SecondInningTabFragment : Fragment() {
     private var newDBRefBatsman: DatabaseReference? = null
     private var newDBRefBowler: DatabaseReference? = null
     private var listener: OnFragmentInteractionListener? = null
+    private var lastScore: Int = 0
+    private var lastBall: Int = 0
 
     private val batsmanAdapter = GroupAdapter<ViewHolder>()
     private val bowlerAdapter = GroupAdapter<ViewHolder>()
@@ -72,7 +75,8 @@ class SecondInningTabFragment : Fragment() {
         super.onResume()
         battingTeamId = ""
         bowlingTeamId = ""
-        changeScoreListener()
+        getInningData()
+
     }
 
     interface OnFragmentInteractionListener {
@@ -88,30 +92,6 @@ class SecondInningTabFragment : Fragment() {
                     putString(ARG_PARAM1, mId)
                 }
             }
-    }
-
-    private fun changeScoreListener(){
-        newDBRef = FirebaseDatabase.getInstance().getReference("/MatchScore/$matchId/SecondInning/inningScore")
-        newDBRef?.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                changeBallListener()
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                getInningData()
-            }
-        })
-    }
-
-    private fun changeBallListener(){
-        newDBRef = FirebaseDatabase.getInstance().getReference("/MatchScore/$matchId/SecondInning/over_balls")
-        newDBRef?.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {}
-
-            override fun onDataChange(p0: DataSnapshot) {
-                getInningData()
-            }
-        })
     }
 
     private fun toWords(name:String) =name.trim().splitToSequence(' ').filter { it.isNotEmpty() }.toList()
@@ -131,7 +111,7 @@ class SecondInningTabFragment : Fragment() {
                 val fw= if(name.contains(" ")){name.split(' ').first()}else{ return ""}
                 val fc=fw.substring(0,1)
                 val sW= if(name.contains(" ")){name.split(' ')[1]}else{ return ""}
-                val sC=sW.substring(1,2)
+                val sC=sW.substring(0,1)
                 nameOfBatsman = "$fc.$sC.${nameArray[2]}"
                 return nameOfBatsman
             }
@@ -139,9 +119,9 @@ class SecondInningTabFragment : Fragment() {
                 val fw= if(name.contains(" ")){name.split(' ').first()}else{ return ""}
                 val fc=fw.substring(0,1)
                 val sW= if(name.contains(" ")){name.split(' ')[1]}else{ return ""}
-                val sC=sW.substring(1,2)
+                val sC=sW.substring(0,1)
                 val tW= if(name.contains(" ")){name.split(' ')[2]}else{ return ""}
-                val tC=tW.substring(2,3)
+                val tC=tW.substring(0,1)
                 nameOfBatsman = "$fc.$sC.$tC.${nameArray[3]}"
                 return nameOfBatsman
             }
@@ -149,11 +129,11 @@ class SecondInningTabFragment : Fragment() {
                 val fw= if(name.contains(" ")){name.split(' ').first()}else{ return ""}
                 val fc=fw.substring(0,1)
                 val sW= if(name.contains(" ")){name.split(' ')[1]}else{ return ""}
-                val sC=sW.substring(1,2)
+                val sC=sW.substring(0,1)
                 val tW= if(name.contains(" ")){name.split(' ')[2]}else{ return ""}
-                val tC=tW.substring(2,3)
+                val tC=tW.substring(0,1)
                 val ftW= if(name.contains(" ")){name.split(' ')[3]}else{ return ""}
-                val ftC=ftW.substring(3,4)
+                val ftC=ftW.substring(0,1)
                 nameOfBatsman = "$fc.$sC.$tC.$ftC.${nameArray[4]}"
                 return nameOfBatsman
             }
@@ -164,54 +144,68 @@ class SecondInningTabFragment : Fragment() {
 
     private fun getInningData(){
         newDBRef = FirebaseDatabase.getInstance().getReference("/MatchScore/$matchId/SecondInning")
-        newDBRef?.addListenerForSingleValueEvent(object : ValueEventListener {
+        newDBRef?.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
 
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()){
+                    val totalRuns = p0.child("inningScore").value.toString().toInt()
+                    val over_balls = p0.child("over_balls").value.toString().toInt()
 
+                    if(lastScore != totalRuns || lastBall != over_balls)
+                    {
+                        batsmanAdapter.clear()
+                        bowlerAdapter.clear()
+                        batting_recycler_view_second_inning?.removeAllViewsInLayout()
+                        bowling_recycler_view_second_inning?.removeAllViewsInLayout()
+
+                        lastScore=totalRuns
+                        lastBall=over_balls
                         val totalExtras= p0.child("extras").value.toString()
                         var wides = p0.child("Wides").value.toString()
                         var noBall = p0.child("NoBalls").value.toString()
                         var bye = p0.child("Byes").value.toString()
                         var legBye = p0.child("LegByes").value.toString()
-                        val totalRuns = p0.child("inningScore").value.toString()
                         val wickets = p0.child("wickets").value.toString()
                         val overs = p0.child("overs").value.toString()
-                        val over_balls = p0.child("over_balls").value.toString()
                         battingTeamId = p0.child("battingTeamId").value.toString()
                         bowlingTeamId = p0.child("bowlingTeamId").value.toString()
                         getBatsmanData()
                         getOutBatsmansData()
                         getBowlerData()
-                    if (wides=="null"){
-                        wides = "0"
-                    }
-                    if (noBall=="null"){
-                        noBall = "0"
-                    }
-                    if (bye=="null"){
-                        bye = "0"
-                    }
-                    if (legBye =="null"){
-                        legBye = "0"
-                    }
+                        if (wides=="null"){
+                            wides = "0"
+                        }
+                        if (noBall=="null"){
+                            noBall = "0"
+                        }
+                        if (bye=="null"){
+                            bye = "0"
+                        }
+                        if (legBye =="null"){
+                            legBye = "0"
+                        }
                         total_extras_second_inning?.text = totalExtras
                         no_ball_score_second_inning?.text = noBall
                         wide_score_second_inning?.text = wides
                         bye_score_second_inning?.text = bye
                         leg_byes_score_second_inning?.text = legBye
-                    total_runs_second_inning.text = totalRuns
-                    wickets_second_inning.text = wickets
-                    overs_bowled_second_inning.text = overs
-                    over_balls_bowled_second_inning.text = over_balls
+                        total_runs_second_inning.text = totalRuns.toString()
+                        wickets_second_inning.text = wickets
+                        overs_bowled_second_inning.text = overs
+                        over_balls_bowled_second_inning.text = over_balls.toString()
+
+
+                    }else{
+                        Log.d("InningScore","Something went wrong")}
+
+
                 }
             }
         })
     }
 
     private fun getBatsmanData(){
-        batsmanAdapter.clear()
         newDBRefBatsman = FirebaseDatabase.getInstance().getReference("/MatchScore/$matchId/SecondInning/$battingTeamId")
         newDBRefBatsman?.addValueEventListener(object: ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
@@ -249,7 +243,7 @@ class SecondInningTabFragment : Fragment() {
                         }
 
                     }
-                    batting_recycler_view_second_inning.adapter = batsmanAdapter
+                    batting_recycler_view_second_inning?.adapter = batsmanAdapter
                 }
             }
         })
@@ -257,7 +251,6 @@ class SecondInningTabFragment : Fragment() {
 
 
     private fun getOutBatsmansData(){
-        batsmanAdapter.clear()
         newDBRefBatsman = FirebaseDatabase.getInstance().getReference("/MatchScore/$matchId/SecondInning/$battingTeamId/OutSquad")
         newDBRefBatsman?.addValueEventListener(object: ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
@@ -293,7 +286,7 @@ class SecondInningTabFragment : Fragment() {
 
 
                     }
-                    batting_recycler_view_second_inning.adapter = batsmanAdapter
+                    batting_recycler_view_second_inning?.adapter = batsmanAdapter
                 }
             }
         })
@@ -329,7 +322,6 @@ class SecondInningTabFragment : Fragment() {
 
 
     private fun getBowlerData(){
-        bowlerAdapter.clear()
         newDBRefBowler = FirebaseDatabase.getInstance().getReference("/MatchScore/$matchId/SecondInning/$bowlingTeamId")
         newDBRefBowler?.addValueEventListener(object: ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
@@ -370,7 +362,7 @@ class SecondInningTabFragment : Fragment() {
 
                         }
                     }
-                    bowling_recycler_view_second_inning.adapter = bowlerAdapter
+                    bowling_recycler_view_second_inning?.adapter = bowlerAdapter
                 }
             }
         })

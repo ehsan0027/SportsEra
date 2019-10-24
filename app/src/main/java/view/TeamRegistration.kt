@@ -169,7 +169,7 @@ if (selectedLogoUri == null)
             dialog.setProgressStyle(STYLE_HORIZONTAL)
             dialog.incrementProgressBy(progress.toInt())
 
-        }?.addOnSuccessListener { snapshot ->
+        }.addOnSuccessListener { snapshot ->
             val result = snapshot.metadata!!.reference!!.downloadUrl
             result.addOnSuccessListener {
                 imageLink = it.toString()

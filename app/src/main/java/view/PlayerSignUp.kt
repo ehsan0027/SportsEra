@@ -98,7 +98,7 @@ private val SAMPLE_CROPPED_IMAGE_NAME="SampleCropImage"
             dialog.setProgressStyle(STYLE_HORIZONTAL)
             dialog.incrementProgressBy(progress.toInt())
 
-        }?.addOnSuccessListener { snapshot ->
+        }.addOnSuccessListener { snapshot ->
             val result = snapshot.metadata!!.reference!!.downloadUrl
             result.addOnSuccessListener {
                 imageLink = it.toString()
