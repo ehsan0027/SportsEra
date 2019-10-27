@@ -8,12 +8,16 @@ class GlobalVariable : Application() {
     companion object {
 
         //Match
+        var BATTING_TEAM_SQUAD = ArrayList<String>()
+        var BOWLING_TEAM_SQUAD = ArrayList<String>()
+        var YetToBat = ArrayList<String>()
         var Inning: String = "FirstInning"
-        var TeamSquad:String = "team_A_Squad"
+        var TeamSquad:String = ""
         var TossWonTeamDecidedTo: String = ""
         var TossWonTeamName: String = ""
         var MatchCurrentDetails:String = ""
         var BATTING_TEAM_ID: String = ""
+        var SELECTED_PLAYERS_ID_LIST = ArrayList<String>()
         var BATTING_TEAM_NAME: String = ""
         var BATTING_TEAM_LOGO: String = ""
         var BATTING_TEAM_Squad_Count: Int = 0

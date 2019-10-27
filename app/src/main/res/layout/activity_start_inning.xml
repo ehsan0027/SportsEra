@@ -57,6 +57,8 @@
                 android:layout_height="110dp"
                 android:layout_margin="15dp"
             android:layout_gravity="center"
+            app:civ_border_width="3dp"
+            app:civ_border_color="@color/Gray"
                 android:background="@drawable/batsman"
                 android:id="@+id/striker_imageButton_StartInning"
 
@@ -94,6 +96,8 @@
                 android:layout_height="110dp"
                 android:layout_margin="15dp"
             android:layout_gravity="center"
+            app:civ_border_width="3dp"
+            app:civ_border_color="@color/Gray"
                 android:background="@drawable/batsman"
                 android:id="@+id/non_Striker_imageButton_StartInning"
 
@@ -101,7 +105,7 @@
 
         </de.hdodenhof.circleimageview.CircleImageView>
         <TextView
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
             android:layout_gravity="center"
@@ -155,6 +159,8 @@
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:layout_margin="15dp"
+        app:civ_border_width="3dp"
+        app:civ_border_color="@color/Gray"
         android:layout_gravity="center"
         android:background="@drawable/bowler"
             android:id="@+id/bowler_imageButton_StartInning"
@@ -162,7 +168,7 @@
     </de.hdodenhof.circleimageview.CircleImageView>
 
     <TextView
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textSize="14sp"
@@ -182,9 +188,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:text="Save Inning"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/Widget.MaterialComponents.Button"
             android:id="@+id/saveInning_Button_StartInning"
-            android:background="@color/white_layout"
             >
     </com.google.android.material.button.MaterialButton>
 

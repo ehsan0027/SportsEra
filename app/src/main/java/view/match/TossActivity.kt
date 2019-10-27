@@ -4,6 +4,11 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sportsplayer.R
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.pawegio.kandroid.toast
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_toss.*
 import org.jetbrains.anko.alert
@@ -23,6 +28,11 @@ class TossActivity : AppCompatActivity() {
     lateinit var battingTeamName: String
     lateinit var newMatchId: String //new match id sent from StartMatchActivity
 
+    val teamASquad = ArrayList<String>()
+    val teamBSquad = ArrayList<String>()
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +40,10 @@ class TossActivity : AppCompatActivity() {
 
 
 //start Inning Button
-        startInning_TossActivity.setOnClickListener { setTossWonTeam()}
+        startInning_TossActivity.setOnClickListener {
+
+            setTossWonTeam()
+        }
 
         //teamA_Card
         teamA_Card_TossActivity.setOnClickListener { v ->
@@ -42,7 +55,6 @@ class TossActivity : AppCompatActivity() {
                 GlobalVariable.TossWonTeamName = teamA_Name
                 }
             }
-
         }
 
         //teamB_Card
@@ -55,7 +67,6 @@ class TossActivity : AppCompatActivity() {
                 GlobalVariable.TossWonTeamName = teamB_Name
                 }
             }
-
         }
 
         //batting Card
@@ -102,6 +113,9 @@ class TossActivity : AppCompatActivity() {
                 GlobalVariable.BATTING_TEAM_LOGO=teamA_Logo
                 Log.d("TOSSACTIVITY","teamA_selected")
                 Log.d("MatchOvers1",GlobalVariable.MATCH_OVERS.toString())
+
+                GlobalVariable.BATTING_TEAM_SQUAD = teamASquad
+                GlobalVariable.BOWLING_TEAM_SQUAD = teamBSquad
                 startInning(battingTeamId)
 
             }
@@ -116,26 +130,78 @@ class TossActivity : AppCompatActivity() {
                 GlobalVariable.BOWLING_TEAM_ID=teamA_Id
                 Log.d("TOSSACTIVITY","teamB_selected")
 
+                GlobalVariable.BATTING_TEAM_SQUAD = teamBSquad
+                GlobalVariable.BOWLING_TEAM_SQUAD = teamASquad
+
                 startInning(battingTeamId)
 
             }
         }
+    }
 
+    private fun setTeamASquad(teamA_id: String) {
+        Log.d("TossFlow","1")
+        val teamSquadRef = FirebaseDatabase.getInstance().getReference("/Team/$teamA_id/TeamSquad")
+        teamSquadRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.exists()) {
+                    Log.d("TossFlow","2")
+                    p0.children.forEach {
+                        Log.d("TossFlow","Bat")
+                        val playerId = it.key.toString()
+                        teamASquad.add(playerId)
+                        Log.d("TossFlow","${teamASquad.size}")
+                    }
 
+                }
+
+            }
+        })
 
     }
 
 
+    private fun setTeamBSquad(teamB_id: String) {
+        Log.d("TossFlow","3")
+        val teamSquadRef = FirebaseDatabase.getInstance().getReference("/Team/$teamB_id/TeamSquad")
+        teamSquadRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.exists()) {
+                    Log.d("TossFlow","4")
+                    p0.children.forEach {
+                        Log.d("TossFlow","Bowl")
+                        val playerId = it.key.toString()
+                        teamBSquad.add(playerId)
+                    }
+                }
+            }
+        })
+
+    }
+
 
     private fun startInning(battingTeamId:String) {
-        Log.d("TOSSACTIVITY","BT_id $battingTeamId")
+
         if (battingTeamId.isNotEmpty()
             && battingTeamName.isNotEmpty()
             && newMatchId.isNotEmpty()
             && teamA_Id.isNotEmpty()
             && teamB_Id.isNotEmpty()
+            && GlobalVariable.BATTING_TEAM_SQUAD.isNotEmpty()
+            && GlobalVariable.BOWLING_TEAM_SQUAD.isNotEmpty()
         ) {
-            Log.d("TOSSACTIVITY","StartInningActivity")
+        val newDatabaseSquad = FirebaseDatabase.getInstance().reference
+        val setSquad=HashMap<String,Any>()
+        setSquad["/MatchInfo/$newMatchId/${GlobalVariable.BATTING_TEAM_NAME}"] = GlobalVariable.BATTING_TEAM_SQUAD
+        setSquad["/MatchInfo/$newMatchId/${GlobalVariable.BOWLING_TEAM_NAME}"] = GlobalVariable.BOWLING_TEAM_SQUAD
+        newDatabaseSquad.updateChildren(setSquad).addOnCompleteListener { task->
+            if(task.isSuccessful){
+                toast("Team Squads are set")
+            }
+        }
+
             startActivity<StartInningActivity>(
                 "battingTeamId" to battingTeamId,
                 "battingTeamName" to battingTeamName,
@@ -159,6 +225,8 @@ class TossActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        GlobalVariable.BATTING_TEAM_SQUAD.clear()
+        GlobalVariable.BOWLING_TEAM_SQUAD.clear()
         showTeams()
     }
 
@@ -169,6 +237,9 @@ class TossActivity : AppCompatActivity() {
         teamA_Name = intent.getStringExtra("team_A_Name")
         teamB_Name = intent.getStringExtra("team_B_Name")
         newMatchId = intent.getStringExtra("match_Id")
+
+        setTeamASquad(teamA_Id)
+        setTeamBSquad(teamB_Id)
 
         teamA_Logo = intent.getStringExtra("team_A_Logo")
         teamB_Logo = intent.getStringExtra("team_B_Logo")

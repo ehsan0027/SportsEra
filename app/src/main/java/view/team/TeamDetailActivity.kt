@@ -41,6 +41,7 @@ class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
     lateinit var team_A_Name: String
     lateinit var team_A_Logo: String
     lateinit var team_A_City: String
+    var team_A_Squad: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,24 +56,19 @@ class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
         if (currentPlayer != captainId) {
             makeViewsInvisible(challenge_for_match)
         }
-
-
     }
 
 
     private fun getUserInfo(teamId: String) {
         val teamRef = FirebaseDatabase.getInstance().getReference("/Team/$teamId")
         teamRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
+            override fun onCancelled(p0: DatabaseError) {}
 
             override fun onDataChange(p0: DataSnapshot) {
 
-
-                val teamSquadCount =p0.child("TeamSquad").childrenCount
-                Log.d("Team Squad Count","$teamSquadCount")
-                if (teamSquadCount < 2)
+                team_A_Squad = p0.child("TeamSquad").childrenCount.toString()
+                Log.d("TeamSquadCount","$team_A_Squad")
+                if (team_A_Squad < "2")
                 {
                     makeViewsInvisible(challenge_for_match)
                 toast("Please Add Players in Your Team to Challenge Opponent")
@@ -130,7 +126,8 @@ class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
                     "team_A_Logo" to team_A_Logo,
                     "team_A_Name" to team_A_Name,
                     "captainId_A" to captainId_A,
-                    "teamCity_A" to team_A_City
+                    "teamCity_A" to team_A_City,
+                    "team_A_Squad" to team_A_Squad
                 )
                 finish()
             }

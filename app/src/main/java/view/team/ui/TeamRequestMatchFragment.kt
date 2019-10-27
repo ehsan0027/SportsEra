@@ -57,8 +57,7 @@ class TeamRequestMatchFragment(
     private var listener: OnFragmentInteractionListener? = null
     private var mAuth: FirebaseAuth? = null
     val matchInviteAdapter = GroupAdapter<ViewHolder>()
-    val team_A_Squad = ArrayList<String>()//Creating an empty arraylist
-    val team_B_Squad = ArrayList<String>()//Creating an empty arraylist
+
 
     private val currentPlayer = FirebaseAuth.getInstance().uid.toString()
     lateinit var changeDetailPopUpDialog: Dialog
@@ -112,41 +111,6 @@ class TeamRequestMatchFragment(
         fun onFragmentInteraction(uri: Uri)
     }
 
-
-    private fun setTeamASquad(teamA_id: String) {
-        val teamSquadRef = FirebaseDatabase.getInstance().getReference("/Team/$teamA_id/TeamSquad")
-        teamSquadRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {}
-            override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists()) {
-                    p0.children.forEach {
-                        val playerId = it.key.toString()
-                        team_A_Squad.add(playerId)
-                    }
-                }
-
-            }
-        })
-
-    }
-
-
-    private fun setTeamBSquad(teamB_id: String) {
-        val teamSquadRef = FirebaseDatabase.getInstance().getReference("/Team/$teamB_id/TeamSquad")
-        teamSquadRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {}
-            override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists()) {
-                    p0.children.forEach {
-                        val playerId = it.key.toString()
-                        team_B_Squad.add(playerId)
-                    }
-
-                }
-            }
-        })
-
-    }
 
 
     private fun changeMatchInviteDetailsDialog(
@@ -306,9 +270,7 @@ class TeamRequestMatchFragment(
         val matchId = v.matchInviteId
         val matchOvers = v.matchOvers
         val team_A_Id = v.team_A_Id
-        setTeamASquad(team_A_Id)
         val team_B_Id = v.team_B_Id
-        setTeamBSquad(team_B_Id)
         Log.d("TeamB", team_B_Id)
 
         GlobalVariable.MATCH_OVERS = matchOvers.toInt()
@@ -413,22 +375,6 @@ class TeamRequestMatchFragment(
 
                     }
                 )
-
-
-            val newDatabaseSquad_A = FirebaseDatabase.getInstance().reference
-            newDatabaseSquad_A.child("MatchInfo").child(matchId)
-                .child("team_A_Squad")
-                .setValue(team_A_Squad).addOnCompleteListener {
-                    toast("Team A Squad is set")
-                }
-
-
-            val newDatabaseSquad_B = FirebaseDatabase.getInstance().reference
-            newDatabaseSquad_B.child("MatchInfo").child(matchId)
-                .child("team_B_Squad")
-                .setValue(team_B_Squad).addOnCompleteListener {
-                    toast("Team B Squad is set")
-                }
 
             toast("Upcoming Match Id is sent to Team")
             Log.d(

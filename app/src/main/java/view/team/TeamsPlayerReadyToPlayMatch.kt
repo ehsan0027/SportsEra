@@ -17,11 +17,8 @@ import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_teams_player_ready_to_play_match.*
 import kotlinx.android.synthetic.main.player_in_selected_team_to_start_inning.view.*
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.okButton
 import org.jetbrains.anko.toast
 import view.GlobalVariable
-import view.GlobalVariable.Companion.found
 
 class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
 
@@ -50,79 +47,10 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
             Log.d("GroupAdapter", teamId)
             Log.d("GroupAdapter", GlobalVariable.BOWLING_TEAM_ID)
             toast("Clicked")
-            if (GlobalVariable.BOWLING_TEAM_ID == teamId) {
 
-                setPlayer(playerId, name, player_img)
-            } else {
-                isPlayerAlreadySelected(playerId, name, player_img)
-            }
+            setPlayer(playerId, name, player_img)
+
         }
-    }
-
-
-    private fun isPlayerAlreadySelected(playerId: String, name: String, player_img: String) {
-        val matchRef =
-            FirebaseDatabase.getInstance()
-                .getReference("/MatchScore/$newMatchId/${GlobalVariable.Inning}/$teamId")
-        matchRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {}
-            override fun onDataChange(p0: DataSnapshot) {
-
-                if (p0.exists()) {
-
-                    val newDBRef = FirebaseDatabase.getInstance()
-                        .getReference("/MatchScore/$newMatchId/${GlobalVariable.Inning}/$teamId/OutSquad")
-                    newDBRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onCancelled(p0: DatabaseError) {
-                        }
-
-                        override fun onDataChange(p0: DataSnapshot) {
-                            if (p0.exists()) {
-                                p0.children.forEach {
-                                    val outPId = it.key.toString()
-                                    if (outPId == playerId) {
-                                        alert {
-                                            title = "Player Reselection"
-                                            message = "$name Recently Out"
-                                            okButton { dialog -> dialog.dismiss() }
-                                        }.show()
-                                    }
-                                }
-                            }
-                        }
-
-                    })
-
-
-                    for (p in p0.children) {
-                        Log.d("PlayersMatch", p.key)
-                        Log.d("NewBowler", teamId)
-                        if (playerId == p.key) {
-                            found = true
-                            Log.d("FoundPlayer", "$found")
-                            break
-                        }
-                    }
-                    Log.d("Found", "$found")
-                    if (found) {
-                        found = false
-                        Log.d("Reselection", "found")
-                        alert {
-                            title = "Player Reselection"
-                            message = "$name Already Selected"
-                            okButton { dialog -> dialog.dismiss() }
-                        }.show()
-                    } else {
-                        Log.d("Reselection", "not found")
-                        setPlayer(playerId, name, player_img)
-                    }
-
-                } else {
-                    Log.d("ONDATACHANGE", "no data found")
-                    setPlayer(playerId, name, player_img)
-                }
-            }
-        })
     }
 
 
@@ -155,9 +83,7 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
         val playerRef = FirebaseDatabase.getInstance()
         val teamsPlayerRef = FirebaseDatabase.getInstance().getReference("/Team/$teamId/TeamSquad")
         teamsPlayerRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                Log.d("FetchTeam_ID", "onCancelled")
-            }
+            override fun onCancelled(p0: DatabaseError) {}
 
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()) {
@@ -176,14 +102,14 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
                                     //get the actual player
                                     if (p0.exists()) {
 
-                                        val playerId = p0.child("playerId").value.toString()
+                                        val player_Id = p0.child("playerId").value.toString()
                                         val playerName = p0.child("name").value.toString()
                                         val profile_img = p0.child("profile_img").value.toString()
-                                        if (playerId != GlobalVariable.BOWLER_ID) {
+                                        if ((player_Id != GlobalVariable.BOWLER_ID) && (!GlobalVariable.SELECTED_PLAYERS_ID_LIST.contains(player_Id))) {
                                             groupAdapter.add(
                                                 SelectedTeamPlayer(
                                                     playerName,
-                                                    playerId,
+                                                    player_Id,
                                                     profile_img
                                                 )
                                             )

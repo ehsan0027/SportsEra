@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
 
+
 class MatchDetails : AppCompatActivity(){
 
 
@@ -112,6 +113,19 @@ class MatchDetails : AppCompatActivity(){
         if(teamData!==null)
         {
             val teamId=teamData.getString("team_A_Id")
+            val team_A_Squad=teamData.getString("team_A_Squad")
+
+            Log.d("Squad",team_A_Squad)
+            squad_count_Match_Details.setText(team_A_Squad)
+
+            val c = Calendar.getInstance().time
+            val df = SimpleDateFormat("dd-MMM-yyyy",Locale.US)
+            val formattedDate = df.format(c)
+            matchDate_Match_Details.setText(formattedDate)
+
+            val currentTime = SimpleDateFormat("HH:mm a", Locale.getDefault()).format(Date())
+            matchTime_Match_Details.setText(currentTime)
+
             val teamLogo=teamData.getString("team_A_Logo")
             Log.d("Select Team Activity",teamId)
         }else{
@@ -131,8 +145,7 @@ class MatchDetails : AppCompatActivity(){
             cal.set(Calendar.YEAR, year)
             cal.set(Calendar.MONTH, monthOfYear)
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            val myFormat = "dd.MM.yyyy" // mention the format you need
-            val sdf = SimpleDateFormat(myFormat, Locale.US)
+            val sdf = SimpleDateFormat("dd-MMM-yyyy",Locale.US)
             matchDate_Match_Details.setText(sdf.format(cal.time))
         }
 
@@ -148,13 +161,19 @@ class MatchDetails : AppCompatActivity(){
 
     private fun setMatchTime()
     {
-       val matchHour=0
-        val matchMinute=0
-        val timePicker = TimePickerDialog(this,
-            TimePickerDialog.OnTimeSetListener { _, hourOfDay, minutes ->
-                matchTime_Match_Details.setText("$hourOfDay : $minutes")
-            },matchHour,matchMinute,false)
-        timePicker.show()
+
+        val cal = Calendar.getInstance()
+
+        val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
+            cal.set(Calendar.HOUR_OF_DAY, hour)
+            cal.set(Calendar.MINUTE, minute)
+
+            matchTime_Match_Details.setText(SimpleDateFormat("HH:mm a").format(cal.time))
+        }
+
+        matchTime_Match_Details.setOnClickListener {
+            TimePickerDialog(this, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
+        }
 
     }
 
@@ -174,7 +193,7 @@ class MatchDetails : AppCompatActivity(){
         })
     }
 
-private fun sendRequestForMatch() {
+    private fun sendRequestForMatch() {
 
     val team_A_id = intent.getStringExtra("team_A_Id")
     val team_A_Logo=intent.getStringExtra("team_A_Logo")

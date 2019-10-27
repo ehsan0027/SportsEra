@@ -27,7 +27,6 @@ import kotlinx.android.synthetic.main.dashboard_activity.*
 import kotlinx.android.synthetic.main.fragment_team_upcoming_match_card.view.*
 import kotlinx.android.synthetic.main.match_card_on_dashboard.view.*
 import kotlinx.android.synthetic.main.my_team_list_ondashboard.view.*
-import kotlinx.coroutines.runBlocking
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.startActivity
 import view.ProfilePackage.Profile
@@ -58,7 +57,6 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dashboard_activity)
-
 
 
         profile_cardView.setOnClickListener {
@@ -129,25 +127,6 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
     override fun onResume() {
         super.onResume()
 
-        runBlocking {
-            runBlocking {
-                val newDatabaseRef =
-                    FirebaseDatabase.getInstance()
-                        .getReference("PlayersMatchId/${FirebaseAuth.getInstance().uid}/Live")
-                newDatabaseRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onCancelled(p0: DatabaseError) {}
-                    override fun onDataChange(liveMatch: DataSnapshot) {
-                        if (liveMatch.exists()) {
-                            liveMatch.children.forEach {
-                                uMatchArray.add(it.key!!)
-                            }
-
-                        }
-                    }
-
-                })
-            }
-        }
         teamAdapter.clear()
         upcomingMatchAdapter.clear()
         liveMatchAdapter.clear()
@@ -157,7 +136,7 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
         //retrieve team data from the database
         fetchTeamFromDatabase(currentPlayer)
         //Live Match Call
-        fetchLiveMatchDetails()
+        fetchLiveMatchDetails(currentPlayer)
     }
 
     private fun getUserInfo() {
@@ -603,163 +582,173 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
 
     //Live Match Card Starts
 
-    private fun fetchLiveMatchDetails(){
-        val liveMatchRef =
-            FirebaseDatabase.getInstance().getReference("MatchInfo")
-        if (uMatchArray.isNotEmpty()) {
-            for (it in 0 until uMatchArray.size) {
-                val matchId = uMatchArray[it]
+    private fun fetchLiveMatchDetails(playerId: String) {
+        val newDatabaseRef =
+            FirebaseDatabase.getInstance()
+                .getReference("PlayersMatchId/$playerId/Live")
+        newDatabaseRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+            override fun onDataChange(liveMatch: DataSnapshot) {
+                if (liveMatch.exists()) {
+                    Log.d("Flow","1")
+                    val liveMatchRef =
+                        FirebaseDatabase.getInstance().getReference("MatchInfo")
+                    liveMatch.children.forEach {
+                        val matchId = it.key.toString()
 
-                Log.d("Flow", matchId)
-                liveMatchRef.child(matchId)
-                    .addListenerForSingleValueEvent(object :
-                        ValueEventListener {
-                        override fun onCancelled(p0: DatabaseError) {}
+                        liveMatchRef.child(matchId)
+                            .addListenerForSingleValueEvent(object :
+                                ValueEventListener {
+                                override fun onCancelled(p0: DatabaseError) {}
 
-                        override fun onDataChange(matchInfo: DataSnapshot) {
+                                override fun onDataChange(matchInfo: DataSnapshot) {
 
-                            if (matchInfo.exists()) {
-                                Log.d("Flow", "2")
+                                    if (matchInfo.exists()) {
+                                        Log.d("Flow", "2")
 
-                                val battingTeamId: String
-                                val bowlingTeamId: String
-                                val bowlTeamName: String
-                                val batTeamLogo: String
-                                val bowlTeamLogo: String
+                                        val battingTeamId: String
+                                        val bowlingTeamId: String
+                                        val bowlTeamName: String
+                                        val batTeamLogo: String
+                                        val bowlTeamLogo: String
 
-                                val match_Id =
-                                    matchInfo.child("matchId").value.toString()
-                                val batTeamName =
-                                    matchInfo.child("battingTeamName").value.toString()
-                                val team_A_Id =
-                                    matchInfo.child("team_A_Id").value.toString()
-                                val team_B_Id =
-                                    matchInfo.child("team_B_Id").value.toString()
-                                val match_type =
-                                    matchInfo.child("matchType").value.toString()
-                                val match_overs =
-                                    matchInfo.child("matchOvers").value.toString()
-                                val team_A_Name =
-                                    matchInfo.child("team_A_Name").value.toString()
-                                val team_B_Name =
-                                    matchInfo.child("team_B_Name").value.toString()
-                                val team_A_Logo =
-                                    matchInfo.child("team_A_Logo").value.toString()
-                                val team_B_Logo =
-                                    matchInfo.child("team_B_Logo").value.toString()
-                                val sender = matchInfo.child("sender").value.toString()
-                                if (batTeamName == team_A_Name) {
-                                    battingTeamId = team_A_Id
-                                    bowlingTeamId = team_B_Id
-                                    bowlTeamName = team_B_Name
-                                    batTeamLogo = team_A_Logo
-                                    bowlTeamLogo = team_B_Logo
-                                } else {
-                                    battingTeamId = team_B_Id
-                                    bowlingTeamId = team_A_Id
-                                    bowlTeamName = team_A_Name
-                                    batTeamLogo = team_B_Logo
-                                    bowlTeamLogo = team_A_Logo
-                                }
-                                secondInningScore(matchId)
-
-                                //FirstInning
-                                val db_RefFirstInning = FirebaseDatabase.getInstance()
-                                    .getReference("/MatchScore/$matchId/FirstInning")
-
-                                db_RefFirstInning.addListenerForSingleValueEvent(object :
-                                    ValueEventListener {
-                                    override fun onCancelled(p0: DatabaseError) {}
-
-                                    override fun onDataChange(firstInningData: DataSnapshot) {
-                                        if (firstInningData.exists()) {
-                                            Log.d("Flow", "3")
-                                            GlobalVariable.LiveMatchCurrentInning =
-                                                firstInningData.child("CurrentInning")
-                                                    .value.toString()
-                                            GlobalVariable.LiveScoreFirstInning =
-                                                firstInningData.child("inningScore")
-                                                    .value.toString()
-                                                    .toInt()
-                                            GlobalVariable.LiveWicketsFirstInning =
-                                                firstInningData.child("wickets")
-                                                    .value.toString().toInt()
-                                            GlobalVariable.LiveOversFirstInning =
-                                                firstInningData.child("overs")
-                                                    .value.toString().toInt()
-                                            GlobalVariable.LiveOverBallsFirstInning =
-                                                firstInningData.child("over_balls")
-                                                    .value.toString()
-                                                    .toInt()
-                                            GlobalVariable.LiveMatchCurrentDetails =
-                                                firstInningData.child("MatchCurrentDetail")
-                                                    .value.toString()
-                                            GlobalVariable.LiveCRR =
-                                                firstInningData.child("crr")
-                                                    .value.toString().toFloat()
-                                            GlobalVariable.LiveRRR = 0f
-
-                                            if (GlobalVariable.LiveMatchCurrentInning == "FirstInning") {
-                                                GlobalVariable.LiveScoreSecondInning = 0
-                                                GlobalVariable.LiveWicketsSecondInning = 0
-                                                GlobalVariable.LiveOversSecondInning = 0
-                                                GlobalVariable.LiveOverBallsSecondInning = 0
-                                            }
-                                                Log.d(
-                                                    "MSG1",
-                                                    match_Id
-                                                )
-                                                Log.d(
-                                                    "MSG1",
-                                                    "${GlobalVariable.LiveScoreFirstInning}"
-                                                )
-                                                Log.d(
-                                                    "MSG1",
-                                                    "${GlobalVariable.LiveScoreSecondInning}"
-                                                )
-
-                                                liveMatchAdapter.add(
-                                                    LiveMatchViewHolder(
-                                                        match_Id,
-                                                        battingTeamId,
-                                                        bowlingTeamId,
-                                                        match_type,
-                                                        match_overs,
-                                                        batTeamName,
-                                                        bowlTeamName,
-                                                        batTeamLogo,
-                                                        bowlTeamLogo,
-                                                        sender,
-                                                        GlobalVariable.LiveScoreFirstInning,
-                                                        GlobalVariable.LiveWicketsFirstInning,
-                                                        GlobalVariable.LiveOversFirstInning,
-                                                        GlobalVariable.LiveOverBallsFirstInning,
-                                                        GlobalVariable.LiveScoreSecondInning,
-                                                        GlobalVariable.LiveWicketsSecondInning,
-                                                        GlobalVariable.LiveOversSecondInning,
-                                                        GlobalVariable.LiveOverBallsSecondInning,
-                                                        GlobalVariable.LiveMatchCurrentDetails,
-                                                        GlobalVariable.LiveCRR,
-                                                        GlobalVariable.LiveRRR,
-
-                                                        this@Dashboard
-                                                    )
-                                                )
+                                        val match_Id =
+                                            matchInfo.child("matchId").value.toString()
+                                        val batTeamName =
+                                            matchInfo.child("battingTeamName").value.toString()
+                                        val team_A_Id =
+                                            matchInfo.child("team_A_Id").value.toString()
+                                        val team_B_Id =
+                                            matchInfo.child("team_B_Id").value.toString()
+                                        val match_type =
+                                            matchInfo.child("matchType").value.toString()
+                                        val match_overs =
+                                            matchInfo.child("matchOvers").value.toString()
+                                        val team_A_Name =
+                                            matchInfo.child("team_A_Name").value.toString()
+                                        val team_B_Name =
+                                            matchInfo.child("team_B_Name").value.toString()
+                                        val team_A_Logo =
+                                            matchInfo.child("team_A_Logo").value.toString()
+                                        val team_B_Logo =
+                                            matchInfo.child("team_B_Logo").value.toString()
+                                        val sender = matchInfo.child("sender").value.toString()
+                                        if (batTeamName == team_A_Name) {
+                                            battingTeamId = team_A_Id
+                                            bowlingTeamId = team_B_Id
+                                            bowlTeamName = team_B_Name
+                                            batTeamLogo = team_A_Logo
+                                            bowlTeamLogo = team_B_Logo
+                                        } else {
+                                            battingTeamId = team_B_Id
+                                            bowlingTeamId = team_A_Id
+                                            bowlTeamName = team_A_Name
+                                            batTeamLogo = team_B_Logo
+                                            bowlTeamLogo = team_A_Logo
                                         }
-                                    }
-                                })
+                                        secondInningScore(matchId)
 
-                                empty_match_card_on_dashboard.visible = false
-                            }
-                        }
-                    })
-            }
-        }
+                                        //FirstInning
+                                        val db_RefFirstInning = FirebaseDatabase.getInstance()
+                                            .getReference("/MatchScore/$matchId/FirstInning")
+
+                                        db_RefFirstInning.addListenerForSingleValueEvent(object :
+                                            ValueEventListener {
+                                            override fun onCancelled(p0: DatabaseError) {}
+
+                                            override fun onDataChange(firstInningData: DataSnapshot) {
+                                                if (firstInningData.exists()) {
+                                                    Log.d("Flow", "3")
+                                                    GlobalVariable.LiveMatchCurrentInning =
+                                                        firstInningData.child("CurrentInning")
+                                                            .value.toString()
+                                                    GlobalVariable.LiveScoreFirstInning =
+                                                        firstInningData.child("inningScore")
+                                                            .value.toString()
+                                                            .toInt()
+                                                    GlobalVariable.LiveWicketsFirstInning =
+                                                        firstInningData.child("wickets")
+                                                            .value.toString().toInt()
+                                                    GlobalVariable.LiveOversFirstInning =
+                                                        firstInningData.child("overs")
+                                                            .value.toString().toInt()
+                                                    GlobalVariable.LiveOverBallsFirstInning =
+                                                        firstInningData.child("over_balls")
+                                                            .value.toString()
+                                                            .toInt()
+
+                                                    if (GlobalVariable.LiveMatchCurrentInning == "FirstInning") {
+
+                                                        GlobalVariable.LiveMatchCurrentDetails =
+                                                            firstInningData.child("MatchCurrentDetail")
+                                                                .value.toString()
+                                                        GlobalVariable.LiveCRR =
+                                                            firstInningData.child("crr")
+                                                                .value.toString().toFloat()
+                                                        GlobalVariable.LiveRRR = 0f
+
+                                                        GlobalVariable.LiveScoreSecondInning = 0
+                                                        GlobalVariable.LiveWicketsSecondInning = 0
+                                                        GlobalVariable.LiveOversSecondInning = 0
+                                                        GlobalVariable.LiveOverBallsSecondInning = 0
+                                                    }
+                                                    Log.d(
+                                                        "MSG1",
+                                                        match_Id
+                                                    )
+                                                    Log.d(
+                                                        "MSG1",
+                                                        "${GlobalVariable.LiveScoreFirstInning}"
+                                                    )
+                                                    Log.d(
+                                                        "MSG1",
+                                                        "${GlobalVariable.LiveScoreSecondInning}"
+                                                    )
+
+                                                    liveMatchAdapter.add(
+                                                        LiveMatchViewHolder(
+                                                            match_Id,
+                                                            battingTeamId,
+                                                            bowlingTeamId,
+                                                            match_type,
+                                                            match_overs,
+                                                            batTeamName,
+                                                            bowlTeamName,
+                                                            batTeamLogo,
+                                                            bowlTeamLogo,
+                                                            sender,
+                                                            GlobalVariable.LiveScoreFirstInning,
+                                                            GlobalVariable.LiveWicketsFirstInning,
+                                                            GlobalVariable.LiveOversFirstInning,
+                                                            GlobalVariable.LiveOverBallsFirstInning,
+                                                            GlobalVariable.LiveScoreSecondInning,
+                                                            GlobalVariable.LiveWicketsSecondInning,
+                                                            GlobalVariable.LiveOversSecondInning,
+                                                            GlobalVariable.LiveOverBallsSecondInning,
+                                                            GlobalVariable.LiveMatchCurrentDetails,
+                                                            GlobalVariable.LiveCRR,
+                                                            GlobalVariable.LiveRRR,
+
+                                                            this@Dashboard
+                                                        )
+                                                    )
+                                                }
+                                            }
+                                        })
+
+                                        empty_match_card_on_dashboard.visible = false
+                                    }
+                                }
+                            })
+                    }
+                }
+
 
 
         else{
             fetchUpcomingMatchDetails(currentPlayer)
         }
+    }})
 
         /*   fun resumeScoringActivity(position: Int) {
             val item = liveMatchAdapter.getItem(position) as LiveMatchViewHolder
