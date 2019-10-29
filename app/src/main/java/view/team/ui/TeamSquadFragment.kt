@@ -10,11 +10,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.example.sportsplayer.R
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.pawegio.kandroid.toast
+import com.pawegio.kandroid.visible
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
@@ -35,10 +37,12 @@ private const val ARG_PARAM2 = "param2"
  * to handle interaction events.
  *
  */
-class TeamSquadFragment(val teamId:String) : Fragment() {
+class TeamSquadFragment(val teamId:String,val captainId:String) : Fragment() {
     private var listener: OnFragmentInteractionListener? = null
     val benchAdapter= GroupAdapter<ViewHolder>() //groupi Adapter
     val squadAdapter= GroupAdapter<ViewHolder>() //groupi Adapter
+
+    lateinit var currentPlayer:String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,6 +59,7 @@ class TeamSquadFragment(val teamId:String) : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        currentPlayer = ""
         if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
@@ -70,6 +75,8 @@ class TeamSquadFragment(val teamId:String) : Fragment() {
 
     override fun onResume() {
         super.onResume()
+
+        currentPlayer = FirebaseAuth.getInstance().uid.toString()
         squadAdapter.clear()
         benchAdapter.clear()
         fetchTeamBench(teamId)
@@ -183,8 +190,13 @@ class TeamSquadFragment(val teamId:String) : Fragment() {
             Picasso.get().load(playerImage).into(image)
             viewHolder.itemView.playerName_squad_card_remove.text=playerName
             viewHolder.itemView.playerRole_squad_card_remove.text=playerRole
+            if (ctx.currentPlayer == ctx.captainId){
             viewHolder.itemView.add_player_to_squad.setOnClickListener {
                 addToSquad(position)
+            }
+            }
+            else{
+                viewHolder.itemView.add_player_to_squad.visible = false
             }
 
 
@@ -240,15 +252,6 @@ class TeamSquadFragment(val teamId:String) : Fragment() {
 
     }
 
-fun getItemCount()
-{
-    squad_count_squad.text= squadAdapter.itemCount.toString()
-    bench_count_squad.text= benchAdapter.itemCount.toString()
-
-Log.d("Total Count","${squadAdapter.itemCount}")
-Log.d("Total Count","${benchAdapter.itemCount}")
-}
-
     class TeamsPlayerSquad(var playerImage:String,
                            var playerName:String,
                            var playerRole:String,
@@ -287,8 +290,14 @@ Log.d("Total Count","${benchAdapter.itemCount}")
             Picasso.get().load(playerImage).into(image)
             viewHolder.itemView.playerName_squad_card_add.text=playerName
             viewHolder.itemView.playerRole_squad_card_add.text=playerRole
-            viewHolder.itemView.remove_player_from_squad.setOnClickListener {
-                removeFromSquad(position)
+
+            if (ctx.currentPlayer == ctx.captainId) {
+                viewHolder.itemView.remove_player_from_squad.setOnClickListener {
+                    removeFromSquad(position)
+                }
+            }
+            else{
+                viewHolder.itemView.remove_player_from_squad.visible = false
             }
         }
 

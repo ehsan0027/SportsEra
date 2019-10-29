@@ -11,7 +11,7 @@ class SectionPagerAdapter(private val team_A_Id:String, private val team_A_Name:
         {
             0->{TeamMemberFragment(team_A_Id,captainId_A)}
             1->{TeamRequestMatchFragment(team_A_Id,team_A_Name,team_A_Logo,captainId_A)}
-            2->{TeamSquadFragment(team_A_Id)}
+            2->{TeamSquadFragment(team_A_Id,captainId_A)}
             3->{TeamStatsFragment()}
             4->{TeamMatchFragment(team_A_Id)}
             else->{return TeamMatchFragment(team_A_Id)}

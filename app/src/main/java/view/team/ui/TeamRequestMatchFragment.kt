@@ -31,7 +31,6 @@ import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_notifications_layout.*
 import kotlinx.android.synthetic.main.notifications_card_match_request.view.*
 import org.jetbrains.anko.find
-import view.GlobalVariable
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -227,7 +226,6 @@ class TeamRequestMatchFragment(
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         toast("Invite is updated")
-                        GlobalVariable.MATCH_OVERS = newOvers.toInt()
                         Log.d("Updated", "Invitation is Updated")
                         changeDetailPopUpDialog.cancel()
                     }
@@ -268,12 +266,10 @@ class TeamRequestMatchFragment(
 
         val v = matchInviteAdapter.getItem(position) as MyTeamsNotifications
         val matchId = v.matchInviteId
-        val matchOvers = v.matchOvers
         val team_A_Id = v.team_A_Id
         val team_B_Id = v.team_B_Id
         Log.d("TeamB", team_B_Id)
 
-        GlobalVariable.MATCH_OVERS = matchOvers.toInt()
         notifications_recycler_view?.removeAllViewsInLayout()
 
 
@@ -462,8 +458,6 @@ private fun fetchNotificationsFromDatabase() {
                                                         val match_overs =
                                                             p0.child("matchOvers")
                                                                 .value.toString()
-                                                        GlobalVariable.MATCH_OVERS =
-                                                            match_overs.toInt()
                                                         val match_time =
                                                             p0.child("matchTime")
                                                                 .value.toString()

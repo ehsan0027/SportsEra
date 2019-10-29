@@ -167,6 +167,8 @@ class SecondInningTabFragment : Fragment() {
                         var bye = p0.child("Byes").value.toString()
                         var legBye = p0.child("LegByes").value.toString()
                         val wickets = p0.child("wickets").value.toString()
+                        val fow = p0.child("FOW$wickets").value.toString()
+                        val fowInstance = p0.child("FOW_Instance$wickets").value.toString()
                         val overs = p0.child("overs").value.toString()
                         battingTeamId = p0.child("battingTeamId").value.toString()
                         bowlingTeamId = p0.child("bowlingTeamId").value.toString()
@@ -194,6 +196,8 @@ class SecondInningTabFragment : Fragment() {
                         wickets_second_inning.text = wickets
                         overs_bowled_second_inning.text = overs
                         over_balls_bowled_second_inning.text = over_balls.toString()
+                        fall_of_wicket_second_inning.text = fow
+                        fall_of_wicket_batsman_name_second_inning.text = fowInstance
 
 
                     }else{
@@ -215,7 +219,7 @@ class SecondInningTabFragment : Fragment() {
 
                     p0.children.forEach { i->
                         val childId=i.key.toString()
-                        if(childId != "StrikerId"&& childId != "OutSquad"){
+                        if(childId != "StrikerId"&& childId != "OutSquad" && childId!="YetToBat"){
 
                             val logo=i.child("batsmanLogo").value.toString()
                             val name=i.child("name").value.toString()

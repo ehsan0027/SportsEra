@@ -26,6 +26,8 @@ import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_match_scoring.*
 import model.Batsman
 import model.Bowler
+import model.player.BattingStats
+import model.player.BowlingStats
 import org.jetbrains.anko.find
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
@@ -40,6 +42,11 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
 
 
     private var databaseReference: FirebaseDatabase? = null
+    val battingStats = HashMap<String,BattingStats>()
+    val bowlerStats = HashMap<String,BowlingStats>()
+    val batsmanMatchData = HashMap<String,Batsman>()
+    val batsmanUpdateData = HashMap<String,BattingStats>()
+    val bowlerMatchData = HashMap<String,Bowler>()
     val bowlersList = ArrayList<String>()
     val ballAdapter = GroupAdapter<ViewHolder>()
     val newplayer_RC = 1
@@ -50,6 +57,7 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_match_scoring)
         databaseReference = FirebaseDatabase.getInstance()
+
 
         //Assign Click Listeners
         threeRuns.setOnClickListener(this)
@@ -122,7 +130,6 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
         super.onStart()
         supportActionBar?.title = GlobalVariable.BATTING_TEAM_NAME
         batsman_1_card.isChecked = true
-        Log.d("overs", GlobalVariable.MATCH_OVERS.toString())
         match_total_overs.text = GlobalVariable.MATCH_OVERS.toString()
         bowlersList.add(GlobalVariable.BOWLER_ID)
 
@@ -140,8 +147,6 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
             GlobalVariable.BATTING_TEAM_Squad_Count = GlobalVariable.BOWLING_TEAM_SQUAD.size
         }
         showScreenContent()
-        toast("Batting Team Squad Count: ${GlobalVariable.BATTING_TEAM_Squad_Count}")
-
     }
 
     override fun onDestroy() {
@@ -186,6 +191,10 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
 
             val db_Ref = FirebaseDatabase.getInstance().reference
             val newData = HashMap<String, Any>()
+            newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/FOW${GlobalVariable.TEAM_WICKET}"] =
+                "${GlobalVariable.CURRENT_TEAM_SCORE}/${GlobalVariable.TEAM_WICKET}"
+            newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/FOW_Instance${GlobalVariable.TEAM_WICKET}"] =
+                "($pName,${GlobalVariable.Current_Over}.${GlobalVariable.CURRENT_BALL} ov)"
             newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/wickets"] =
                 GlobalVariable.TEAM_WICKET
             newData["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}/${GlobalVariable.BOWLER_ID}/wickets"] =
@@ -231,15 +240,10 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
 
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()) {
-                    GlobalVariable.YetToBat.remove(p_id)
                     var outSquadRef = FirebaseDatabase.getInstance().reference
                     val setOutSquad = HashMap<String, Any?>()
                     setOutSquad["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/OutSquad/$p_id"] =
                         p0.value
-                    if (((GlobalVariable.MATCH_OVERS*6)) == (GlobalVariable.Current_Over*6)+GlobalVariable.CURRENT_BALL){
-                    setOutSquad["/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/YetToBat"] =
-                        GlobalVariable.YetToBat
-                    }
                     outSquadRef.updateChildren(setOutSquad).addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             outSquadRef = FirebaseDatabase.getInstance().reference
@@ -249,9 +253,9 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                             outSquadRef.updateChildren(removeOutPlayer)
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
-                                        GlobalVariable.YetToBat.clear()
                                         toast("Remaining Wickets: ${GlobalVariable.YetToBat.size}")
                                         if (GlobalVariable.TEAM_WICKET == (GlobalVariable.BATTING_TEAM_Squad_Count - 1)) {
+                                            GlobalVariable.YetToBat.clear()
                                             toast("Inning Completed")
                                             if (GlobalVariable.Inning == "FirstInning") {
                                                 showInningCompletePopUp()
@@ -259,18 +263,20 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                                                 showCompleteMatchPopUp()
                                             }
                                         } else {
+                                            if (GlobalVariable.MATCH_OVERS != GlobalVariable.Current_Over){
                                             //START ACTIVITY TO SELECT NEW BATSMAN
                                             startActivityForResult<TeamsPlayerReadyToPlayMatch>(
                                                 newplayer_RC,
                                                 "teamId" to GlobalVariable.BATTING_TEAM_ID,
                                                 "newMatchId" to GlobalVariable.MATCH_ID
-                                            )
+                                            )}
                                         }
                                     }
                                 }.addOnFailureListener { e: Exception -> toast(e.localizedMessage) }
 
                         }
                     }
+
                 }
 
             }
@@ -416,22 +422,7 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
     private fun addNewBatsman(playerId: String?,pName: String,playerImage:String) {
         GlobalVariable.BattingPosition = 1 + GlobalVariable.BattingPosition
         GlobalVariable.SELECTED_PLAYERS_ID_LIST.add(playerId!!)
-        if (GlobalVariable.Inning=="FirstInning"){
-            GlobalVariable.BATTING_TEAM_SQUAD.forEach {
-                if(!GlobalVariable.SELECTED_PLAYERS_ID_LIST.contains(it))
-                {
-                    GlobalVariable.YetToBat.add(it)
-                }
-            }
-        }
-        else{
-            GlobalVariable.BOWLING_TEAM_SQUAD.forEach {
-                if(!GlobalVariable.SELECTED_PLAYERS_ID_LIST.contains(it))
-                {
-                    GlobalVariable.YetToBat.add(it)
-                }
-            }
-        }
+       GlobalVariable.YetToBat.remove(playerId)
         val batRef = FirebaseDatabase.getInstance().reference
         val bat = HashMap<String, Any>()
         val newP = Batsman(pName,0, 0, 0, 0, 0, 0, 0, 0,0f, GlobalVariable.BattingPosition,playerImage)
@@ -1290,6 +1281,138 @@ GlobalVariable.StrikerId=GlobalVariable.Batsman_2_ID
         }
     }
 
+    private fun setIndividualData() {
+        val batsmanRef = FirebaseDatabase.getInstance().getReference("BattingStats")
+        GlobalVariable.BATTING_TEAM_SQUAD.forEach {
+            batsmanRef.child(it).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {}
+
+                override fun onDataChange(playerData: DataSnapshot) {
+                    if (playerData.exists()) {
+                        val pBattingStats = playerData.getValue(BattingStats::class.java)
+                        if (pBattingStats != null) {
+                            battingStats[it] = pBattingStats
+
+                            val p = battingStats[it]
+                            Log.d("BattingStats", it)
+                            Log.d("BattingStats", p?.ball_played.toString())
+                        }
+                    }
+                }
+            })
+        }
+
+        val bowlerRef = FirebaseDatabase.getInstance().getReference("BowlingStats")
+        GlobalVariable.BOWLING_TEAM_SQUAD.forEach {
+            bowlerRef.child(it).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {}
+
+                override fun onDataChange(playerData: DataSnapshot) {
+                    if (playerData.exists()) {
+                        val pBowlingStats = playerData.getValue(BowlingStats::class.java)
+                        if (pBowlingStats != null) {
+                            bowlerStats[it] = pBowlingStats
+
+                            val p = bowlerStats[it]
+                            Log.d("BowlingStats", it)
+                            Log.d("BowlingStats", p?.wicket.toString())
+                        }
+                    }
+                }
+            })
+        }
+
+        val batsmanMatchRefNotOut = FirebaseDatabase.getInstance().getReference("/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}")
+        GlobalVariable.BATTING_TEAM_SQUAD.forEach {
+            batsmanMatchRefNotOut.child(it).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {}
+
+                override fun onDataChange(playerData: DataSnapshot) {
+                    if (playerData.exists()) {
+                        val batsmanMatchStats = playerData.getValue(Batsman::class.java)
+                        if (batsmanMatchStats != null) {
+                            batsmanMatchData[it] = batsmanMatchStats
+
+                            val p = batsmanMatchData[it]
+                            Log.d("BatsmanStats", it)
+                            Log.d("BatsmanStats", p?.balls_played.toString())
+                        }
+                    }
+                }
+            })
+        }
+
+        val batsmanMatchRefOut = FirebaseDatabase.getInstance().getReference("/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BATTING_TEAM_ID}/OutSquad")
+        GlobalVariable.BATTING_TEAM_SQUAD.forEach {
+            batsmanMatchRefOut.child(it).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {}
+
+                override fun onDataChange(playerData: DataSnapshot) {
+                    if (playerData.exists()) {
+                        val batsmanMatchStats = playerData.getValue(Batsman::class.java)
+                        if (batsmanMatchStats != null) {
+                            batsmanMatchData[it] = batsmanMatchStats
+
+                            val p = batsmanMatchData[it]
+                            Log.d("BatsmanStats", it)
+                            Log.d("BatsmanStats", p?.balls_played.toString())
+                        }
+                    }
+                }
+            })
+        }
+
+        val bowlerMatchRef = FirebaseDatabase.getInstance().getReference("/MatchScore/${GlobalVariable.MATCH_ID}/${GlobalVariable.Inning}/${GlobalVariable.BOWLING_TEAM_ID}")
+        GlobalVariable.BOWLING_TEAM_SQUAD.forEach {
+            bowlerMatchRef.child(it).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {}
+
+                override fun onDataChange(playerData: DataSnapshot) {
+                    if (playerData.exists()) {
+                        val bowlerMatchStats = playerData.getValue(Bowler::class.java)
+                        if (bowlerMatchStats != null) {
+                            bowlerMatchData[it] = bowlerMatchStats
+
+                            val p = bowlerMatchData[it]
+                            Log.d("BowlerStats", it)
+                            Log.d("BowlerStats", p?.bowler_overs.toString())
+                        }
+                    }
+                }
+            })
+        }
+
+
+    }
+
+    private fun updateIndidualBattingsStats()
+    {
+        GlobalVariable.BATTING_TEAM_SQUAD.forEach {
+            val pBatStats=battingStats[it]
+            val pBatStatsMatch=batsmanMatchData[it]
+            if(pBatStats != null && pBatStatsMatch !=null) {
+                val pUpdateData = BattingStats()
+                pUpdateData.apply {
+                    runs = pBatStats.runs + pBatStatsMatch.runs
+                    matches = pBatStats.matches + 1
+                }
+                batsmanUpdateData[it]=pUpdateData
+
+            }
+        }
+        val updateRef=FirebaseDatabase.getInstance().getReference("BattingStats")
+        GlobalVariable.BATTING_TEAM_SQUAD.forEach{
+            val updatedBatsman=batsmanUpdateData[it]
+            updateRef.child(it).setValue(updatedBatsman).addOnCompleteListener {
+              task ->if (task.isSuccessful)
+            {
+                toast("Individual data updated")
+            }
+            }
+
+        }
+    }
+
     private fun showCompleteMatchPopUp() {
         val completeMatchPopUp = Dialog(this)
         completeMatchPopUp.setCancelable(false)
@@ -1359,6 +1482,7 @@ GlobalVariable.StrikerId=GlobalVariable.Batsman_2_ID
         }
 
         saveGameButton.setOnClickListener {
+
             val ndref = FirebaseDatabase.getInstance()
                 .getReference("/MatchScore/${GlobalVariable.MATCH_ID}")
             ndref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -1633,6 +1757,7 @@ GlobalVariable.StrikerId=GlobalVariable.Batsman_2_ID
     }
 
     private fun showOverSummaryPopUp() {
+//        setIndividualData()
         val overSummaryPopUpDialog = Dialog(this)
         overSummaryPopUpDialog.setCancelable(false)
         overSummaryPopUpDialog.setCanceledOnTouchOutside(false)

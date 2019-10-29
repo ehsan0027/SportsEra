@@ -111,7 +111,7 @@ if (currentInning=="FirstInning"){
                 for (batsman in p0.children) {
                     val id=batsman.key.toString()
 
-                    if(id != "OutSquad" && id != "StrikerId")
+                    if(id != "OutSquad" && id != "StrikerId" && id != "YetToBat")
                     {
                         if (id==strikerId) {
                             val name = batsman.child("name").value.toString()
@@ -228,7 +228,7 @@ if (currentInning=="FirstInning"){
                             for (batsman in p0.children) {
                                 val id=batsman.key.toString()
 
-                                if(id != "OutSquad" && id != "StrikerId")
+                                if(id != "OutSquad" && id != "StrikerId" && id != "YetToBat")
                                 {
                                     if (id==strikerId) {
                                         val name = batsman.child("name").value.toString()

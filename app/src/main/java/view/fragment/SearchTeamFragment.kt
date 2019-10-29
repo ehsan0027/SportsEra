@@ -146,13 +146,18 @@ class SearchTeamFragment : Fragment() {
                         val name=model.teamName
                         val city=model.city
                         val teamId=model.teamId
+                        val captainId=model.captainId
+                        val team_A_Logo=model.teamLogo
 
 
-                        val intent= Intent(context,TeamDetailActivity::class.java)
-                        intent.putExtra("teamName",name)
-                        intent.putExtra("teamCity",city)
-                        intent.putExtra("teamId",teamId)
+                        val intent= Intent(activity,TeamDetailActivity::class.java)
+                        intent.putExtra("team_A_Name",name)
+                        intent.putExtra("team_A_City",city)
+                        intent.putExtra("team_A_Id",teamId)
+                        intent.putExtra("captainId_A",captainId)
+                        intent.putExtra("team_A_Logo",team_A_Logo)
                         startActivity(intent)
+
 
                         /**
                        activity?.supportFragmentManager

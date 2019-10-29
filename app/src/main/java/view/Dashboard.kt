@@ -38,7 +38,6 @@ import view.team.TeamDetailActivity
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 @Suppress("DEPRECATION")
 class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionListener {
@@ -51,7 +50,6 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
     private lateinit var searchTeamFragment: SearchTeamFragment
     val teamAdapter = GroupAdapter<ViewHolder>()
     val upcomingMatchAdapter = GroupAdapter<ViewHolder>()
-    val uMatchArray = ArrayList<String>()
 
     val liveMatchAdapter = GroupAdapter<ViewHolder>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -438,6 +436,7 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
                                         val team_B_Id = p0.child("team_B_Id").value.toString()
                                         val match_Id = p0.child("matchId").value.toString()
                                         val match_overs = p0.child("matchOvers").value.toString()
+                                        GlobalVariable.MATCH_OVERS = match_overs.toInt()
                                         val match_date = p0.child("matchDate").value.toString()
                                         val match_time = p0.child("matchTime").value.toString()
                                         val match_venue = p0.child("matchVenue").value.toString()
@@ -866,9 +865,10 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
 
 
 
-            if (ctx.currentPlayer != sender) {
-                makeViewsInvisible(viewHolder.itemView.resume_scoring)
-            }
+//            if (ctx.currentPlayer != sender) {
+//                makeViewsInvisible(viewHolder.itemView.resume_scoring)
+//            }
+            makeViewsInvisible(viewHolder.itemView.resume_scoring)
             viewHolder.itemView.resume_scoring.setOnClickListener { v ->
                 run {
                     ctx.startTossActivity(position)

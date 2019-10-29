@@ -23,6 +23,7 @@ import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_team_upcoming_match_card.view.*
 import kotlinx.android.synthetic.main.fragment_team_upcoming_match_recycler_view.*
+import view.GlobalVariable
 import view.match.TossActivity
 
 // TODO: Rename parameter arguments, choose names that match
@@ -123,6 +124,7 @@ class TeamUpcomingMatchFragment(private val teamId: String) : Fragment() {
                                         val match_Id = p0.child("matchId").value.toString()
                                         val match_type = p0.child("matchType").value.toString()
                                         val match_overs = p0.child("matchOvers").value.toString()
+                                        GlobalVariable.MATCH_OVERS = match_overs.toInt()
                                         val match_date = p0.child("matchDate").value.toString()
                                         val match_time = p0.child("matchTime").value.toString()
                                         val match_venue = p0.child("matchVenue").value.toString()

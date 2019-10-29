@@ -43,6 +43,7 @@ class StartInningActivity : AppCompatActivity() {
         setContentView(R.layout.activity_start_inning)
         striker = ""
         nonStriker = ""
+        bowler = ""
         newMatchId=""
 
 
