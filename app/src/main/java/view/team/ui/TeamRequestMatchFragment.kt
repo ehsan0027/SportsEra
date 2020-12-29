@@ -77,7 +77,7 @@ class TeamRequestMatchFragment(
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        changeDetailPopUpDialog = Dialog(activity!!)  //Dialog Initialization
+        changeDetailPopUpDialog = Dialog(requireActivity())  //Dialog Initialization
     }
 
 
@@ -125,7 +125,9 @@ class TeamRequestMatchFragment(
 
         changeDetailPopUpDialog.setCancelable(true)
         val view = activity?.layoutInflater?.inflate(R.layout.change_match_invite_details, null)
-        changeDetailPopUpDialog.setContentView(view)
+        if (view != null) {
+            changeDetailPopUpDialog.setContentView(view)
+        }
 
         fun setDate(view: View) {
             val date = view as EditText
@@ -142,7 +144,7 @@ class TeamRequestMatchFragment(
                 }
 
             DatePickerDialog(
-                activity, dateSetListener,
+                requireActivity(), dateSetListener,
                 cal.get(Calendar.YEAR),
                 cal.get(Calendar.MONTH),
                 cal.get(Calendar.DAY_OF_MONTH)

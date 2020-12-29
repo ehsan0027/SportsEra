@@ -315,7 +315,7 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                             GlobalVariable.Batsman_2_ID = playerId
                             GlobalVariable.Batsman_2_NAME = name
                             GlobalVariable.Batsman_2_Img=player_img
-                            GlobalVariable.Batsman_1_SCORE = 0
+                            GlobalVariable.Batsman_2_SCORE = 0
                             GlobalVariable.Batsman_2_BALL = 0
                             GlobalVariable.Batsman_2_SINGLES = 0
                             GlobalVariable.Batsman_2_doubles = 0
@@ -1187,7 +1187,7 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                     GlobalVariable.Batsman_2_BALL = 1 + GlobalVariable.Batsman_2_BALL
                 }
 
-
+                switchStriker()
                 showBall("B")
                 val db_Ref = FirebaseDatabase.getInstance().reference
                 val newData = HashMap<String, Any>()
@@ -1225,7 +1225,7 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                     GlobalVariable.Batsman_2_BALL = 1 + GlobalVariable.Batsman_2_BALL
                 }
 
-
+                switchStriker()
                 showBall("LB")
 
                 val db_Ref = FirebaseDatabase.getInstance().reference
