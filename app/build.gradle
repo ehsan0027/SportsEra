@@ -123,6 +123,7 @@ dependencies {
 
     //Material Shape Of Views
     implementation 'com.github.florent37:shapeofview:1.3.2'
+
     //ImageCrop
     implementation 'com.github.yalantis:ucrop:2.2.2'
 
