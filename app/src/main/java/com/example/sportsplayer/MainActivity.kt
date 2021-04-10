@@ -53,7 +53,6 @@ class MainActivity :AppCompatActivity()
 
     // [END on_start_check_user]
 
-
     private fun isNetworkAvailable(): Boolean {
         val connectivityManager =
             getSystemService(android.content.Context.CONNECTIVITY_SERVICE) as ConnectivityManager
