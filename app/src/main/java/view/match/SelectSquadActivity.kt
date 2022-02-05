@@ -51,7 +51,7 @@ class SelectSquadActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val teamId = intent.getStringExtra("teamId")
-        Log.d("TeamID_SelectedSquad", teamId)
+        Log.d("TeamID_SelectedSquad", teamId!!)
         if (teamId != null)
             fetchTeamMember(teamId)
 
@@ -68,7 +68,7 @@ class SelectSquadActivity : AppCompatActivity() {
                 if (p0.exists()) {
                     p0.children.forEach {
                         val playerId = it.key
-                        Log.d("TeamMember_ID", playerId)
+                        Log.d("TeamMember_ID", playerId!!)
                         teamRef.getReference("/PlayerBasicProfile/$playerId").also { task ->
                             task.addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onCancelled(p0: DatabaseError) {}

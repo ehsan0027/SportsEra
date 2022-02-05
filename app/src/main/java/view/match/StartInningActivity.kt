@@ -129,16 +129,16 @@ class StartInningActivity : AppCompatActivity() {
 //            Log.d("TossFlow",it)
 //        }
         supportActionBar?.title = "Start Inning"
-        battingTeamIdStartInning = intent.getStringExtra("battingTeamId")
+        battingTeamIdStartInning = intent.getStringExtra("battingTeamId")!!
         val battingTeamName = intent.getStringExtra("battingTeamName")
-        newMatchId = intent.getStringExtra("newMatchId")
-        teamA_Id = intent.getStringExtra("teamA_Id")
-        teamB_Id = intent.getStringExtra("teamB_Id")
+        newMatchId = intent.getStringExtra("newMatchId")!!
+        teamA_Id = intent.getStringExtra("teamA_Id")!!
+        teamB_Id = intent.getStringExtra("teamB_Id")!!
         bowlingTeamIdStartInning = when (battingTeamIdStartInning) {
             teamA_Id -> teamB_Id
             else -> teamA_Id
         }
-        setTeamName(battingTeamName, bowlingTeamIdStartInning)
+        setTeamName(battingTeamName!!, bowlingTeamIdStartInning)
 
     }
 
@@ -418,11 +418,11 @@ class StartInningActivity : AppCompatActivity() {
                     Log.d("onActivity_SI", "striker selected")
                     val name = data.getStringExtra("name")
                     val player_img = data.getStringExtra("player_img")
-                    striker = data.getStringExtra("playerId")
+                    striker = data.getStringExtra("playerId")!!
                     GlobalVariable.SELECTED_PLAYERS_ID_LIST.add(striker)
-                    GlobalVariable.Batsman_1_NAME = name
+                    GlobalVariable.Batsman_1_NAME = name!!
                     GlobalVariable.Batsman_1_ID = striker
-                    GlobalVariable.Batsman_1_Img=player_img
+                    GlobalVariable.Batsman_1_Img=player_img!!
                     Picasso.get().load(player_img).into(striker_imageButton_StartInning)
                     playerReSelection(name, STRIKER_RC)
                     striker_Name_StartInning.text = name
@@ -431,11 +431,11 @@ class StartInningActivity : AppCompatActivity() {
                 NON_STRIKER_RC -> {
                     val name = data.getStringExtra("name")
                     val player_img = data.getStringExtra("player_img")
-                    nonStriker = data.getStringExtra("playerId")
+                    nonStriker = data.getStringExtra("playerId")!!
                     GlobalVariable.SELECTED_PLAYERS_ID_LIST.add(nonStriker)
                     GlobalVariable.Batsman_2_ID = nonStriker
-                    GlobalVariable.Batsman_2_NAME = name
-                    GlobalVariable.Batsman_2_Img=player_img
+                    GlobalVariable.Batsman_2_NAME = name!!
+                    GlobalVariable.Batsman_2_Img=player_img!!
                     Picasso.get().load(player_img).into(non_Striker_imageButton_StartInning)
                     playerReSelection(name, NON_STRIKER_RC)
                     non_striker_Name_StartInning.text = name
@@ -444,11 +444,11 @@ class StartInningActivity : AppCompatActivity() {
                 BOWLER_RC -> {
                     val name = data.getStringExtra("name")
                     val player_img = data.getStringExtra("player_img")
-                    bowler = data.getStringExtra("playerId")
+                    bowler = data.getStringExtra("playerId")!!
                     GlobalVariable.BOWLER_ID = bowler
                     Log.d("BOWLER_ID_1", "$bowler")
-                    GlobalVariable.BOWLER_NAME = name
-                    GlobalVariable.BOWLER_Img=player_img
+                    GlobalVariable.BOWLER_NAME = name!!
+                    GlobalVariable.BOWLER_Img=player_img!!
                     bowler_Name_StartInning.text = name
                     Picasso.get().load(player_img).into(bowler_imageButton_StartInning)
                     toast(name)

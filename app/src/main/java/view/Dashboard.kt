@@ -263,9 +263,9 @@ class Dashboard : AppCompatActivity(), SearchTeamFragment.OnFragmentInteractionL
 
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        when (item?.itemId) {
+        when (item.itemId) {
             R.id.profile -> startActivity<Profile>()
             R.id.editProfile -> {
                 startActivity<EditProfile>()

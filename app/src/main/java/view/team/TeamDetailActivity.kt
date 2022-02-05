@@ -95,11 +95,11 @@ class TeamDetailActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     private fun setViewsContent() {
-        team_A_Id = intent.getStringExtra("team_A_Id")
-        team_A_Logo = intent.getStringExtra("team_A_Logo")
-        team_A_Name = intent.getStringExtra("team_A_Name")
-        team_A_City = intent.getStringExtra("team_A_City")
-        captainId_A = intent.getStringExtra("captainId_A")
+        team_A_Id = intent.getStringExtra("team_A_Id").toString()
+        team_A_Logo = intent.getStringExtra("team_A_Logo").toString()
+        team_A_Name = intent.getStringExtra("team_A_Name").toString()
+        team_A_City = intent.getStringExtra("team_A_City").toString()
+        captainId_A = intent.getStringExtra("captainId_A").toString()
         Log.d("CaptainId", captainId_A)
 
         supportActionBar?.title = team_A_Name

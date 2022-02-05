@@ -88,8 +88,8 @@ class SearchPlayerToAddInTeam : AppCompatActivity() {
 
                             val playerId=model.playerId
                             val teamId=intent.getStringExtra("teamId")
-                            Log.d("Search_Player_teamId",teamId)
-                            Log.d("Search_Player_playerId",playerId)
+                            Log.d("Search_Player_teamId",teamId!!)
+                            Log.d("Search_Player_playerId",playerId!!)
 
                             if(teamId.isNotEmpty()) {
                                 val teamSquad="TeamSquad"

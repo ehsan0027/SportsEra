@@ -63,7 +63,7 @@ class PhoneHintActivity: FragmentActivity(), GoogleApiClient.ConnectionCallbacks
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RESOLVE_HINT) {
             if (resultCode == RESULT_OK) {
-                val credential: Credential = data!!.getParcelableExtra(Credential.EXTRA_KEY)
+                val credential: Credential = data!!.getParcelableExtra(Credential.EXTRA_KEY)!!
                 // credential.getId(); <-- E.164 format phone number on 10.2.+ devices
                 if(credential != null)
                 {

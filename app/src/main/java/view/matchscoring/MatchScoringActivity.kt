@@ -290,9 +290,9 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
         if (resultCode == Activity.RESULT_OK && data != null) {
             when (requestCode) {
                 newplayer_RC -> {
-                    val playerId = data.getStringExtra("playerId")
-                    val name = data.getStringExtra("name")
-                    val player_img = data.getStringExtra("player_img")
+                    val playerId = data.getStringExtra("playerId").toString()
+                    val name = data.getStringExtra("name").toString()
+                    val player_img = data.getStringExtra("player_img").toString()
                     if (playerId.isNotEmpty()) {
                         if (batsman_1_card.isChecked) {
                             GlobalVariable.Batsman_1_ID = playerId
@@ -315,7 +315,7 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                             GlobalVariable.Batsman_2_ID = playerId
                             GlobalVariable.Batsman_2_NAME = name
                             GlobalVariable.Batsman_2_Img=player_img
-                            GlobalVariable.Batsman_1_SCORE = 0
+                            GlobalVariable.Batsman_2_SCORE = 0
                             GlobalVariable.Batsman_2_BALL = 0
                             GlobalVariable.Batsman_2_SINGLES = 0
                             GlobalVariable.Batsman_2_doubles = 0
@@ -333,9 +333,9 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                 }
 
                 newBowler_RC -> {
-                    val playerId = data.getStringExtra("playerId")
-                    val name = data.getStringExtra("name")
-                    val player_img = data.getStringExtra("player_img")
+                    val playerId = data.getStringExtra("playerId").toString()
+                    val name = data.getStringExtra("name").toString()
+                    val player_img = data.getStringExtra("player_img").toString()
                     GlobalVariable.BOWLER_NAME = name
                     GlobalVariable.BOWLER_ID = playerId
                     GlobalVariable.BOWLER_Img=player_img
@@ -1187,7 +1187,7 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                     GlobalVariable.Batsman_2_BALL = 1 + GlobalVariable.Batsman_2_BALL
                 }
 
-
+                switchStriker()
                 showBall("B")
                 val db_Ref = FirebaseDatabase.getInstance().reference
                 val newData = HashMap<String, Any>()
@@ -1225,7 +1225,7 @@ class MatchScoringActivity : AppCompatActivity(), View.OnClickListener {
                     GlobalVariable.Batsman_2_BALL = 1 + GlobalVariable.Batsman_2_BALL
                 }
 
-
+                switchStriker()
                 showBall("LB")
 
                 val db_Ref = FirebaseDatabase.getInstance().reference

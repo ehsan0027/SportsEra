@@ -64,14 +64,14 @@ class GlobalVariable : Application() {
         var Batsman_1_NUM_SIX: Int = 0
         var Batsman_1_SR: Float = 00f
         var Batsman_1_DOT_BALLS_Played: Int = 0
-        var Batsman_1_Img:String=""
+        var Batsman_1_Img:String = ""
 
 
         //Batsman2
 
         var Batsman_2_ID: String = ""
         var Batsman_2_NAME: String = ""
-        var Batsman_2_Img:String=""
+        var Batsman_2_Img:String =""
         var Batsman_2_SCORE: Int = 0
         var Batsman_2_BALL: Int = 0
         var Batsman_2_SINGLES: Int = 0
@@ -93,7 +93,7 @@ class GlobalVariable : Application() {
 
         var BOWLER_ID: String = ""
         var BOWLER_NAME: String = ""
-        var BOWLER_Img:String=""
+        var BOWLER_Img:String = ""
         var BOWLER_OVERS: Int = 0
         var BOWLER_MAIDEN: Int = 0
         var BOWLER_WICKET: Int = 0

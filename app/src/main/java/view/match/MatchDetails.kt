@@ -115,7 +115,7 @@ class MatchDetails : AppCompatActivity(){
             val teamId=teamData.getString("team_A_Id")
             val team_A_Squad=teamData.getString("team_A_Squad")
 
-            Log.d("Squad",team_A_Squad)
+            Log.d("Squad",team_A_Squad!!)
             squad_count_Match_Details.setText(team_A_Squad)
 
             val c = Calendar.getInstance().time
@@ -127,7 +127,7 @@ class MatchDetails : AppCompatActivity(){
             matchTime_Match_Details.setText(currentTime)
 
             val teamLogo=teamData.getString("team_A_Logo")
-            Log.d("Select Team Activity",teamId)
+            Log.d("Select Team Activity",teamId!!)
         }else{
             Log.d("Select Team Activity","  NULL")
         }
@@ -201,7 +201,7 @@ class MatchDetails : AppCompatActivity(){
     val team_A_City = intent.getStringExtra("teamCity_A")
     val team_A_Captain = intent.getStringExtra("captainId_A")
 
-    Log.d("team",team_A_id)
+    Log.d("team",team_A_id!!)
     var overs = matchOvers_Match_Details.text.toString().trim()
     val city = matchCity_Match_Details.text.toString().trim()
     val venue = matchVenue_Match_Details.text.toString().trim()
@@ -230,7 +230,7 @@ class MatchDetails : AppCompatActivity(){
         Log.d("requestId ",matchId)
         newRequestId=matchId
 
-        val newMatchInvite=MatchInfo(matchType,overs,city,venue,date,time,ballType,squad,team_A_id,team_B_id,team_A_Name,team_B_Name,team_A_Logo,team_B_Logo,matchId,team_A_Captain,captain_B_Id,"","",
+        val newMatchInvite=MatchInfo(matchType,overs,city,venue,date,time,ballType,squad,team_A_id,team_B_id,team_A_Name!!,team_B_Name,team_A_Logo!!,team_B_Logo,matchId,team_A_Captain!!,captain_B_Id,"","",
             "")
 
         Log.d("Team_A_Id ",team_A_id)
@@ -290,12 +290,12 @@ class MatchDetails : AppCompatActivity(){
                     val team2_id = data.getStringExtra("team_B_Id")
                     val team2_logo = data.getStringExtra("team_B_Logo")
                     val team2_Name = data.getStringExtra("team_B_Name")
-                    Log.d("MatchDetails_Team_B",team2_id)
-                    if (team2_id.isNotEmpty() && team2_logo.isNotEmpty() && team2_Name.isNotEmpty() )
+                    Log.d("MatchDetails_Team_B",team2_id!!)
+                    if (team2_id.isNotEmpty() && team2_logo!!.isNotEmpty() && team2_Name!!.isNotEmpty() )
                     {
                         team_B_id=team2_id
-                        team_B_Logo=team2_logo
-                        team_B_Name=team2_Name
+                        team_B_Logo=team2_logo!!
+                        team_B_Name=team2_Name!!
 
                         teamBcaptain(team_B_id)
 

@@ -56,7 +56,7 @@ class TeamMemberFragment(val team_A_Id: String,val captainId_A:String) : Fragmen
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        removePopUpDialog=Dialog(activity!!)  //Dialog Initialization
+        removePopUpDialog=Dialog(requireActivity())  //Dialog Initialization
     }
 
     override fun onAttach(context: Context) {
@@ -100,7 +100,7 @@ class TeamMemberFragment(val team_A_Id: String,val captainId_A:String) : Fragmen
     {
         removePopUpDialog.setCancelable(true)
         val view=activity?.layoutInflater?.inflate(R.layout.remove_player_popup,null)
-        removePopUpDialog.setContentView(view)
+        removePopUpDialog.setContentView(view!!)
         val image=view?.find<ImageView>(R.id.profile_Image_RemovePlayerPopUp)
         val phone=view?.find<TextView>(R.id.player_phn_RemovePlayerPopUp)
         val batting_S=view?.find<TextView>(R.id.playerBatting_S_RemovePlayerPopUp)
@@ -234,7 +234,7 @@ class TeamMemberFragment(val team_A_Id: String,val captainId_A:String) : Fragmen
                 if(p0.exists())
                 {
                     p0.children.forEach{
-                        val playerId=it.key
+                        val playerId=it.key.toString()
                         Log.d("TeamMember_ID",playerId)
                         teamRef.getReference("/PlayerBasicProfile/$playerId").also { task ->
                             task.addListenerForSingleValueEvent(object: ValueEventListener {

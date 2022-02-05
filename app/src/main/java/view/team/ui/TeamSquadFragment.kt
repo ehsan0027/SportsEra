@@ -113,7 +113,7 @@ class TeamSquadFragment(val teamId:String,val captainId:String) : Fragment() {
                 if(p0.exists())
                 {
                     p0.children.forEach{
-                        val playerId=it.key
+                        val playerId=it.key.toString()
                         Log.d("TeamMember_ID",playerId)
                         teamRef.getReference("/PlayerBasicProfile/$playerId").also { task ->
                             task.addListenerForSingleValueEvent(object: ValueEventListener {
@@ -217,7 +217,7 @@ class TeamSquadFragment(val teamId:String,val captainId:String) : Fragment() {
                 if(p0.exists())
                 {
                     p0.children.forEach{
-                        val playerId=it.key
+                        val playerId=it.key.toString()
                         Log.d("TeamMember_ID",playerId)
                         teamRef.getReference("/PlayerBasicProfile/$playerId").also { task ->
                             task.addListenerForSingleValueEvent(object: ValueEventListener {

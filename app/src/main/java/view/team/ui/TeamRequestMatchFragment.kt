@@ -77,7 +77,7 @@ class TeamRequestMatchFragment(
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        changeDetailPopUpDialog = Dialog(activity!!)  //Dialog Initialization
+        changeDetailPopUpDialog = Dialog(requireActivity())  //Dialog Initialization
     }
 
 
@@ -125,7 +125,7 @@ class TeamRequestMatchFragment(
 
         changeDetailPopUpDialog.setCancelable(true)
         val view = activity?.layoutInflater?.inflate(R.layout.change_match_invite_details, null)
-        changeDetailPopUpDialog.setContentView(view)
+        changeDetailPopUpDialog.setContentView(view!!)
 
         fun setDate(view: View) {
             val date = view as EditText
@@ -142,7 +142,7 @@ class TeamRequestMatchFragment(
                 }
 
             DatePickerDialog(
-                activity, dateSetListener,
+                requireActivity(), dateSetListener,
                 cal.get(Calendar.YEAR),
                 cal.get(Calendar.MONTH),
                 cal.get(Calendar.DAY_OF_MONTH)
@@ -421,7 +421,7 @@ private fun fetchNotificationsFromDatabase() {
             if (p0.exists()) {
                 Log.d("FetchMatch", "PlayerId Received")
                 p0.children.forEach {
-                    val teamId = it.key
+                    val teamId = it.key.toString()
                     teamRef.getReference("/TeamsMatchInfo/$teamId/Request").also { task ->
                         task.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onCancelled(p0: DatabaseError) {

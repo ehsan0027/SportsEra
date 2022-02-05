@@ -174,7 +174,6 @@ private val SAMPLE_CROPPED_IMAGE_NAME="SampleCropImage"
                override fun onDataChange(p0: DataSnapshot) {
                    if (p0.exists()) {
                        for (u in p0.children) {
-                           Log.d("UserExist_Key", u.key)
                            if (u.key == playerId) {
                                exist=true
                                longToast("Player Found")
@@ -232,7 +231,6 @@ private val SAMPLE_CROPPED_IMAGE_NAME="SampleCropImage"
                 PHONE_AUTH_SUCCESSFUL->{
                     val success = data.getStringExtra("status")
                     val number = data.getStringExtra("number")
-                    Log.d("Success",number)
                     if(success=="1") {
                         when {isSignUpButtonClick -> {
                             Log.d("PlayerSignUp_Button",isSignUpButtonClick.toString())

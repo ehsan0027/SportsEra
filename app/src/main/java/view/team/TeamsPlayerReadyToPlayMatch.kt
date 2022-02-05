@@ -67,8 +67,8 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        teamId = intent.getStringExtra("teamId")
-        newMatchId = intent.getStringExtra("newMatchId")
+        teamId = intent.getStringExtra("teamId").toString()
+        newMatchId = intent.getStringExtra("newMatchId").toString()
         groupAdapter.clear()
         getTeamSquad(teamId)
     }
@@ -89,7 +89,7 @@ class TeamsPlayerReadyToPlayMatch : AppCompatActivity() {
                 if (p0.exists()) {
                     Log.d("FetchTeam_ID", "team exist")
                     p0.children.forEach {
-                        val playerId = it.key
+                        val playerId = it.key.toString()
                         Log.d("FetchPlayer_ID", playerId)
 
                         playerRef.getReference("/PlayerBasicProfile/$playerId").also { task ->

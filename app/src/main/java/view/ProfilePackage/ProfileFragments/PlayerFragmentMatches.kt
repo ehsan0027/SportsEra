@@ -97,7 +97,7 @@ class PlayerFragmentMatches:Fragment() {
 
                                 override fun onDataChange(p0: DataSnapshot) {
                                     if(p0.exists()){
-                                        Log.d("FetchMatch",teamId)
+                                        Log.d("FetchMatch",teamId!!)
                                         p0.children.forEach {
                                             val matchId = it.key
                                             teamsMatchRef.getReference("/Match/$matchId").also {task->

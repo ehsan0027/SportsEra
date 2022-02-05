@@ -232,17 +232,17 @@ class TossActivity : AppCompatActivity() {
 
     private fun showTeams() {
 
-        teamA_Id = intent.getStringExtra("team_A_Id")
-        teamB_Id = intent.getStringExtra("team_B_Id")
-        teamA_Name = intent.getStringExtra("team_A_Name")
-        teamB_Name = intent.getStringExtra("team_B_Name")
-        newMatchId = intent.getStringExtra("match_Id")
+        teamA_Id = intent.getStringExtra("team_A_Id")!!
+        teamB_Id = intent.getStringExtra("team_B_Id")!!
+        teamA_Name = intent.getStringExtra("team_A_Name")!!
+        teamB_Name = intent.getStringExtra("team_B_Name")!!
+        newMatchId = intent.getStringExtra("match_Id")!!
 
         setTeamASquad(teamA_Id)
         setTeamBSquad(teamB_Id)
 
-        teamA_Logo = intent.getStringExtra("team_A_Logo")
-        teamB_Logo = intent.getStringExtra("team_B_Logo")
+        teamA_Logo = intent.getStringExtra("team_A_Logo")!!
+        teamB_Logo = intent.getStringExtra("team_B_Logo")!!
 
         Picasso.get().load(teamA_Logo).into(teamA_Logo_TossActivity)
         Picasso.get().load(teamB_Logo).into(teamB_Logo_TossActivity)

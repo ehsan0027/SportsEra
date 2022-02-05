@@ -39,9 +39,9 @@ class FullScoreCardActivity: AppCompatActivity(), FirstInningTabFragment.OnFragm
     override fun onStart() {
         super.onStart()
 
-        match_Id = intent.getStringExtra("match_Id")
-        team_A_Id = intent.getStringExtra("team_A_Id")
-        team_B_Id = intent.getStringExtra("team_B_Id")
+        match_Id = intent.getStringExtra("match_Id")!!
+        team_A_Id = intent.getStringExtra("team_A_Id")!!
+        team_B_Id = intent.getStringExtra("team_B_Id")!!
 
         val fragmentAdapter= InningsSectionPager(supportFragmentManager,match_Id)
         viewPagerFullScoreCard.adapter=fragmentAdapter
