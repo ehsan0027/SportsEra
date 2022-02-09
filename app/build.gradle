@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 
+apply plugin: 'com.google.gms.google-services'
+
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
@@ -10,7 +12,7 @@ android {
     compileSdkVersion 31
     defaultConfig {
         applicationId "com.example.sportsplayer"
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 31
         multiDexEnabled true
         versionCode 1
@@ -24,6 +26,15 @@ android {
             multiDexEnabled = true
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
 }
 
 dependencies {
@@ -35,7 +46,7 @@ dependencies {
 
 
     // Import the platform
-    implementation platform('com.google.firebase:firebase-bom:22.2.0')
+    implementation platform('com.google.firebase:firebase-bom:29.0.4')
 
     // When using a BoM, dependencies don't require a specified version
     // If you do specify a version, it overrides the library version specified in the BoM
@@ -131,4 +142,4 @@ dependencies {
 
 }
 
-apply plugin: 'com.google.gms.google-services'
+

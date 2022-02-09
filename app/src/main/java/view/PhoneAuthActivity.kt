@@ -11,10 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.sportsplayer.R
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.auth.*
 import kotlinx.android.synthetic.main.activity_phone_auth.*
 import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.toast
@@ -25,7 +22,7 @@ class PhoneAuthActivity : AppCompatActivity(), View.OnClickListener {
     // [START declare_auth]
     private lateinit var auth: FirebaseAuth
     // [END declare_auth]
-    var progressdialog:ProgressDialog?=null
+    var progressdialog:ProgressDialog? = null
     private var storedVerificationId: String? = ""
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
     private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
@@ -120,12 +117,20 @@ class PhoneAuthActivity : AppCompatActivity(), View.OnClickListener {
     private fun startPhoneNumberVerification(phoneNumber: String) {
         // [START start_phone_auth]
         Log.d(TAG,"Start number verification")
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-            phoneNumber, // Phone number to verify
-            60, // Timeout duration
-            TimeUnit.SECONDS, // Unit of timeout
-            this, // Activity (for callback binding)
-            callbacks) // OnVerificationStateChangedCallbacks
+        val options = PhoneAuthOptions.newBuilder(auth)
+            .setPhoneNumber(phoneNumber)       // Phone number to verify
+            .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+            .setActivity(this)                 // Activity (for callback binding)
+            .setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
+            .build()
+        PhoneAuthProvider.verifyPhoneNumber(options)
+
+//        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+//            phoneNumber, // Phone number to verify
+//            60, // Timeout duration
+//            TimeUnit.SECONDS, // Unit of timeout
+//            this, // Activity (for callback binding)
+//            callbacks) // OnVerificationStateChangedCallbacks
         // [END start_phone_auth]
     }
 
@@ -205,6 +210,7 @@ class PhoneAuthActivity : AppCompatActivity(), View.OnClickListener {
                     progressdialog?.setCanceledOnTouchOutside(false)
                     progressdialog?.show()
                     val phoneNumber=phoneNumber_textView_PhoneAuthActivity.text.toString().trim()
+                    Log.d("Phone Number",phoneNumber)
                     makeViewsInVisible(phoneNumber_textView_PhoneAuthActivity,sendCode_Button_PhoneAuthActivity)
                     makeViewsVisible    (verifyPhone_Button_PhoneAuthActivity,code_textView_PhoneAuthActivity)
                     startPhoneNumberVerification(phoneNumber)

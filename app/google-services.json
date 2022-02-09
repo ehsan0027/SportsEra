@@ -15,27 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "675174842791-lk9tkpnp0gdhav03gkdiifnpl3h8lkb5.apps.googleusercontent.com",
+          "client_id": "675174842791-4a562pgg59b52rfnqdb0gk6pokas2a6f.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.sportsplayer",
-            "certificate_hash": "978cf69a9cf0fd1a4b09d5d8239ac7cf34e61771"
-          }
-        },
-        {
-          "client_id": "675174842791-tm3pgpnnrhpf4fil1gvk9v8vnm2970rv.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.sportsplayer",
-            "certificate_hash": "4d6da4487592d4b1114a094d9da0001eb773cf5e"
-          }
-        },
-        {
-          "client_id": "675174842791-9bljlppo800tbmnc0g659gr7je8ae1k0.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.sportsplayer",
-            "certificate_hash": "984c7ff0a7fb81dc0a1366e1d66bb150713d1462"
+            "certificate_hash": "26e7e098879309d7a6645a575480bde573bacbe8"
           }
         },
         {
